@@ -1,0 +1,37 @@
+# Mappy
+Amiga port of Mappy arcade
+
+Requires a 1-button joystick, or the keyboard
+
+Features:
+
+- arcade perfect gameplay
+- 50 fps vanilla A1200
+- 25 fps on A500
+- whdload mode available for AGA/ECS: TODO
+
+Note:
+
+AGA version runs on vanilla A1200: arcade exact colors
+TODO: ECS version runs on any ECS amiga: slightly less colors (not
+really noticeable) and not very fast either
+
+Credits:
+
+- jotd: reverse-engineering, 68000 transcode, graphics conversion
+  sound conversion for the Amiga.
+- no9: music
+- PascalDe73: icon
+
+Instructions:
+
+5/fire: insert coin
+1/2/up/down: start game
+arrows/joystick: move
+red/ctrl: open doors
+
+Cheat:
+
+F1: skip level
+F2: invincible
+F3: add 10000 points
