@@ -11,6 +11,123 @@
 ;	map(0x8000, 0x8000).w("watchdog", FUNC(watchdog_timer_device::reset_w));
 ;	map(0x8000, 0xffff).rom();  // only c000-ffff here
 
+
+;#define NAMCO_56IN0\
+;	PORT_START("P1")    /* 56XX #0 pins 22-29 */\
+;	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_4WAY\
+;	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_4WAY\
+;	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_4WAY\
+;	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_4WAY\
+;	PORT_START("P2")    /* 56XX #0 pins 22-29 */\
+;	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_4WAY PORT_COCKTAIL\
+;	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_4WAY PORT_COCKTAIL\
+;	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_4WAY PORT_COCKTAIL\
+;	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_4WAY PORT_COCKTAIL
+;
+;#define NAMCO_5XIN0\
+;	PORT_START("P1") /* 56XX #0 pins 22-29 */\
+;	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY\
+;	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY\
+;	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY\
+;	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY\
+;	PORT_START("P2") /* 56XX #0 pins 22-29 */\
+;	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_COCKTAIL\
+;	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_COCKTAIL\
+;	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_COCKTAIL\
+;	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_COCKTAIL
+;
+;#define NAMCO_56IN1\
+;	PORT_START("BUTTONS")   /* 56XX #0 pins 30-33 and 38-41 */\
+;	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )\
+;	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_COCKTAIL\
+;	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START1 )\
+;	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START2 )\
+;	PORT_START("COINS") /* 56XX #0 pins 30-33 and 38-41 */\
+;	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )\
+;	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )\
+;	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )\
+;	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )
+;
+;#define NAMCO_56DSW0\
+;	PORT_START("DSW0")  /* 56XX #1 pins 30-33 */\
+;	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )\
+;	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )\
+;	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Cabinet ) )\
+;	PORT_DIPSETTING(    0x04, DEF_STR( Upright ) )\
+;	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )\
+;	PORT_SERVICE( 0x08, IP_ACTIVE_LOW )
+;
+;static INPUT_PORTS_START( superpac )
+;	NAMCO_56IN0
+;	NAMCO_56IN1
+;	NAMCO_56DSW0
+;
+;	PORT_START("DSW1")  // 56XX #1 pins 22-29
+;	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Difficulty ) )   PORT_DIPLOCATION("SW1:1,2,3,4")
+;	PORT_DIPSETTING(    0x0f, "Rank 0-Normal" )
+;	PORT_DIPSETTING(    0x0e, "Rank 1-Easiest" )
+;	PORT_DIPSETTING(    0x0d, "Rank 2" )
+;	PORT_DIPSETTING(    0x0c, "Rank 3" )
+;	PORT_DIPSETTING(    0x0b, "Rank 4" )
+;	PORT_DIPSETTING(    0x0a, "Rank 5" )
+;	PORT_DIPSETTING(    0x09, "Rank 6-Medium" )
+;	PORT_DIPSETTING(    0x08, "Rank 7" )
+;	PORT_DIPSETTING(    0x07, "Rank 8-Default" )
+;	PORT_DIPSETTING(    0x06, "Rank 9" )
+;	PORT_DIPSETTING(    0x05, "Rank A" )
+;	PORT_DIPSETTING(    0x04, "Rank B-Hardest" )
+;	PORT_DIPSETTING(    0x03, "Rank C-Easy Auto" )
+;	PORT_DIPSETTING(    0x02, "Rank D-Auto" )
+;	PORT_DIPSETTING(    0x01, "Rank E-Auto" )
+;	PORT_DIPSETTING(    0x00, "Rank F-Hard Auto" )
+;	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Coin_B ) )       PORT_DIPLOCATION("SW1:5,6")
+;	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
+;	PORT_DIPSETTING(    0x30, DEF_STR( 1C_1C ) )
+;	PORT_DIPSETTING(    0x00, DEF_STR( 2C_3C ) )
+;	PORT_DIPSETTING(    0x20, DEF_STR( 1C_2C ) )
+;	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Demo_Sounds ) )  PORT_DIPLOCATION("SW1:7")
+;	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+;	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
+;	// When Freeze is on, press P1 button 1 to skip levels
+;	PORT_DIPNAME( 0x80, 0x80, "Freeze / Rack Test (Cheat)" ) PORT_TOGGLE PORT_DIPLOCATION("SW1:8")
+;	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+;	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+;
+;	PORT_START("DSW2")  // 56XX #1 pins 38-41 multiplexed
+;	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) )       PORT_DIPLOCATION("SW2:1,2,3")
+;	PORT_DIPSETTING(    0x00, DEF_STR( 3C_1C ) )
+;	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) )
+;	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
+;	PORT_DIPSETTING(    0x01, DEF_STR( 2C_3C ) )
+;	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
+;	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
+;	PORT_DIPSETTING(    0x04, DEF_STR( 1C_6C ) )
+;	PORT_DIPSETTING(    0x03, DEF_STR( 1C_7C ) )
+;	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Bonus_Life ) )   PORT_DIPLOCATION("SW2:4,5,6")
+;	PORT_DIPSETTING(    0x08, "30k Only" )                  PORT_CONDITION("DSW2",0xc0,NOTEQUALS,0x00)
+;	PORT_DIPSETTING(    0x30, "30k & 80k Only" )            PORT_CONDITION("DSW2",0xc0,NOTEQUALS,0x00)
+;	PORT_DIPSETTING(    0x20, "30k, 80k & Every 80k" )      PORT_CONDITION("DSW2",0xc0,NOTEQUALS,0x00)
+;	PORT_DIPSETTING(    0x38, "30k & 100k Only" )           PORT_CONDITION("DSW2",0xc0,NOTEQUALS,0x00)
+;	PORT_DIPSETTING(    0x18, "30k, 100k & Every 100k" )    PORT_CONDITION("DSW2",0xc0,NOTEQUALS,0x00)
+;	PORT_DIPSETTING(    0x28, "30k & 120k Only" )           PORT_CONDITION("DSW2",0xc0,NOTEQUALS,0x00)
+;	PORT_DIPSETTING(    0x10, "30k, 120k & Every 120k" )    PORT_CONDITION("DSW2",0xc0,NOTEQUALS,0x00)
+;	PORT_DIPSETTING(    0x10, "30k Only" )                  PORT_CONDITION("DSW2",0xc0,EQUALS,0x00) // Manual shows 100k only, Test Mode shows 30k which is what we use
+;	PORT_DIPSETTING(    0x38, "30k & 100k Only" )           PORT_CONDITION("DSW2",0xc0,EQUALS,0x00)
+;	PORT_DIPSETTING(    0x20, "30k, 100k & Every 100k" )    PORT_CONDITION("DSW2",0xc0,EQUALS,0x00)
+;	PORT_DIPSETTING(    0x30, "30k & 120k Only" )           PORT_CONDITION("DSW2",0xc0,EQUALS,0x00)
+;	PORT_DIPSETTING(    0x08, "40k Only" )                  PORT_CONDITION("DSW2",0xc0,EQUALS,0x00)
+;	PORT_DIPSETTING(    0x28, "40k & 120k Only" )           PORT_CONDITION("DSW2",0xc0,EQUALS,0x00)
+;	PORT_DIPSETTING(    0x18, "40k, 120k & Every 120k" )    PORT_CONDITION("DSW2",0xc0,EQUALS,0x00)
+;	PORT_DIPSETTING(    0x00, DEF_STR( None ) )
+;	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Lives ) )        PORT_DIPLOCATION("SW2:7,8")
+;	PORT_DIPSETTING(    0x80, "1" )
+;	PORT_DIPSETTING(    0x40, "2" )
+;	PORT_DIPSETTING(    0xc0, "3" )
+;	PORT_DIPSETTING(    0x00, "5" )
+;INPUT_PORTS_END
+
+
+init_c000:    ; [global]
 C000: BD EB 3B    JSR    $EB3B
 C003: 4F          CLRA
 C004: 97 8B       STA    <$8B
@@ -27,21 +144,11 @@ C01B: CE 00 8B    LDU    #$008B
 C01E: BD C1 35    JSR    $C135
 C021: CE 02 D2    LDU    #$02D2
 C024: BD EE C7    JSR    never_returns_eec7
-C027: 50          NEGB
-C028: 4F          CLRA
-C029: 57          ASRB
-C02A: 45          LSRA
-C02B: 52          XNCB
-C02C: 00 CE       NEG    <$CE
-C02E: 02 D7       XNC    <$D7
+
 C030: BD EE C7    JSR    never_returns_eec7
-C033: 53          COMB
-C034: 55          LSRB
-C035: 50          NEGB
-C036: 45          LSRA
-C037: 52          XNCB
-C038: 00 BD       NEG    <$BD
-C03A: C1 6C       CMPB   #$6C
+
+main_game_init_c039:
+C039: BD C1 6C    JSR    $C16C
 C03C: BD C1 D6    JSR    $C1D6
 C03F: BD C2 4C    JSR    $C24C
 C042: BD C2 56    JSR    $C256
@@ -59,12 +166,8 @@ C063: BD EE 06    JSR    $EE06
 C066: BD C0 85    JSR    $C085
 C069: CE 02 50    LDU    #$0250
 C06C: BD EE C7    JSR    never_returns_eec7
-C06F: 42          XNCA
-C070: 45          LSRA
-C071: 53          COMB
-C072: 54          LSRB
-C073: 20 35       BRA    $C0AA
-C075: 00 BD       NEG    <$BD
+
+attract_c077:
 C077: EC 50       LDD    -$10,U
 C079: CC 00 B4    LDD    #$00B4
 C07C: BD E2 BB    JSR    $E2BB
@@ -86,30 +189,12 @@ C0A2: 39          RTS
 C0A3: 20 09       BRA    $C0AE
 
 C106: BD EE C7    JSR    never_returns_eec7
-C109: 21 22       BRN    $C12D
-C10B: 23 20       BLS    $C12D
-C10D: 31 39       LEAY   -$7,Y
-C10F: 38 32       XANDCC #$32
-C111: 20 4E       BRA    $C161
-C113: 41          NEGA
-C114: 4D          TSTA
-C115: 43          COMA
-C116: 4F          CLRA
-C117: 20 4C       BRA    $C165
-C119: 54          LSRB
-C11A: 44          LSRA
-C11B: 40          NEGA
-C11C: 00 CE       NEG    <$CE
-C11E: 06 5E       ROR    <$5E
+
 C120: CC 02 07    LDD    #$0207
 C123: BD FE 0F    JSR    $FE0F
 C126: CE 02 5E    LDU    #$025E
 C129: BD EE C7    JSR    never_returns_eec7
-C12C: 29 2A       BVS    $C158
-C12E: 2B 2C       BMI    $C15C
-C130: 2D 2E       BLT    $C160
-C132: 2F 00       BLE    $C134
-C134: 39          RTS
+
 C135: CC C4 D4    LDD    #$C4D4
 C138: B7 03 6B    STA    $036B
 C13B: F7 03 6E    STB    $036E
@@ -527,17 +612,7 @@ C514: 8E C5 21    LDX    #$C521
 C517: CE 10 94    LDU    #$1094
 C51A: 10 8E 00 0B LDY    #$000B
 C51E: 7E EE BA    JMP    $EEBA
-C521: 00 02       NEG    <$02
-C523: 00 02       NEG    <$02
-C525: 0F 05       CLR    <$05
-C527: 01 68       NEG    <$68
-C529: 01 2C       NEG    <$2C
-C52B: 00 F0       NEG    <$F0
-C52D: 00 E0       NEG    <$E0
-C52F: 00 F0       NEG    <$F0
-C531: 01 00       NEG    <$00
-C533: 00 80       NEG    <$80
-C535: 00 80       NEG    <$80
+
 C537: 96 AB       LDA    <$AB
 C539: 26 05       BNE    $C540
 C53B: 96 C2       LDA    <$C2
@@ -580,95 +655,7 @@ C584: 96 C2       LDA    <$C2
 C586: 2A ED       BPL    $C575
 C588: 0C 8B       INC    <$8B
 C58A: 20 AF       BRA    $C53B
-C58C: 08 24       ASL    <$24
-C58E: 00 01       NEG    <$01
-C590: 04 0E       LSR    <$0E
-C592: 00 01       NEG    <$01
-C594: 08 0D       ASL    <$0D
-C596: 00 25       NEG    <$25
-C598: 04 1C       LSR    <$1C
-C59A: 00 54       NEG    <$54
-C59C: 02 22       XNC    <$22
-C59E: 00 02       NEG    <$02
-C5A0: 01 21       NEG    <$21
-C5A2: 00 48       NEG    <$48
-C5A4: 02 15       XNC    <$15
-C5A6: 00 03       NEG    <$03
-C5A8: 04 2A       LSR    <$2A
-C5AA: 00 03       NEG    <$03
-C5AC: 08 13       ASL    <$13
-C5AE: 00 02       NEG    <$02
-C5B0: 04 04       LSR    <$04
-C5B2: 00 05       NEG    <$05
-C5B4: 02 1B       XNC    <$1B
-C5B6: 00 33       NEG    <$33
-C5B8: 01 24       NEG    <$24
-C5BA: 00 02       NEG    <$02
-C5BC: 08 25       ASL    <$25
-C5BE: 00 02       NEG    <$02
-C5C0: 04 24       LSR    <$24
-C5C2: 00 01       NEG    <$01
-C5C4: 08 21       ASL    <$21
-C5C6: 00 4D       NEG    <$4D
-C5C8: 01 22       NEG    <$22
-C5CA: 00 76       NEG    <$76
-C5CC: 08 1C       ASL    <$1C
-C5CE: 00 01       NEG    <$01
-C5D0: 01 19       NEG    <$19
-C5D2: 00 01       NEG    <$01
-C5D4: 02 4B       XNC    <$4B
-C5D6: 00 01       NEG    <$01
-C5D8: 04 1F       LSR    <$1F
-C5DA: 00 04       NEG    <$04
-C5DC: 08 12       ASL    <$12
-C5DE: 00 02       NEG    <$02
-C5E0: 04 11       LSR    <$11
-C5E2: 00 02       NEG    <$02
-C5E4: 02 0D       XNC    <$0D
-C5E6: 00 01       NEG    <$01
-C5E8: 04 11       LSR    <$11
-C5EA: 00 04       NEG    <$04
-C5EC: 02 11       XNC    <$11
-C5EE: 00 02       NEG    <$02
-C5F0: 04 0F       LSR    <$0F
-C5F2: 00 05       NEG    <$05
-C5F4: 02 23       XNC    <$23
-C5F6: 00 02       NEG    <$02
-C5F8: 01 1F       NEG    <$1F
-C5FA: 00 47       NEG    <$47
-C5FC: 02 17       XNC    <$17
-C5FE: 00 02       NEG    <$02
-C600: 01 3A       NEG    <$3A
-C602: 00 02       NEG    <$02
-C604: 02 38       XNC    <$38
-C606: 00 1E       NEG    <$1E
-C608: 04 15       LSR    <$15
-C60A: 00 03       NEG    <$03
-C60C: 08 1B       ASL    <$1B
-C60E: 00 01       NEG    <$01
-C610: 04 0A       LSR    <$0A
-C612: 00 86       NEG    <$86
-C614: 08 1B       ASL    <$1B
-C616: 00 00       NEG    <$00
-C618: 00 00       NEG    <$00
-C61A: 00 00       NEG    <$00
-C61C: 00 00       NEG    <$00
-C61E: 00 00       NEG    <$00
-C620: 00 00       NEG    <$00
-C622: 00 00       NEG    <$00
-C624: 00 00       NEG    <$00
-C626: 00 00       NEG    <$00
-C628: 00 00       NEG    <$00
-C62A: 00 00       NEG    <$00
-C62C: 00 00       NEG    <$00
-C62E: 00 00       NEG    <$00
-C630: 00 00       NEG    <$00
-C632: 00 00       NEG    <$00
-C634: 00 00       NEG    <$00
-C636: 00 00       NEG    <$00
-C638: 00 00       NEG    <$00
-C63A: 00 00       NEG    <$00
-C63C: 00 00       NEG    <$00
+
 C63E: BD C7 28    JSR    $C728
 C641: 8D 4E       BSR    $C691
 C643: CE 00 E0    LDU    #$00E0
@@ -842,24 +829,32 @@ C784: 83 E3 E6    SUBD   #$E3E6
 C787: 27 01       BEQ    $C78A
 C789: 39          RTS
 C78A: 6E 9F 10 E4 JMP    [$10E4]
+
+; ghost state machine variant A
 C78E: D6 AA       LDB    <$AA
 C790: 58          ASLB
-C791: 8E C7 94    LDX    #$C794
-C794: 6E 95       JMP    [B,X]
-C796: C7 E3       XSTB   #$E3
-C798: C8 B7       EORB   #$B7
-C79A: C9 61       ADCB   #$61
-C79C: CA 64       ORB    #$64
-C79E: CB 39       ADDB   #$39
-C7A0: D6 AA       LDB    <$AA
+C791: 8E C7 94    LDX    #table_c796-2
+C794: 6E 95       JMP    [B,X]		; [jump_table] [nb_entries=6]
+
+table_c796:
+	dc.w	$C7E3
+	dc.w	$C8B7
+	dc.w	$C961
+	dc.w	$CA64
+	dc.w	$CB39
+	dc.w	$D6AA
+
+; ghost state machine, variant B
 C7A2: 58          ASLB
-C7A3: 8E C7 A6    LDX    #$C7A6
-C7A6: 6E 95       JMP    [B,X]
-C7A8: C8 4C       EORB   #$4C
-C7AA: C9 07       ADCB   #$07
-C7AC: C9 FF       ADCB   #$FF
-C7AE: CA A9       ORB    #$A9
-C7B0: CB 79       ADDB   #$79
+C7A3: 8E C7 A6    LDX    #table_c7a8-2
+C7A6: 6E 95       JMP    [B,X]		; [jump_table] [nb_entries=5]
+
+table_c7a8:
+	dc.w	$C84C
+	dc.w	$C907
+	dc.w	$C9FF
+	dc.w	$CAA9
+	dc.w	$CB79
 C7B2: 0F AA       CLR    <$AA
 C7B4: D6 18       LDB    <$18
 C7B6: 58          ASLB
@@ -881,14 +876,10 @@ C7D1: 0C 18       INC    <$18
 C7D3: E6 01       LDB    $1,X
 C7D5: D7 AA       STB    <$AA
 C7D7: 39          RTS
-C7D8: 02 01       XNC    <$01
-C7DA: 04 03       LSR    <$03
-C7DC: 05 05       LSR    <$05
-C7DE: 05 04       LSR    <$04
-C7E0: 04 04       LSR    <$04
-C7E2: 84 7F       ANDA   #$7F
+
+
 C7E4: 16 26 8E    LBRA   $EE75
-C7E7: F8 80 CC    EORB   $80CC
+
 C7EA: 01 01       NEG    <$01
 C7EC: BD F5 1E    JSR    $F51E
 C7EF: CC 00 C0    LDD    #$00C0
@@ -974,11 +965,7 @@ C8A5: 8E C8 AD    LDX    #$C8AD
 C8A8: EC 85       LDD    B,X
 C8AA: ED 49       STD    $9,U
 C8AC: 39          RTS
-C8AD: 00 24       NEG    <$24
-C8AF: 02 54       XNC    <$54
-C8B1: 00 26       NEG    <$26
-C8B3: 00 54       NEG    <$54
-C8B5: 02 24       XNC    <$24
+
 C8B7: 86 01       LDA    #$01
 C8B9: B7 16 26    STA    $1626
 C8BC: 8E 00 80    LDX    #$0080
@@ -1512,18 +1499,7 @@ CD73: BD CE 6A    JSR    $CE6A
 CD76: 96 B0       LDA    <$B0
 CD78: 97 1B       STA    <$1B
 CD7A: 39          RTS
-CD7B: 00 02       NEG    <$02
-CD7D: 01 01       NEG    <$01
-CD7F: 02 25       XNC    <$25
-CD81: 03 02       COM    <$02
-CD83: 02 01       XNC    <$01
-CD85: 02 2B       XNC    <$2B
-CD87: 06 03       ROR    <$03
-CD89: 02 01       XNC    <$01
-CD8B: 02 30       XNC    <$30
-CD8D: 06 04       ROR    <$04
-CD8F: 03 02       COM    <$02
-CD91: 02 37       XNC    <$37
+
 CD93: 96 D1       LDA    <$D1
 CD95: 81 0C       CMPA   #$0C
 CD97: 24 01       BCC    $CD9A
@@ -1641,1717 +1617,7 @@ CE75: DC 10       LDD    <$10
 CE77: 8E 10 08    LDX    #$1008
 CE7A: A7 85       STA    B,X
 CE7C: 39          RTS
-CE7D: CF 00 CE    XSTU   #$00CE
-CE80: 9D CE       JSR    <$CE
-CE82: BE CE DF    LDX    $CEDF
-CE85: CF 00 CF    XSTU   #$00CF
-CE88: 21 CF       BRN    $CE59
-CE8A: 42          XNCA
-CE8B: CF 63 CF    XSTU   #$63CF
-CE8E: 84 CF       ANDA   #$CF
-CE90: A5 CF       BITA   ,W++
-CE92: C6 CF       LDB    #$CF
-CE94: DC CF       LDD    <$CF
-CE96: 00 CF       NEG    <$CF
-CE98: 00 CF       NEG    <$CF
-CE9A: 00 CF       NEG    <$CF
-CE9C: 00 00       NEG    <$00
-CE9E: 02 3F       XNC    <$3F
-CEA0: 04 06       LSR    <$06
-CEA2: 07 3F       ASR    <$3F
-CEA4: 09 0A       ROL    <$0A
-CEA6: 0B 3F       XDEC   <$3F
-CEA8: 0C 0D       INC    <$0D
-CEAA: 0E 3F       JMP    <$3F
-CEAC: 0F 10       CLR    <$10
-CEAE: 13          SYNC
-CEAF: 3F          SWI
-CEB0: 16 19 1C    LBRA   $E7CF
-CEB3: 3F          SWI
-CEB4: 1F 21       TFR    Y,X
-CEB6: 23 3F       BLS    $CEF7
-CEB8: 25 27       BCS    $CEE1
-CEBA: 29 3F       BVS    $CEFB
-CEBC: 2B 9C       BMI    $CE5A
-CEBE: 01 03       NEG    <$03
-CEC0: 3F          SWI
-CEC1: 05 07       LSR    <$07
-CEC3: 09 3F       ROL    <$3F
-CEC5: 0B 0D       XDEC   <$0D
-CEC7: 0F 3F       CLR    <$3F
-CEC9: 11 13       SYNC
-CECB: 15          XHCF
-CECC: 3F          SWI
-CECD: 17 17 17    LBSR   $E5E7
-CED0: 3F          SWI
-CED1: 19          DAA
-CED2: 1B          NOP
-CED3: 1D          SEX
-CED4: 3F          SWI
-CED5: 1F 21       TFR    Y,X
-CED7: 23 3F       BLS    $CF18
-CED9: 25 27       BCS    $CF02
-CEDB: 29 3F       BVS    $CF1C
-CEDD: 2B 9C       BMI    $CE7B
-CEDF: 02 05       XNC    <$05
-CEE1: 3F          SWI
-CEE2: 08 0A       ASL    <$0A
-CEE4: 0C 3F       INC    <$3F
-CEE6: 10 12       NOP
-CEE8: 13          SYNC
-CEE9: 3F          SWI
-CEEA: 13          SYNC
-CEEB: 14          XHCF
-CEEC: 15          XHCF
-CEED: 3F          SWI
-CEEE: 18          X18
-CEEF: 18          X18
-CEF0: 18          X18
-CEF1: 3F          SWI
-CEF2: 19          DAA
-CEF3: 1C 1E       ANDCC  #$1E
-CEF5: 3F          SWI
-CEF6: 20 20       BRA    $CF18
-CEF8: 20 3F       BRA    $CF39
-CEFA: 24 29       BCC    $CF25
-CEFC: 20 3F       BRA    $CF3D
-CEFE: 2A 9C       BPL    $CE9C
-CF00: 03 06       COM    <$06
-CF02: 3F          SWI
-CF03: 0A 0A       DEC    <$0A
-CF05: 0C 3F       INC    <$3F
-CF07: 10 12       NOP
-CF09: 13          SYNC
-CF0A: 3F          SWI
-CF0B: 13          SYNC
-CF0C: 16 19 3F    LBRA   $E84E
-CF0F: 1E 1E       EXG    X,inv
-CF11: 1E 3F       EXG    U,inv
-CF13: 23 38       BLS    $CF4D
-CF15: 38 3F       XANDCC #$3F
-CF17: 39          RTS
-CF18: 29 2A       BVS    $CF44
-CF1A: 3F          SWI
-CF1B: 3A          ABX
-CF1C: 29 3A       BVS    $CF58
-CF1E: 3F          SWI
-CF1F: 30 9C 05    LEAX   [$CF27,PCR]
-CF22: 06 3F       ROR    <$3F
-CF24: 0A 0C       DEC    <$0C
-CF26: 10 3F       SWI2
-CF28: 13          SYNC
-CF29: 16 16 3F    LBRA   $E56B
-CF2C: 18          X18
-CF2D: 19          DAA
-CF2E: 1B          NOP
-CF2F: 3F          SWI
-CF30: 1E 1E       EXG    X,inv
-CF32: 1E 3F       EXG    U,inv
-CF34: 23 26       BLS    $CF5C
-CF36: 24 3F       BCC    $CF77
-CF38: 27 29       BEQ    $CF63
-CF3A: 2A 3F       BPL    $CF7B
-CF3C: 2B 2E       BMI    $CF6C
-CF3E: 30 3F       LEAX   -$1,Y
-CF40: 31 9C 05    LEAY   [$CF48,PCR]
-CF43: 06 3F       ROR    <$3F
-CF45: 0B 0C       XDEC   <$0C
-CF47: 11 3F       SWI3
-CF49: 14          XHCF
-CF4A: 16 17 3F    LBRA   $E68C
-CF4D: 19          DAA
-CF4E: 1A 1B       ORCC   #$1B
-CF50: 3F          SWI
-CF51: 1F 20       TFR    Y,D
-CF53: 21 3F       BRN    $CF94
-CF55: 22 26       BHI    $CF7D
-CF57: 26 3F       BNE    $CF98
-CF59: 28 29       BVC    $CF84
-CF5B: 2B 3F       BMI    $CF9C
-CF5D: 2C 2F       BGE    $CF8E
-CF5F: 2C 3F       BGE    $CFA0
-CF61: 32 9C 06    LEAS   [$CF6A,PCR]
-CF64: 06 3F       ROR    <$3F
-CF66: 0B 0D       XDEC   <$0D
-CF68: 12          NOP
-CF69: 3F          SWI
-CF6A: 15          XHCF
-CF6B: 18          X18
-CF6C: 1B          NOP
-CF6D: 3F          SWI
-CF6E: 1E 1E       EXG    X,inv
-CF70: 1E 3F       EXG    U,inv
-CF72: 23 21       BLS    $CF95
-CF74: 38 3F       XANDCC #$3F
-CF76: 39          RTS
-CF77: 3A          ABX
-CF78: 3B          RTI
-CF79: 3F          SWI
-CF7A: 30 31       LEAX   -$F,Y
-CF7C: 32 3F       LEAS   -$1,Y
-CF7E: 2C 2F       BGE    $CFAF
-CF80: 2C 3F       BGE    $CFC1
-CF82: 32 9C 08    LEAS   [$CF8D,PCR]
-CF85: 0A 3F       DEC    <$3F
-CF87: 0C 0E       INC    <$0E
-CF89: 12          NOP
-CF8A: 3F          SWI
-CF8B: 15          XHCF
-CF8C: 18          X18
-CF8D: 1B          NOP
-CF8E: 3F          SWI
-CF8F: 1E 1F       EXG    X,inv
-CF91: 21 3F       BRN    $CFD2
-CF93: 22 24       BHI    $CFB9
-CF95: 25 3F       BCS    $CFD6
-CF97: 28 2A       BVC    $CFC3
-CF99: 29 3F       BVS    $CFDA
-CF9B: 2C 30       BGE    $CFCD
-CF9D: 33 3F       LEAU   -$1,Y
-CF9F: 34 35       PSHS   Y,X,B,CC
-CFA1: 2F 3F       BLE    $CFE2
-CFA3: 37 9C       PULU   B,DP,X,PC
-CFA5: 08 0A       ASL    <$0A
-CFA7: 3F          SWI
-CFA8: 0E 10       JMP    <$10
-CFAA: 13          SYNC
-CFAB: 3F          SWI
-CFAC: 16 19 1C    LBRA   $E8CB
-CFAF: 3F          SWI
-CFB0: 1F 24       TFR    Y,S
-CFB2: 29 3F       BVS    $CFF3
-CFB4: 28 2B       BVC    $CFE1
-CFB6: 2C 3F       BGE    $CFF7
-CFB8: 2E 30       BGT    $CFEA
-CFBA: 2F 3F       BLE    $CFFB
-CFBC: 31 33       LEAY   -$D,Y
-CFBE: 35 3F       PULS   CC,D,DP,X,Y
-CFC0: 37 36       PULU   D,X,Y
-CFC2: 3B          RTI
-CFC3: 3F          SWI
-CFC4: 37 9C       PULU   B,DP,X,PC
-CFC6: 0A 0D       DEC    <$0D
-CFC8: 3F          SWI
-CFC9: 12          NOP
-CFCA: 13          SYNC
-CFCB: 14          XHCF
-CFCC: 3F          SWI
-CFCD: 1C 1D       ANDCC  #$1D
-CFCF: 23 3F       BLS    $D010
-CFD1: 20 24       BRA    $CFF7
-CFD3: 29 3F       BVS    $D014
-CFD5: 2A 2D       BPL    $D004
-CFD7: 30 3F       LEAX   -$1,Y
-CFD9: 31 37       LEAY   -$9,Y
-CFDB: 91 12       CMPA   <$12
-CFDD: 12          NOP
-CFDE: 3F          SWI
-CFDF: 13          SYNC
-CFE0: 16 19 3F    LBRA   $E922
-CFE3: 1C 20       ANDCC  #$20
-CFE5: 23 3F       BLS    $D026
-CFE7: 24 26       BCC    $D00F
-CFE9: 29 3F       BVS    $D02A
-CFEB: 2A 2D       BPL    $D01A
-CFED: 30 3F       LEAX   -$1,Y
-CFEF: 31 37       LEAY   -$9,Y
-CFF1: 91 00       CMPA   <$00
-CFF3: 00 00       NEG    <$00
-CFF5: 00 00       NEG    <$00
-CFF7: 00 02       NEG    <$02
-CFF9: 58          ASLB
-CFFA: 02 58       XNC    <$58
-CFFC: 00 00       NEG    <$00
-CFFE: 00 01       NEG    <$01
-D000: 05 00       LSR    <$00
-D002: 02 58       XNC    <$58
-D004: 01 E0       NEG    <$E0
-D006: 00 00       NEG    <$00
-D008: 00 01       NEG    <$01
-D00A: 06 01       ROR    <$01
-D00C: 01 E0       NEG    <$E0
-D00E: 01 68       NEG    <$68
-D010: 00 00       NEG    <$00
-D012: 00 02       NEG    <$02
-D014: 07 01       ASR    <$01
-D016: 01 E0       NEG    <$E0
-D018: 01 4A       NEG    <$4A
-D01A: 00 01       NEG    <$01
-D01C: 00 01       NEG    <$01
-D01E: 07 02       ASR    <$02
-D020: 01 C2       NEG    <$C2
-D022: 01 4A       NEG    <$4A
-D024: 00 01       NEG    <$01
-D026: 00 01       NEG    <$01
-D028: 08 02       ASL    <$02
-D02A: 01 A4       NEG    <$A4
-D02C: 01 2C       NEG    <$2C
-D02E: 00 01       NEG    <$01
-D030: 00 02       NEG    <$02
-D032: 08 03       ASL    <$03
-D034: 01 86       NEG    <$86
-D036: 01 0E       NEG    <$0E
-D038: 00 01       NEG    <$01
-D03A: 00 02       NEG    <$02
-D03C: 08 03       ASL    <$03
-D03E: 00 78       NEG    <$78
-D040: 01 E0       NEG    <$E0
-D042: 01 01       NEG    <$01
-D044: 00 02       NEG    <$02
-D046: 09 04       ROL    <$04
-D048: 01 68       NEG    <$68
-D04A: 00 F0       NEG    <$F0
-D04C: 01 01       NEG    <$01
-D04E: 00 02       NEG    <$02
-D050: 09 04       ROL    <$04
-D052: 01 56       NEG    <$56
-D054: 00 E4       NEG    <$E4
-D056: 01 01       NEG    <$01
-D058: 00 02       NEG    <$02
-D05A: 09 05       ROL    <$05
-D05C: 01 4A       NEG    <$4A
-D05E: 00 D8       NEG    <$D8
-D060: 01 01       NEG    <$01
-D062: 00 03       NEG    <$03
-D064: 0A 05       DEC    <$05
-D066: 01 3E       NEG    <$3E
-D068: 00 CC       NEG    <$CC
-D06A: 01 01       NEG    <$01
-D06C: 00 03       NEG    <$03
-D06E: 0A 05       DEC    <$05
-D070: 01 2C       NEG    <$2C
-D072: 00 C0       NEG    <$C0
-D074: 01 02       NEG    <$02
-D076: 00 03       NEG    <$03
-D078: 0A 06       DEC    <$06
-D07A: 01 0E       NEG    <$0E
-D07C: 00 B4       NEG    <$B4
-D07E: 01 02       NEG    <$02
-D080: 00 03       NEG    <$03
-D082: 0B 06       XDEC   <$06
-D084: 00 F0       NEG    <$F0
-D086: 00 A8       NEG    <$A8
-D088: 01 03       NEG    <$03
-D08A: 00 03       NEG    <$03
-D08C: 0B 06       XDEC   <$06
-D08E: 00 F0       NEG    <$F0
-D090: 00 9C       NEG    <$9C
-D092: 02 01       XNC    <$01
-D094: 00 03       NEG    <$03
-D096: 0C 06       INC    <$06
-D098: 00 F0       NEG    <$F0
-D09A: 00 90       NEG    <$90
-D09C: 02 01       XNC    <$01
-D09E: 00 03       NEG    <$03
-D0A0: 0C 07       INC    <$07
-D0A2: 00 F0       NEG    <$F0
-D0A4: 00 84       NEG    <$84
-D0A6: 02 01       XNC    <$01
-D0A8: 00 03       NEG    <$03
-D0AA: 0D 07       TST    <$07
-D0AC: 00 F0       NEG    <$F0
-D0AE: 00 78       NEG    <$78
-D0B0: 02 02       XNC    <$02
-D0B2: 00 03       NEG    <$03
-D0B4: 0E 07       JMP    <$07
-D0B6: 00 F0       NEG    <$F0
-D0B8: 00 5A       NEG    <$5A
-D0BA: 02 02       XNC    <$02
-D0BC: 00 03       NEG    <$03
-D0BE: 0E 08       JMP    <$08
-D0C0: 00 D2       NEG    <$D2
-D0C2: 00 5A       NEG    <$5A
-D0C4: 02 02       XNC    <$02
-D0C6: 00 03       NEG    <$03
-D0C8: 0F 08       CLR    <$08
-D0CA: 00 D2       NEG    <$D2
-D0CC: 00 3C       NEG    <$3C
-D0CE: 02 03       XNC    <$03
-D0D0: 00 03       NEG    <$03
-D0D2: 10 08 00    ASL    <$00
-D0D5: B4 00 3C    ANDA   >$003C
-D0D8: 02 03       XNC    <$03
-D0DA: 00 03       NEG    <$03
-D0DC: 10 09 00    ROL    <$00
-D0DF: 96 00       LDA    <$00
-D0E1: 3C 03       CWAI   #$03
-D0E3: 02 00       XNC    <$00
-D0E5: 03 11       COM    <$11
-D0E7: 09 00       ROL    <$00
-D0E9: 96 00       LDA    <$00
-D0EB: 3C 03       CWAI   #$03
-D0ED: 02 00       XNC    <$00
-D0EF: 03 12       COM    <$12
-D0F1: 09 00       ROL    <$00
-D0F3: 78 00 3C    ASL    >$003C
-D0F6: 03 03       COM    <$03
-D0F8: 00 03       NEG    <$03
-D0FA: 12          NOP
-D0FB: 0A 00       DEC    <$00
-D0FD: 6C 00       INC    $0,X
-D0FF: 3C 03       CWAI   #$03
-D101: 03 00       COM    <$00
-D103: 03 13       COM    <$13
-D105: 0A 00       DEC    <$00
-D107: 60 00       NEG    $0,X
-D109: 3C 03       CWAI   #$03
-D10B: 03 00       COM    <$00
-D10D: 04 14       LSR    <$14
-D10F: 0A 00       DEC    <$00
-D111: 54          LSRB
-D112: 00 3C       NEG    <$3C
-D114: 03 03       COM    <$03
-D116: 00 04       NEG    <$04
-D118: 14          XHCF
-D119: 0B 00       XDEC   <$00
-D11B: 48          ASLA
-D11C: 00 3C       NEG    <$3C
-D11E: 04 03       LSR    <$03
-D120: 00 03       NEG    <$03
-D122: 14          XHCF
-D123: 05 00       LSR    <$00
-D125: 48          ASLA
-D126: 00 3C       NEG    <$3C
-D128: 04 03       LSR    <$03
-D12A: 00 03       NEG    <$03
-D12C: 14          XHCF
-D12D: 06 00       ROR    <$00
-D12F: 48          ASLA
-D130: 00 30       NEG    <$30
-D132: 04 03       LSR    <$03
-D134: 00 03       NEG    <$03
-D136: 15          XHCF
-D137: 06 00       ROR    <$00
-D139: 3C 00       CWAI   #$00
-D13B: 30 04       LEAX   $4,X
-D13D: 03 00       COM    <$00
-D13F: 03 16       COM    <$16
-D141: 06 00       ROR    <$00
-D143: 3C 00       CWAI   #$00
-D145: 24 04       BCC    $D14B
-D147: 03 00       COM    <$00
-D149: 04 16       LSR    <$16
-D14B: 07 00       ASR    <$00
-D14D: 3C 00       CWAI   #$00
-D14F: 18          X18
-D150: 04 03       LSR    <$03
-D152: 00 04       NEG    <$04
-D154: 17 07 00    LBSR   $D857
-D157: 3C 00       CWAI   #$00
-D159: F0 05 03    SUBB   $0503
-D15C: 00 04       NEG    <$04
-D15E: 17 08 00    LBSR   $D961
-D161: 30 00       LEAX   $0,X
-D163: 18          X18
-D164: 05 03       LSR    <$03
-D166: 00 04       NEG    <$04
-D168: 18          X18
-D169: 08 00       ASL    <$00
-D16B: 30 00       LEAX   $0,X
-D16D: 0C 05       INC    <$05
-D16F: 03 00       COM    <$00
-D171: 04 18       LSR    <$18
-D173: 09 00       ROL    <$00
-D175: 24 00       BCC    $D177
-D177: 00 05       NEG    <$05
-D179: 03 00       COM    <$00
-D17B: 04 19       LSR    <$19
-D17D: 09 00       ROL    <$00
-D17F: 1E 00       EXG    D,D
-D181: 00 05       NEG    <$05
-D183: 03 00       COM    <$00
-D185: 04 19       LSR    <$19
-D187: 0A 00       DEC    <$00
-D189: 1E 00       EXG    D,D
-D18B: 00 05       NEG    <$05
-D18D: 03 00       COM    <$00
-D18F: 04 1A       LSR    <$1A
-D191: 0A 00       DEC    <$00
-D193: 1E 00       EXG    D,D
-D195: B4 06 03    ANDA   $0603
-D198: 00 04       NEG    <$04
-D19A: 1A 0B       ORCC   #$0B
-D19C: 00 1E       NEG    <$1E
-D19E: 00 00       NEG    <$00
-D1A0: 06 03       ROR    <$03
-D1A2: 00 04       NEG    <$04
-D1A4: 1B          NOP
-D1A5: 0B 00       XDEC   <$00
-D1A7: 12          NOP
-D1A8: 00 00       NEG    <$00
-D1AA: 06 03       ROR    <$03
-D1AC: 00 04       NEG    <$04
-D1AE: 1B          NOP
-D1AF: 0C 00       INC    <$00
-D1B1: 0C 00       INC    <$00
-D1B3: 00 06       NEG    <$06
-D1B5: 03 00       COM    <$00
-D1B7: 04 1C       LSR    <$1C
-D1B9: 0C 00       INC    <$00
-D1BB: 06 00       ROR    <$00
-D1BD: 00 06       NEG    <$06
-D1BF: 03 00       COM    <$00
-D1C1: 04 1C       LSR    <$1C
-D1C3: 0D 00       TST    <$00
-D1C5: 03 00       COM    <$00
-D1C7: 00 06       NEG    <$06
-D1C9: 03 00       COM    <$00
-D1CB: 04 1D       LSR    <$1D
-D1CD: 0D 00       TST    <$00
-D1CF: 03 00       COM    <$00
-D1D1: 78 07 03    ASL    $0703
-D1D4: 00 04       NEG    <$04
-D1D6: 1D          SEX
-D1D7: 0E 00       JMP    <$00
-D1D9: 06 00       ROR    <$00
-D1DB: 06 07       ROR    <$07
-D1DD: 03 00       COM    <$00
-D1DF: 04 1E       LSR    <$1E
-D1E1: 10 00 00    NEG    <$00
-D1E4: 00 00       NEG    <$00
-D1E6: 07 03       ASR    <$03
-D1E8: 00 04       NEG    <$04
-D1EA: 20 13       BRA    $D1FF
-D1EC: 00 00       NEG    <$00
-D1EE: 00 00       NEG    <$00
-D1F0: 07 03       ASR    <$03
-D1F2: 00 04       NEG    <$04
-D1F4: 21 16       BRN    $D20C
-D1F6: 00 00       NEG    <$00
-D1F8: 00 00       NEG    <$00
-D1FA: 07 03       ASR    <$03
-D1FC: 00 04       NEG    <$04
-D1FE: 22 19       BHI    $D219
-D200: 00 00       NEG    <$00
-D202: 00 00       NEG    <$00
-D204: 07 03       ASR    <$03
-D206: 00 04       NEG    <$04
-D208: 23 1C       BLS    $D226
-D20A: 00 00       NEG    <$00
-D20C: 00 00       NEG    <$00
-D20E: 07 03       ASR    <$03
-D210: 00 04       NEG    <$04
-D212: 23 1F       BLS    $D233
-D214: 00 00       NEG    <$00
-D216: 00 00       NEG    <$00
-D218: 07 03       ASR    <$03
-D21A: 00 04       NEG    <$04
-D21C: FF 23 00    STU    $2300
-D21F: 00 00       NEG    <$00
-D221: 00 04       NEG    <$04
-D223: 03 00       COM    <$00
-D225: 04 1E       LSR    <$1E
-D227: 0D 00       TST    <$00
-D229: 3C 00       CWAI   #$00
-D22B: 1E 05       EXG    D,PC
-D22D: 03 00       COM    <$00
-D22F: 04 1E       LSR    <$1E
-D231: 0D 00       TST    <$00
-D233: 3C 00       CWAI   #$00
-D235: 3C 06       CWAI   #$06
-D237: 03 00       COM    <$00
-D239: 04 1E       LSR    <$1E
-D23B: 0D 00       TST    <$00
-D23D: 3C 00       CWAI   #$00
-D23F: 1E 07       EXG    D,inv
-D241: 03 00       COM    <$00
-D243: 04 1E       LSR    <$1E
-D245: 0D 00       TST    <$00
-D247: 3C 00       CWAI   #$00
-D249: 1E 02       EXG    D,Y
-D24B: 01 00       NEG    <$00
-D24D: 04 FF       LSR    <$FF
-D24F: 23 00       BLS    $D251
-D251: 00 02       NEG    <$02
-D253: 58          ASLB
-D254: 07 00       ASR    <$00
-D256: 00 00       NEG    <$00
-D258: 00 00       NEG    <$00
-D25A: 00 00       NEG    <$00
-D25C: 00 00       NEG    <$00
-D25E: 00 00       NEG    <$00
-D260: 00 00       NEG    <$00
-D262: 00 00       NEG    <$00
-D264: 00 00       NEG    <$00
-D266: 00 00       NEG    <$00
-D268: 00 00       NEG    <$00
-D26A: 01 00       NEG    <$00
-D26C: 00 00       NEG    <$00
-D26E: 02 58       XNC    <$58
-D270: 02 58       XNC    <$58
-D272: 00 F0       NEG    <$F0
-D274: 00 E0       NEG    <$E0
-D276: 00 F0       NEG    <$F0
-D278: 01 00       NEG    <$00
-D27A: 00 80       NEG    <$80
-D27C: 00 80       NEG    <$80
-D27E: 00 F0       NEG    <$F0
-D280: 00 F0       NEG    <$F0
-D282: 01 00       NEG    <$00
-D284: 01 10       NEG    <$10
-D286: 00 90       NEG    <$90
-D288: 00 90       NEG    <$90
-D28A: 01 00       NEG    <$00
-D28C: 01 00       NEG    <$00
-D28E: 01 10       NEG    <$10
-D290: 01 20       NEG    <$20
-D292: 00 A0       NEG    <$A0
-D294: 00 A0       NEG    <$A0
-D296: 01 10       NEG    <$10
-D298: 01 00       NEG    <$00
-D29A: 01 20       NEG    <$20
-D29C: 01 40       NEG    <$40
-D29E: 00 B0       NEG    <$B0
-D2A0: 00 B0       NEG    <$B0
-D2A2: 01 10       NEG    <$10
-D2A4: 01 10       NEG    <$10
-D2A6: 01 20       NEG    <$20
-D2A8: 01 40       NEG    <$40
-D2AA: 00 B0       NEG    <$B0
-D2AC: 00 C0       NEG    <$C0
-D2AE: 01 20       NEG    <$20
-D2B0: 01 20       NEG    <$20
-D2B2: 01 30       NEG    <$30
-D2B4: 01 40       NEG    <$40
-D2B6: 00 C0       NEG    <$C0
-D2B8: 00 D0       NEG    <$D0
-D2BA: 01 30       NEG    <$30
-D2BC: 01 30       NEG    <$30
-D2BE: 01 40       NEG    <$40
-D2C0: 01 50       NEG    <$50
-D2C2: 00 C0       NEG    <$C0
-D2C4: 00 E0       NEG    <$E0
-D2C6: 01 20       NEG    <$20
-D2C8: 01 30       NEG    <$30
-D2CA: 01 40       NEG    <$40
-D2CC: 01 50       NEG    <$50
-D2CE: 00 D0       NEG    <$D0
-D2D0: 00 E0       NEG    <$E0
-D2D2: FF FF FF    STU    $FFFF
-D2D5: FF FF FF    STU    $FFFF
-D2D8: FF FF FF    STU    $FFFF
-D2DB: FF FF FF    STU    $FFFF
-D2DE: FF FF FF    STU    $FFFF
-D2E1: FF FF FF    STU    $FFFF
-D2E4: FF FF FF    STU    $FFFF
-D2E7: FF FF FF    STU    $FFFF
-D2EA: FF FF FF    STU    $FFFF
-D2ED: FF FF FF    STU    $FFFF
-D2F0: FF FF FF    STU    $FFFF
-D2F3: FF FF FF    STU    $FFFF
-D2F6: FF FF FF    STU    $FFFF
-D2F9: FF FF FF    STU    $FFFF
-D2FC: FF FF FF    STU    $FFFF
-D2FF: FF FF FF    STU    $FFFF
-D302: FF FF FF    STU    $FFFF
-D305: FF FF FF    STU    $FFFF
-D308: FF FF FF    STU    $FFFF
-D30B: FF FF FF    STU    $FFFF
-D30E: FF FF FF    STU    $FFFF
-D311: FF FF FF    STU    $FFFF
-D314: FF FF FF    STU    $FFFF
-D317: FF FF FF    STU    $FFFF
-D31A: FF FF FF    STU    $FFFF
-D31D: FF FF FF    STU    $FFFF
-D320: FF FF FF    STU    $FFFF
-D323: FF FF FF    STU    $FFFF
-D326: FF FF FF    STU    $FFFF
-D329: FF FF FF    STU    $FFFF
-D32C: FF FF FF    STU    $FFFF
-D32F: FF FF FF    STU    $FFFF
-D332: FF FF FF    STU    $FFFF
-D335: FF FF FF    STU    $FFFF
-D338: FF FF FF    STU    $FFFF
-D33B: FF FF FF    STU    $FFFF
-D33E: FF FF FF    STU    $FFFF
-D341: FF FF FF    STU    $FFFF
-D344: FF FF FF    STU    $FFFF
-D347: FF FF FF    STU    $FFFF
-D34A: FF FF FF    STU    $FFFF
-D34D: FF FF FF    STU    $FFFF
-D350: FF FF FF    STU    $FFFF
-D353: FF FF FF    STU    $FFFF
-D356: FF FF FF    STU    $FFFF
-D359: FF FF FF    STU    $FFFF
-D35C: FF FF FF    STU    $FFFF
-D35F: FF FF FF    STU    $FFFF
-D362: FF FF FF    STU    $FFFF
-D365: FF FF FF    STU    $FFFF
-D368: FF FF FF    STU    $FFFF
-D36B: FF FF FF    STU    $FFFF
-D36E: FF FF FF    STU    $FFFF
-D371: FF FF FF    STU    $FFFF
-D374: FF FF FF    STU    $FFFF
-D377: FF FF FF    STU    $FFFF
-D37A: FF FF FF    STU    $FFFF
-D37D: FF FF FF    STU    $FFFF
-D380: FF FF FF    STU    $FFFF
-D383: FF FF FF    STU    $FFFF
-D386: FF FF FF    STU    $FFFF
-D389: FF FF FF    STU    $FFFF
-D38C: FF FF FF    STU    $FFFF
-D38F: FF FF FF    STU    $FFFF
-D392: FF FF FF    STU    $FFFF
-D395: FF FF FF    STU    $FFFF
-D398: FF FF FF    STU    $FFFF
-D39B: FF FF FF    STU    $FFFF
-D39E: FF FF FF    STU    $FFFF
-D3A1: FF FF FF    STU    $FFFF
-D3A4: FF FF FF    STU    $FFFF
-D3A7: FF FF FF    STU    $FFFF
-D3AA: FF FF FF    STU    $FFFF
-D3AD: FF FF FF    STU    $FFFF
-D3B0: FF FF FF    STU    $FFFF
-D3B3: FF FF FF    STU    $FFFF
-D3B6: FF FF FF    STU    $FFFF
-D3B9: FF FF FF    STU    $FFFF
-D3BC: FF FF FF    STU    $FFFF
-D3BF: FF FF FF    STU    $FFFF
-D3C2: FF FF FF    STU    $FFFF
-D3C5: FF FF FF    STU    $FFFF
-D3C8: FF FF FF    STU    $FFFF
-D3CB: FF FF FF    STU    $FFFF
-D3CE: FF FF FF    STU    $FFFF
-D3D1: FF FF FF    STU    $FFFF
-D3D4: FF FF FF    STU    $FFFF
-D3D7: FF FF FF    STU    $FFFF
-D3DA: FF FF FF    STU    $FFFF
-D3DD: FF FF FF    STU    $FFFF
-D3E0: FF FF FF    STU    $FFFF
-D3E3: FF FF FF    STU    $FFFF
-D3E6: FF FF FF    STU    $FFFF
-D3E9: FF FF FF    STU    $FFFF
-D3EC: FF FF FF    STU    $FFFF
-D3EF: FF FF FF    STU    $FFFF
-D3F2: FF FF FF    STU    $FFFF
-D3F5: FF FF FF    STU    $FFFF
-D3F8: FF FF FF    STU    $FFFF
-D3FB: FF FF FF    STU    $FFFF
-D3FE: FF FF FF    STU    $FFFF
-D401: FF FF FF    STU    $FFFF
-D404: FF FF FF    STU    $FFFF
-D407: FF FF FF    STU    $FFFF
-D40A: FF FF FF    STU    $FFFF
-D40D: FF FF FF    STU    $FFFF
-D410: FF FF FF    STU    $FFFF
-D413: FF FF FF    STU    $FFFF
-D416: FF FF FF    STU    $FFFF
-D419: FF FF FF    STU    $FFFF
-D41C: FF FF FF    STU    $FFFF
-D41F: FF FF FF    STU    $FFFF
-D422: FF FF FF    STU    $FFFF
-D425: FF FF FF    STU    $FFFF
-D428: FF FF FF    STU    $FFFF
-D42B: FF FF FF    STU    $FFFF
-D42E: FF FF FF    STU    $FFFF
-D431: FF FF FF    STU    $FFFF
-D434: FF FF FF    STU    $FFFF
-D437: FF FF FF    STU    $FFFF
-D43A: FF FF FF    STU    $FFFF
-D43D: FF FF FF    STU    $FFFF
-D440: FF FF FF    STU    $FFFF
-D443: FF FF FF    STU    $FFFF
-D446: FF FF FF    STU    $FFFF
-D449: FF FF FF    STU    $FFFF
-D44C: FF FF FF    STU    $FFFF
-D44F: FF FF FF    STU    $FFFF
-D452: FF FF FF    STU    $FFFF
-D455: FF FF FF    STU    $FFFF
-D458: FF FF FF    STU    $FFFF
-D45B: FF FF FF    STU    $FFFF
-D45E: FF FF FF    STU    $FFFF
-D461: FF FF FF    STU    $FFFF
-D464: FF FF FF    STU    $FFFF
-D467: FF FF FF    STU    $FFFF
-D46A: FF FF FF    STU    $FFFF
-D46D: FF FF FF    STU    $FFFF
-D470: FF FF FF    STU    $FFFF
-D473: FF FF FF    STU    $FFFF
-D476: FF FF FF    STU    $FFFF
-D479: FF FF FF    STU    $FFFF
-D47C: FF FF FF    STU    $FFFF
-D47F: FF FF FF    STU    $FFFF
-D482: FF FF FF    STU    $FFFF
-D485: FF FF FF    STU    $FFFF
-D488: FF FF FF    STU    $FFFF
-D48B: FF FF FF    STU    $FFFF
-D48E: FF FF FF    STU    $FFFF
-D491: FF FF FF    STU    $FFFF
-D494: FF FF FF    STU    $FFFF
-D497: FF FF FF    STU    $FFFF
-D49A: FF FF FF    STU    $FFFF
-D49D: FF FF FF    STU    $FFFF
-D4A0: FF FF FF    STU    $FFFF
-D4A3: FF FF FF    STU    $FFFF
-D4A6: FF FF FF    STU    $FFFF
-D4A9: FF FF FF    STU    $FFFF
-D4AC: FF FF FF    STU    $FFFF
-D4AF: FF FF FF    STU    $FFFF
-D4B2: FF FF FF    STU    $FFFF
-D4B5: FF FF FF    STU    $FFFF
-D4B8: FF FF FF    STU    $FFFF
-D4BB: FF FF FF    STU    $FFFF
-D4BE: FF FF FF    STU    $FFFF
-D4C1: FF FF FF    STU    $FFFF
-D4C4: FF FF FF    STU    $FFFF
-D4C7: FF FF FF    STU    $FFFF
-D4CA: FF FF FF    STU    $FFFF
-D4CD: FF FF FF    STU    $FFFF
-D4D0: FF FF FF    STU    $FFFF
-D4D3: FF FF FF    STU    $FFFF
-D4D6: FF FF FF    STU    $FFFF
-D4D9: FF FF FF    STU    $FFFF
-D4DC: FF FF FF    STU    $FFFF
-D4DF: FF FF FF    STU    $FFFF
-D4E2: FF FF FF    STU    $FFFF
-D4E5: FF FF FF    STU    $FFFF
-D4E8: FF FF FF    STU    $FFFF
-D4EB: FF FF FF    STU    $FFFF
-D4EE: FF FF FF    STU    $FFFF
-D4F1: FF FF FF    STU    $FFFF
-D4F4: FF FF FF    STU    $FFFF
-D4F7: FF FF FF    STU    $FFFF
-D4FA: FF FF FF    STU    $FFFF
-D4FD: FF FF FF    STU    $FFFF
-D500: FF FF FF    STU    $FFFF
-D503: FF FF FF    STU    $FFFF
-D506: FF FF FF    STU    $FFFF
-D509: FF FF FF    STU    $FFFF
-D50C: FF FF FF    STU    $FFFF
-D50F: FF FF FF    STU    $FFFF
-D512: FF FF FF    STU    $FFFF
-D515: FF FF FF    STU    $FFFF
-D518: FF FF FF    STU    $FFFF
-D51B: FF FF FF    STU    $FFFF
-D51E: FF FF FF    STU    $FFFF
-D521: FF FF FF    STU    $FFFF
-D524: FF FF FF    STU    $FFFF
-D527: FF FF FF    STU    $FFFF
-D52A: FF FF FF    STU    $FFFF
-D52D: FF FF FF    STU    $FFFF
-D530: FF FF FF    STU    $FFFF
-D533: FF FF FF    STU    $FFFF
-D536: FF FF FF    STU    $FFFF
-D539: FF FF FF    STU    $FFFF
-D53C: FF FF FF    STU    $FFFF
-D53F: FF FF FF    STU    $FFFF
-D542: FF FF FF    STU    $FFFF
-D545: FF FF FF    STU    $FFFF
-D548: FF FF FF    STU    $FFFF
-D54B: FF FF FF    STU    $FFFF
-D54E: FF FF FF    STU    $FFFF
-D551: FF FF FF    STU    $FFFF
-D554: FF FF FF    STU    $FFFF
-D557: FF FF FF    STU    $FFFF
-D55A: FF FF FF    STU    $FFFF
-D55D: FF FF FF    STU    $FFFF
-D560: FF FF FF    STU    $FFFF
-D563: FF FF FF    STU    $FFFF
-D566: FF FF FF    STU    $FFFF
-D569: FF FF FF    STU    $FFFF
-D56C: FF FF FF    STU    $FFFF
-D56F: FF FF FF    STU    $FFFF
-D572: FF FF FF    STU    $FFFF
-D575: FF FF FF    STU    $FFFF
-D578: FF FF FF    STU    $FFFF
-D57B: FF FF FF    STU    $FFFF
-D57E: FF FF FF    STU    $FFFF
-D581: FF FF FF    STU    $FFFF
-D584: FF FF FF    STU    $FFFF
-D587: FF FF FF    STU    $FFFF
-D58A: FF FF FF    STU    $FFFF
-D58D: FF FF FF    STU    $FFFF
-D590: FF FF FF    STU    $FFFF
-D593: FF FF FF    STU    $FFFF
-D596: FF FF FF    STU    $FFFF
-D599: FF FF FF    STU    $FFFF
-D59C: FF FF FF    STU    $FFFF
-D59F: FF FF FF    STU    $FFFF
-D5A2: FF FF FF    STU    $FFFF
-D5A5: FF FF FF    STU    $FFFF
-D5A8: FF FF FF    STU    $FFFF
-D5AB: FF FF FF    STU    $FFFF
-D5AE: FF FF FF    STU    $FFFF
-D5B1: FF FF FF    STU    $FFFF
-D5B4: FF FF FF    STU    $FFFF
-D5B7: FF FF FF    STU    $FFFF
-D5BA: FF FF FF    STU    $FFFF
-D5BD: FF FF FF    STU    $FFFF
-D5C0: FF FF FF    STU    $FFFF
-D5C3: FF FF FF    STU    $FFFF
-D5C6: FF FF FF    STU    $FFFF
-D5C9: FF FF FF    STU    $FFFF
-D5CC: FF FF FF    STU    $FFFF
-D5CF: FF FF FF    STU    $FFFF
-D5D2: FF FF FF    STU    $FFFF
-D5D5: FF FF FF    STU    $FFFF
-D5D8: FF FF FF    STU    $FFFF
-D5DB: FF FF FF    STU    $FFFF
-D5DE: FF FF FF    STU    $FFFF
-D5E1: FF FF FF    STU    $FFFF
-D5E4: FF FF FF    STU    $FFFF
-D5E7: FF FF FF    STU    $FFFF
-D5EA: FF FF FF    STU    $FFFF
-D5ED: FF FF FF    STU    $FFFF
-D5F0: FF FF FF    STU    $FFFF
-D5F3: FF FF FF    STU    $FFFF
-D5F6: FF FF FF    STU    $FFFF
-D5F9: FF FF FF    STU    $FFFF
-D5FC: FF FF FF    STU    $FFFF
-D5FF: FF FF FF    STU    $FFFF
-D602: FF FF FF    STU    $FFFF
-D605: FF FF FF    STU    $FFFF
-D608: FF FF FF    STU    $FFFF
-D60B: FF FF FF    STU    $FFFF
-D60E: FF FF FF    STU    $FFFF
-D611: FF FF FF    STU    $FFFF
-D614: FF FF FF    STU    $FFFF
-D617: FF FF FF    STU    $FFFF
-D61A: FF FF FF    STU    $FFFF
-D61D: FF FF FF    STU    $FFFF
-D620: FF FF FF    STU    $FFFF
-D623: FF FF FF    STU    $FFFF
-D626: FF FF FF    STU    $FFFF
-D629: FF FF FF    STU    $FFFF
-D62C: FF FF FF    STU    $FFFF
-D62F: FF FF FF    STU    $FFFF
-D632: FF FF FF    STU    $FFFF
-D635: FF FF FF    STU    $FFFF
-D638: FF FF FF    STU    $FFFF
-D63B: FF FF FF    STU    $FFFF
-D63E: FF FF FF    STU    $FFFF
-D641: FF FF FF    STU    $FFFF
-D644: FF FF FF    STU    $FFFF
-D647: FF FF FF    STU    $FFFF
-D64A: FF FF FF    STU    $FFFF
-D64D: FF FF FF    STU    $FFFF
-D650: FF FF FF    STU    $FFFF
-D653: FF FF FF    STU    $FFFF
-D656: FF FF FF    STU    $FFFF
-D659: FF FF FF    STU    $FFFF
-D65C: FF FF FF    STU    $FFFF
-D65F: FF FF FF    STU    $FFFF
-D662: FF FF FF    STU    $FFFF
-D665: FF FF FF    STU    $FFFF
-D668: FF FF FF    STU    $FFFF
-D66B: FF FF FF    STU    $FFFF
-D66E: FF FF FF    STU    $FFFF
-D671: FF FF FF    STU    $FFFF
-D674: FF FF FF    STU    $FFFF
-D677: FF FF FF    STU    $FFFF
-D67A: FF FF FF    STU    $FFFF
-D67D: FF FF FF    STU    $FFFF
-D680: FF FF FF    STU    $FFFF
-D683: FF FF FF    STU    $FFFF
-D686: FF FF FF    STU    $FFFF
-D689: FF FF FF    STU    $FFFF
-D68C: FF FF FF    STU    $FFFF
-D68F: FF FF FF    STU    $FFFF
-D692: FF FF FF    STU    $FFFF
-D695: FF FF FF    STU    $FFFF
-D698: FF FF FF    STU    $FFFF
-D69B: FF FF FF    STU    $FFFF
-D69E: FF FF FF    STU    $FFFF
-D6A1: FF FF FF    STU    $FFFF
-D6A4: FF FF FF    STU    $FFFF
-D6A7: FF FF FF    STU    $FFFF
-D6AA: FF FF FF    STU    $FFFF
-D6AD: FF FF FF    STU    $FFFF
-D6B0: FF FF FF    STU    $FFFF
-D6B3: FF FF FF    STU    $FFFF
-D6B6: FF FF FF    STU    $FFFF
-D6B9: FF FF FF    STU    $FFFF
-D6BC: FF FF FF    STU    $FFFF
-D6BF: FF FF FF    STU    $FFFF
-D6C2: FF FF FF    STU    $FFFF
-D6C5: FF FF FF    STU    $FFFF
-D6C8: FF FF FF    STU    $FFFF
-D6CB: FF FF FF    STU    $FFFF
-D6CE: FF FF FF    STU    $FFFF
-D6D1: FF FF FF    STU    $FFFF
-D6D4: FF FF FF    STU    $FFFF
-D6D7: FF FF FF    STU    $FFFF
-D6DA: FF FF FF    STU    $FFFF
-D6DD: FF FF FF    STU    $FFFF
-D6E0: FF FF FF    STU    $FFFF
-D6E3: FF FF FF    STU    $FFFF
-D6E6: FF FF FF    STU    $FFFF
-D6E9: FF FF FF    STU    $FFFF
-D6EC: FF FF FF    STU    $FFFF
-D6EF: FF FF FF    STU    $FFFF
-D6F2: FF FF FF    STU    $FFFF
-D6F5: FF FF FF    STU    $FFFF
-D6F8: FF FF FF    STU    $FFFF
-D6FB: FF FF FF    STU    $FFFF
-D6FE: FF FF FF    STU    $FFFF
-D701: FF FF FF    STU    $FFFF
-D704: FF FF FF    STU    $FFFF
-D707: FF FF FF    STU    $FFFF
-D70A: FF FF FF    STU    $FFFF
-D70D: FF FF FF    STU    $FFFF
-D710: FF FF FF    STU    $FFFF
-D713: FF FF FF    STU    $FFFF
-D716: FF FF FF    STU    $FFFF
-D719: FF FF FF    STU    $FFFF
-D71C: FF FF FF    STU    $FFFF
-D71F: FF FF FF    STU    $FFFF
-D722: FF FF FF    STU    $FFFF
-D725: FF FF FF    STU    $FFFF
-D728: FF FF FF    STU    $FFFF
-D72B: FF FF FF    STU    $FFFF
-D72E: FF FF FF    STU    $FFFF
-D731: FF FF FF    STU    $FFFF
-D734: FF FF FF    STU    $FFFF
-D737: FF FF FF    STU    $FFFF
-D73A: FF FF FF    STU    $FFFF
-D73D: FF FF FF    STU    $FFFF
-D740: FF FF FF    STU    $FFFF
-D743: FF FF FF    STU    $FFFF
-D746: FF FF FF    STU    $FFFF
-D749: FF FF FF    STU    $FFFF
-D74C: FF FF FF    STU    $FFFF
-D74F: FF FF FF    STU    $FFFF
-D752: FF FF FF    STU    $FFFF
-D755: FF FF FF    STU    $FFFF
-D758: FF FF FF    STU    $FFFF
-D75B: FF FF FF    STU    $FFFF
-D75E: FF FF FF    STU    $FFFF
-D761: FF FF FF    STU    $FFFF
-D764: FF FF FF    STU    $FFFF
-D767: FF FF FF    STU    $FFFF
-D76A: FF FF FF    STU    $FFFF
-D76D: FF FF FF    STU    $FFFF
-D770: FF FF FF    STU    $FFFF
-D773: FF FF FF    STU    $FFFF
-D776: FF FF FF    STU    $FFFF
-D779: FF FF FF    STU    $FFFF
-D77C: FF FF FF    STU    $FFFF
-D77F: FF FF FF    STU    $FFFF
-D782: FF FF FF    STU    $FFFF
-D785: FF FF FF    STU    $FFFF
-D788: FF FF FF    STU    $FFFF
-D78B: FF FF FF    STU    $FFFF
-D78E: FF FF FF    STU    $FFFF
-D791: FF FF FF    STU    $FFFF
-D794: FF FF FF    STU    $FFFF
-D797: FF FF FF    STU    $FFFF
-D79A: FF FF FF    STU    $FFFF
-D79D: FF FF FF    STU    $FFFF
-D7A0: FF FF FF    STU    $FFFF
-D7A3: FF FF FF    STU    $FFFF
-D7A6: FF FF FF    STU    $FFFF
-D7A9: FF FF FF    STU    $FFFF
-D7AC: FF FF FF    STU    $FFFF
-D7AF: FF FF FF    STU    $FFFF
-D7B2: FF FF FF    STU    $FFFF
-D7B5: FF FF FF    STU    $FFFF
-D7B8: FF FF FF    STU    $FFFF
-D7BB: FF FF FF    STU    $FFFF
-D7BE: FF FF FF    STU    $FFFF
-D7C1: FF FF FF    STU    $FFFF
-D7C4: FF FF FF    STU    $FFFF
-D7C7: FF FF FF    STU    $FFFF
-D7CA: FF FF FF    STU    $FFFF
-D7CD: FF FF FF    STU    $FFFF
-D7D0: FF FF FF    STU    $FFFF
-D7D3: FF FF FF    STU    $FFFF
-D7D6: FF FF FF    STU    $FFFF
-D7D9: FF FF FF    STU    $FFFF
-D7DC: FF FF FF    STU    $FFFF
-D7DF: FF FF FF    STU    $FFFF
-D7E2: FF FF FF    STU    $FFFF
-D7E5: FF FF FF    STU    $FFFF
-D7E8: FF FF FF    STU    $FFFF
-D7EB: FF FF FF    STU    $FFFF
-D7EE: FF FF FF    STU    $FFFF
-D7F1: FF FF FF    STU    $FFFF
-D7F4: FF FF FF    STU    $FFFF
-D7F7: FF FF FF    STU    $FFFF
-D7FA: FF FF FF    STU    $FFFF
-D7FD: FF FF FF    STU    $FFFF
-D800: FF FF FF    STU    $FFFF
-D803: FF FF FF    STU    $FFFF
-D806: FF FF FF    STU    $FFFF
-D809: FF FF FF    STU    $FFFF
-D80C: FF FF FF    STU    $FFFF
-D80F: FF FF FF    STU    $FFFF
-D812: FF FF FF    STU    $FFFF
-D815: FF FF FF    STU    $FFFF
-D818: FF FF FF    STU    $FFFF
-D81B: FF FF FF    STU    $FFFF
-D81E: FF FF FF    STU    $FFFF
-D821: FF FF FF    STU    $FFFF
-D824: FF FF FF    STU    $FFFF
-D827: FF FF FF    STU    $FFFF
-D82A: FF FF FF    STU    $FFFF
-D82D: FF FF FF    STU    $FFFF
-D830: FF FF FF    STU    $FFFF
-D833: FF FF FF    STU    $FFFF
-D836: FF FF FF    STU    $FFFF
-D839: FF FF FF    STU    $FFFF
-D83C: FF FF FF    STU    $FFFF
-D83F: FF FF FF    STU    $FFFF
-D842: FF FF FF    STU    $FFFF
-D845: FF FF FF    STU    $FFFF
-D848: FF FF FF    STU    $FFFF
-D84B: FF FF FF    STU    $FFFF
-D84E: FF FF FF    STU    $FFFF
-D851: FF FF FF    STU    $FFFF
-D854: FF FF FF    STU    $FFFF
-D857: FF FF FF    STU    $FFFF
-D85A: FF FF FF    STU    $FFFF
-D85D: FF FF FF    STU    $FFFF
-D860: FF FF FF    STU    $FFFF
-D863: FF FF FF    STU    $FFFF
-D866: FF FF FF    STU    $FFFF
-D869: FF FF FF    STU    $FFFF
-D86C: FF FF FF    STU    $FFFF
-D86F: FF FF FF    STU    $FFFF
-D872: FF FF FF    STU    $FFFF
-D875: FF FF FF    STU    $FFFF
-D878: FF FF FF    STU    $FFFF
-D87B: FF FF FF    STU    $FFFF
-D87E: FF FF FF    STU    $FFFF
-D881: FF FF FF    STU    $FFFF
-D884: FF FF FF    STU    $FFFF
-D887: FF FF FF    STU    $FFFF
-D88A: FF FF FF    STU    $FFFF
-D88D: FF FF FF    STU    $FFFF
-D890: FF FF FF    STU    $FFFF
-D893: FF FF FF    STU    $FFFF
-D896: FF FF FF    STU    $FFFF
-D899: FF FF FF    STU    $FFFF
-D89C: FF FF FF    STU    $FFFF
-D89F: FF FF FF    STU    $FFFF
-D8A2: FF FF FF    STU    $FFFF
-D8A5: FF FF FF    STU    $FFFF
-D8A8: FF FF FF    STU    $FFFF
-D8AB: FF FF FF    STU    $FFFF
-D8AE: FF FF FF    STU    $FFFF
-D8B1: FF FF FF    STU    $FFFF
-D8B4: FF FF FF    STU    $FFFF
-D8B7: FF FF FF    STU    $FFFF
-D8BA: FF FF FF    STU    $FFFF
-D8BD: FF FF FF    STU    $FFFF
-D8C0: FF FF FF    STU    $FFFF
-D8C3: FF FF FF    STU    $FFFF
-D8C6: FF FF FF    STU    $FFFF
-D8C9: FF FF FF    STU    $FFFF
-D8CC: FF FF FF    STU    $FFFF
-D8CF: FF FF FF    STU    $FFFF
-D8D2: FF FF FF    STU    $FFFF
-D8D5: FF FF FF    STU    $FFFF
-D8D8: FF FF FF    STU    $FFFF
-D8DB: FF FF FF    STU    $FFFF
-D8DE: FF FF FF    STU    $FFFF
-D8E1: FF FF FF    STU    $FFFF
-D8E4: FF FF FF    STU    $FFFF
-D8E7: FF FF FF    STU    $FFFF
-D8EA: FF FF FF    STU    $FFFF
-D8ED: FF FF FF    STU    $FFFF
-D8F0: FF FF FF    STU    $FFFF
-D8F3: FF FF FF    STU    $FFFF
-D8F6: FF FF FF    STU    $FFFF
-D8F9: FF FF FF    STU    $FFFF
-D8FC: FF FF FF    STU    $FFFF
-D8FF: FF FF FF    STU    $FFFF
-D902: FF FF FF    STU    $FFFF
-D905: FF FF FF    STU    $FFFF
-D908: FF FF FF    STU    $FFFF
-D90B: FF FF FF    STU    $FFFF
-D90E: FF FF FF    STU    $FFFF
-D911: FF FF FF    STU    $FFFF
-D914: FF FF FF    STU    $FFFF
-D917: FF FF FF    STU    $FFFF
-D91A: FF FF FF    STU    $FFFF
-D91D: FF FF FF    STU    $FFFF
-D920: FF FF FF    STU    $FFFF
-D923: FF FF FF    STU    $FFFF
-D926: FF FF FF    STU    $FFFF
-D929: FF FF FF    STU    $FFFF
-D92C: FF FF FF    STU    $FFFF
-D92F: FF FF FF    STU    $FFFF
-D932: FF FF FF    STU    $FFFF
-D935: FF FF FF    STU    $FFFF
-D938: FF FF FF    STU    $FFFF
-D93B: FF FF FF    STU    $FFFF
-D93E: FF FF FF    STU    $FFFF
-D941: FF FF FF    STU    $FFFF
-D944: FF FF FF    STU    $FFFF
-D947: FF FF FF    STU    $FFFF
-D94A: FF FF FF    STU    $FFFF
-D94D: FF FF FF    STU    $FFFF
-D950: FF FF FF    STU    $FFFF
-D953: FF FF FF    STU    $FFFF
-D956: FF FF FF    STU    $FFFF
-D959: FF FF FF    STU    $FFFF
-D95C: FF FF FF    STU    $FFFF
-D95F: FF FF FF    STU    $FFFF
-D962: FF FF FF    STU    $FFFF
-D965: FF FF FF    STU    $FFFF
-D968: FF FF FF    STU    $FFFF
-D96B: FF FF FF    STU    $FFFF
-D96E: FF FF FF    STU    $FFFF
-D971: FF FF FF    STU    $FFFF
-D974: FF FF FF    STU    $FFFF
-D977: FF FF FF    STU    $FFFF
-D97A: FF FF FF    STU    $FFFF
-D97D: FF FF FF    STU    $FFFF
-D980: FF FF FF    STU    $FFFF
-D983: FF FF FF    STU    $FFFF
-D986: FF FF FF    STU    $FFFF
-D989: FF FF FF    STU    $FFFF
-D98C: FF FF FF    STU    $FFFF
-D98F: FF FF FF    STU    $FFFF
-D992: FF FF FF    STU    $FFFF
-D995: FF FF FF    STU    $FFFF
-D998: FF FF FF    STU    $FFFF
-D99B: FF FF FF    STU    $FFFF
-D99E: FF FF FF    STU    $FFFF
-D9A1: FF FF FF    STU    $FFFF
-D9A4: FF FF FF    STU    $FFFF
-D9A7: FF FF FF    STU    $FFFF
-D9AA: FF FF FF    STU    $FFFF
-D9AD: FF FF FF    STU    $FFFF
-D9B0: FF FF FF    STU    $FFFF
-D9B3: FF FF FF    STU    $FFFF
-D9B6: FF FF FF    STU    $FFFF
-D9B9: FF FF FF    STU    $FFFF
-D9BC: FF FF FF    STU    $FFFF
-D9BF: FF FF FF    STU    $FFFF
-D9C2: FF FF FF    STU    $FFFF
-D9C5: FF FF FF    STU    $FFFF
-D9C8: FF FF FF    STU    $FFFF
-D9CB: FF FF FF    STU    $FFFF
-D9CE: FF FF FF    STU    $FFFF
-D9D1: FF FF FF    STU    $FFFF
-D9D4: FF FF FF    STU    $FFFF
-D9D7: FF FF FF    STU    $FFFF
-D9DA: FF FF FF    STU    $FFFF
-D9DD: FF FF FF    STU    $FFFF
-D9E0: FF FF FF    STU    $FFFF
-D9E3: FF FF FF    STU    $FFFF
-D9E6: FF FF FF    STU    $FFFF
-D9E9: FF FF FF    STU    $FFFF
-D9EC: FF FF FF    STU    $FFFF
-D9EF: FF FF FF    STU    $FFFF
-D9F2: FF FF FF    STU    $FFFF
-D9F5: FF FF FF    STU    $FFFF
-D9F8: FF FF FF    STU    $FFFF
-D9FB: FF FF FF    STU    $FFFF
-D9FE: FF FF FF    STU    $FFFF
-DA01: FF FF FF    STU    $FFFF
-DA04: FF FF FF    STU    $FFFF
-DA07: FF FF FF    STU    $FFFF
-DA0A: FF FF FF    STU    $FFFF
-DA0D: FF FF FF    STU    $FFFF
-DA10: FF FF FF    STU    $FFFF
-DA13: FF FF FF    STU    $FFFF
-DA16: FF FF FF    STU    $FFFF
-DA19: FF FF FF    STU    $FFFF
-DA1C: FF FF FF    STU    $FFFF
-DA1F: FF FF FF    STU    $FFFF
-DA22: FF FF FF    STU    $FFFF
-DA25: FF FF FF    STU    $FFFF
-DA28: FF FF FF    STU    $FFFF
-DA2B: FF FF FF    STU    $FFFF
-DA2E: FF FF FF    STU    $FFFF
-DA31: FF FF FF    STU    $FFFF
-DA34: FF FF FF    STU    $FFFF
-DA37: FF FF FF    STU    $FFFF
-DA3A: FF FF FF    STU    $FFFF
-DA3D: FF FF FF    STU    $FFFF
-DA40: FF FF FF    STU    $FFFF
-DA43: FF FF FF    STU    $FFFF
-DA46: FF FF FF    STU    $FFFF
-DA49: FF FF FF    STU    $FFFF
-DA4C: FF FF FF    STU    $FFFF
-DA4F: FF FF FF    STU    $FFFF
-DA52: FF FF FF    STU    $FFFF
-DA55: FF FF FF    STU    $FFFF
-DA58: FF FF FF    STU    $FFFF
-DA5B: FF FF FF    STU    $FFFF
-DA5E: FF FF FF    STU    $FFFF
-DA61: FF FF FF    STU    $FFFF
-DA64: FF FF FF    STU    $FFFF
-DA67: FF FF FF    STU    $FFFF
-DA6A: FF FF FF    STU    $FFFF
-DA6D: FF FF FF    STU    $FFFF
-DA70: FF FF FF    STU    $FFFF
-DA73: FF FF FF    STU    $FFFF
-DA76: FF FF FF    STU    $FFFF
-DA79: FF FF FF    STU    $FFFF
-DA7C: FF FF FF    STU    $FFFF
-DA7F: FF FF FF    STU    $FFFF
-DA82: FF FF FF    STU    $FFFF
-DA85: FF FF FF    STU    $FFFF
-DA88: FF FF FF    STU    $FFFF
-DA8B: FF FF FF    STU    $FFFF
-DA8E: FF FF FF    STU    $FFFF
-DA91: FF FF FF    STU    $FFFF
-DA94: FF FF FF    STU    $FFFF
-DA97: FF FF FF    STU    $FFFF
-DA9A: FF FF FF    STU    $FFFF
-DA9D: FF FF FF    STU    $FFFF
-DAA0: FF FF FF    STU    $FFFF
-DAA3: FF FF FF    STU    $FFFF
-DAA6: FF FF FF    STU    $FFFF
-DAA9: FF FF FF    STU    $FFFF
-DAAC: FF FF FF    STU    $FFFF
-DAAF: FF FF FF    STU    $FFFF
-DAB2: FF FF FF    STU    $FFFF
-DAB5: FF FF FF    STU    $FFFF
-DAB8: FF FF FF    STU    $FFFF
-DABB: FF FF FF    STU    $FFFF
-DABE: FF FF FF    STU    $FFFF
-DAC1: FF FF FF    STU    $FFFF
-DAC4: FF FF FF    STU    $FFFF
-DAC7: FF FF FF    STU    $FFFF
-DACA: FF FF FF    STU    $FFFF
-DACD: FF FF FF    STU    $FFFF
-DAD0: FF FF FF    STU    $FFFF
-DAD3: FF FF FF    STU    $FFFF
-DAD6: FF FF FF    STU    $FFFF
-DAD9: FF FF FF    STU    $FFFF
-DADC: FF FF FF    STU    $FFFF
-DADF: FF FF FF    STU    $FFFF
-DAE2: FF FF FF    STU    $FFFF
-DAE5: FF FF FF    STU    $FFFF
-DAE8: FF FF FF    STU    $FFFF
-DAEB: FF FF FF    STU    $FFFF
-DAEE: FF FF FF    STU    $FFFF
-DAF1: FF FF FF    STU    $FFFF
-DAF4: FF FF FF    STU    $FFFF
-DAF7: FF FF FF    STU    $FFFF
-DAFA: FF FF FF    STU    $FFFF
-DAFD: FF FF FF    STU    $FFFF
-DB00: FF FF FF    STU    $FFFF
-DB03: FF FF FF    STU    $FFFF
-DB06: FF FF FF    STU    $FFFF
-DB09: FF FF FF    STU    $FFFF
-DB0C: FF FF FF    STU    $FFFF
-DB0F: FF FF FF    STU    $FFFF
-DB12: FF FF FF    STU    $FFFF
-DB15: FF FF FF    STU    $FFFF
-DB18: FF FF FF    STU    $FFFF
-DB1B: FF FF FF    STU    $FFFF
-DB1E: FF FF FF    STU    $FFFF
-DB21: FF FF FF    STU    $FFFF
-DB24: FF FF FF    STU    $FFFF
-DB27: FF FF FF    STU    $FFFF
-DB2A: FF FF FF    STU    $FFFF
-DB2D: FF FF FF    STU    $FFFF
-DB30: FF FF FF    STU    $FFFF
-DB33: FF FF FF    STU    $FFFF
-DB36: FF FF FF    STU    $FFFF
-DB39: FF FF FF    STU    $FFFF
-DB3C: FF FF FF    STU    $FFFF
-DB3F: FF FF FF    STU    $FFFF
-DB42: FF FF FF    STU    $FFFF
-DB45: FF FF FF    STU    $FFFF
-DB48: FF FF FF    STU    $FFFF
-DB4B: FF FF FF    STU    $FFFF
-DB4E: FF FF FF    STU    $FFFF
-DB51: FF FF FF    STU    $FFFF
-DB54: FF FF FF    STU    $FFFF
-DB57: FF FF FF    STU    $FFFF
-DB5A: FF FF FF    STU    $FFFF
-DB5D: FF FF FF    STU    $FFFF
-DB60: FF FF FF    STU    $FFFF
-DB63: FF FF FF    STU    $FFFF
-DB66: FF FF FF    STU    $FFFF
-DB69: FF FF FF    STU    $FFFF
-DB6C: FF FF FF    STU    $FFFF
-DB6F: FF FF FF    STU    $FFFF
-DB72: FF FF FF    STU    $FFFF
-DB75: FF FF FF    STU    $FFFF
-DB78: FF FF FF    STU    $FFFF
-DB7B: FF FF FF    STU    $FFFF
-DB7E: FF FF FF    STU    $FFFF
-DB81: FF FF FF    STU    $FFFF
-DB84: FF FF FF    STU    $FFFF
-DB87: FF FF FF    STU    $FFFF
-DB8A: FF FF FF    STU    $FFFF
-DB8D: FF FF FF    STU    $FFFF
-DB90: FF FF FF    STU    $FFFF
-DB93: FF FF FF    STU    $FFFF
-DB96: FF FF FF    STU    $FFFF
-DB99: FF FF FF    STU    $FFFF
-DB9C: FF FF FF    STU    $FFFF
-DB9F: FF FF FF    STU    $FFFF
-DBA2: FF FF FF    STU    $FFFF
-DBA5: FF FF FF    STU    $FFFF
-DBA8: FF FF FF    STU    $FFFF
-DBAB: FF FF FF    STU    $FFFF
-DBAE: FF FF FF    STU    $FFFF
-DBB1: FF FF FF    STU    $FFFF
-DBB4: FF FF FF    STU    $FFFF
-DBB7: FF FF FF    STU    $FFFF
-DBBA: FF FF FF    STU    $FFFF
-DBBD: FF FF FF    STU    $FFFF
-DBC0: FF FF FF    STU    $FFFF
-DBC3: FF FF FF    STU    $FFFF
-DBC6: FF FF FF    STU    $FFFF
-DBC9: FF FF FF    STU    $FFFF
-DBCC: FF FF FF    STU    $FFFF
-DBCF: FF FF FF    STU    $FFFF
-DBD2: FF FF FF    STU    $FFFF
-DBD5: FF FF FF    STU    $FFFF
-DBD8: FF FF FF    STU    $FFFF
-DBDB: FF FF FF    STU    $FFFF
-DBDE: FF FF FF    STU    $FFFF
-DBE1: FF FF FF    STU    $FFFF
-DBE4: FF FF FF    STU    $FFFF
-DBE7: FF FF FF    STU    $FFFF
-DBEA: FF FF FF    STU    $FFFF
-DBED: FF FF FF    STU    $FFFF
-DBF0: FF FF FF    STU    $FFFF
-DBF3: FF FF FF    STU    $FFFF
-DBF6: FF FF FF    STU    $FFFF
-DBF9: FF FF FF    STU    $FFFF
-DBFC: FF FF FF    STU    $FFFF
-DBFF: FF FF FF    STU    $FFFF
-DC02: FF FF FF    STU    $FFFF
-DC05: FF FF FF    STU    $FFFF
-DC08: FF FF FF    STU    $FFFF
-DC0B: FF FF FF    STU    $FFFF
-DC0E: FF FF FF    STU    $FFFF
-DC11: FF FF FF    STU    $FFFF
-DC14: FF FF FF    STU    $FFFF
-DC17: FF FF FF    STU    $FFFF
-DC1A: FF FF FF    STU    $FFFF
-DC1D: FF FF FF    STU    $FFFF
-DC20: FF FF FF    STU    $FFFF
-DC23: FF FF FF    STU    $FFFF
-DC26: FF FF FF    STU    $FFFF
-DC29: FF FF FF    STU    $FFFF
-DC2C: FF FF FF    STU    $FFFF
-DC2F: FF FF FF    STU    $FFFF
-DC32: FF FF FF    STU    $FFFF
-DC35: FF FF FF    STU    $FFFF
-DC38: FF FF FF    STU    $FFFF
-DC3B: FF FF FF    STU    $FFFF
-DC3E: FF FF FF    STU    $FFFF
-DC41: FF FF FF    STU    $FFFF
-DC44: FF FF FF    STU    $FFFF
-DC47: FF FF FF    STU    $FFFF
-DC4A: FF FF FF    STU    $FFFF
-DC4D: FF FF FF    STU    $FFFF
-DC50: FF FF FF    STU    $FFFF
-DC53: FF FF FF    STU    $FFFF
-DC56: FF FF FF    STU    $FFFF
-DC59: FF FF FF    STU    $FFFF
-DC5C: FF FF FF    STU    $FFFF
-DC5F: FF FF FF    STU    $FFFF
-DC62: FF FF FF    STU    $FFFF
-DC65: FF FF FF    STU    $FFFF
-DC68: FF FF FF    STU    $FFFF
-DC6B: FF FF FF    STU    $FFFF
-DC6E: FF FF FF    STU    $FFFF
-DC71: FF FF FF    STU    $FFFF
-DC74: FF FF FF    STU    $FFFF
-DC77: FF FF FF    STU    $FFFF
-DC7A: FF FF FF    STU    $FFFF
-DC7D: FF FF FF    STU    $FFFF
-DC80: FF FF FF    STU    $FFFF
-DC83: FF FF FF    STU    $FFFF
-DC86: FF FF FF    STU    $FFFF
-DC89: FF FF FF    STU    $FFFF
-DC8C: FF FF FF    STU    $FFFF
-DC8F: FF FF FF    STU    $FFFF
-DC92: FF FF FF    STU    $FFFF
-DC95: FF FF FF    STU    $FFFF
-DC98: FF FF FF    STU    $FFFF
-DC9B: FF FF FF    STU    $FFFF
-DC9E: FF FF FF    STU    $FFFF
-DCA1: FF FF FF    STU    $FFFF
-DCA4: FF FF FF    STU    $FFFF
-DCA7: FF FF FF    STU    $FFFF
-DCAA: FF FF FF    STU    $FFFF
-DCAD: FF FF FF    STU    $FFFF
-DCB0: FF FF FF    STU    $FFFF
-DCB3: FF FF FF    STU    $FFFF
-DCB6: FF FF FF    STU    $FFFF
-DCB9: FF FF FF    STU    $FFFF
-DCBC: FF FF FF    STU    $FFFF
-DCBF: FF FF FF    STU    $FFFF
-DCC2: FF FF FF    STU    $FFFF
-DCC5: FF FF FF    STU    $FFFF
-DCC8: FF FF FF    STU    $FFFF
-DCCB: FF FF FF    STU    $FFFF
-DCCE: FF FF FF    STU    $FFFF
-DCD1: FF FF FF    STU    $FFFF
-DCD4: FF FF FF    STU    $FFFF
-DCD7: FF FF FF    STU    $FFFF
-DCDA: FF FF FF    STU    $FFFF
-DCDD: FF FF FF    STU    $FFFF
-DCE0: FF FF FF    STU    $FFFF
-DCE3: FF FF FF    STU    $FFFF
-DCE6: FF FF FF    STU    $FFFF
-DCE9: FF FF FF    STU    $FFFF
-DCEC: FF FF FF    STU    $FFFF
-DCEF: FF FF FF    STU    $FFFF
-DCF2: FF FF FF    STU    $FFFF
-DCF5: FF FF FF    STU    $FFFF
-DCF8: FF FF FF    STU    $FFFF
-DCFB: FF FF FF    STU    $FFFF
-DCFE: FF FF FF    STU    $FFFF
-DD01: FF FF FF    STU    $FFFF
-DD04: FF FF FF    STU    $FFFF
-DD07: FF FF FF    STU    $FFFF
-DD0A: FF FF FF    STU    $FFFF
-DD0D: FF FF FF    STU    $FFFF
-DD10: FF FF FF    STU    $FFFF
-DD13: FF FF FF    STU    $FFFF
-DD16: FF FF FF    STU    $FFFF
-DD19: FF FF FF    STU    $FFFF
-DD1C: FF FF FF    STU    $FFFF
-DD1F: FF FF FF    STU    $FFFF
-DD22: FF FF FF    STU    $FFFF
-DD25: FF FF FF    STU    $FFFF
-DD28: FF FF FF    STU    $FFFF
-DD2B: FF FF FF    STU    $FFFF
-DD2E: FF FF FF    STU    $FFFF
-DD31: FF FF FF    STU    $FFFF
-DD34: FF FF FF    STU    $FFFF
-DD37: FF FF FF    STU    $FFFF
-DD3A: FF FF FF    STU    $FFFF
-DD3D: FF FF FF    STU    $FFFF
-DD40: FF FF FF    STU    $FFFF
-DD43: FF FF FF    STU    $FFFF
-DD46: FF FF FF    STU    $FFFF
-DD49: FF FF FF    STU    $FFFF
-DD4C: FF FF FF    STU    $FFFF
-DD4F: FF FF FF    STU    $FFFF
-DD52: FF FF FF    STU    $FFFF
-DD55: FF FF FF    STU    $FFFF
-DD58: FF FF FF    STU    $FFFF
-DD5B: FF FF FF    STU    $FFFF
-DD5E: FF FF FF    STU    $FFFF
-DD61: FF FF FF    STU    $FFFF
-DD64: FF FF FF    STU    $FFFF
-DD67: FF FF FF    STU    $FFFF
-DD6A: FF FF FF    STU    $FFFF
-DD6D: FF FF FF    STU    $FFFF
-DD70: FF FF FF    STU    $FFFF
-DD73: FF FF FF    STU    $FFFF
-DD76: FF FF FF    STU    $FFFF
-DD79: FF FF FF    STU    $FFFF
-DD7C: FF FF FF    STU    $FFFF
-DD7F: FF FF FF    STU    $FFFF
-DD82: FF FF FF    STU    $FFFF
-DD85: FF FF FF    STU    $FFFF
-DD88: FF FF FF    STU    $FFFF
-DD8B: FF FF FF    STU    $FFFF
-DD8E: FF FF FF    STU    $FFFF
-DD91: FF FF FF    STU    $FFFF
-DD94: FF FF FF    STU    $FFFF
-DD97: FF FF FF    STU    $FFFF
-DD9A: FF FF FF    STU    $FFFF
-DD9D: FF FF FF    STU    $FFFF
-DDA0: FF FF FF    STU    $FFFF
-DDA3: FF FF FF    STU    $FFFF
-DDA6: FF FF FF    STU    $FFFF
-DDA9: FF FF FF    STU    $FFFF
-DDAC: FF FF FF    STU    $FFFF
-DDAF: FF FF FF    STU    $FFFF
-DDB2: FF FF FF    STU    $FFFF
-DDB5: FF FF FF    STU    $FFFF
-DDB8: FF FF FF    STU    $FFFF
-DDBB: FF FF FF    STU    $FFFF
-DDBE: FF FF FF    STU    $FFFF
-DDC1: FF FF FF    STU    $FFFF
-DDC4: FF FF FF    STU    $FFFF
-DDC7: FF FF FF    STU    $FFFF
-DDCA: FF FF FF    STU    $FFFF
-DDCD: FF FF FF    STU    $FFFF
-DDD0: FF FF FF    STU    $FFFF
-DDD3: FF FF FF    STU    $FFFF
-DDD6: FF FF FF    STU    $FFFF
-DDD9: FF FF FF    STU    $FFFF
-DDDC: FF FF FF    STU    $FFFF
-DDDF: FF FF FF    STU    $FFFF
-DDE2: FF FF FF    STU    $FFFF
-DDE5: FF FF FF    STU    $FFFF
-DDE8: FF FF FF    STU    $FFFF
-DDEB: FF FF FF    STU    $FFFF
-DDEE: FF FF FF    STU    $FFFF
-DDF1: FF FF FF    STU    $FFFF
-DDF4: FF FF FF    STU    $FFFF
-DDF7: FF FF FF    STU    $FFFF
-DDFA: FF FF FF    STU    $FFFF
-DDFD: FF FF FF    STU    $FFFF
-DE00: FF FF FF    STU    $FFFF
-DE03: FF FF FF    STU    $FFFF
-DE06: FF FF FF    STU    $FFFF
-DE09: FF FF FF    STU    $FFFF
-DE0C: FF FF FF    STU    $FFFF
-DE0F: FF FF FF    STU    $FFFF
-DE12: FF FF FF    STU    $FFFF
-DE15: FF FF FF    STU    $FFFF
-DE18: FF FF FF    STU    $FFFF
-DE1B: FF FF FF    STU    $FFFF
-DE1E: FF FF FF    STU    $FFFF
-DE21: FF FF FF    STU    $FFFF
-DE24: FF FF FF    STU    $FFFF
-DE27: FF FF FF    STU    $FFFF
-DE2A: FF FF FF    STU    $FFFF
-DE2D: FF FF FF    STU    $FFFF
-DE30: FF FF FF    STU    $FFFF
-DE33: FF FF FF    STU    $FFFF
-DE36: FF FF FF    STU    $FFFF
-DE39: FF FF FF    STU    $FFFF
-DE3C: FF FF FF    STU    $FFFF
-DE3F: FF FF FF    STU    $FFFF
-DE42: FF FF FF    STU    $FFFF
-DE45: FF FF FF    STU    $FFFF
-DE48: FF FF FF    STU    $FFFF
-DE4B: FF FF FF    STU    $FFFF
-DE4E: FF FF FF    STU    $FFFF
-DE51: FF FF FF    STU    $FFFF
-DE54: FF FF FF    STU    $FFFF
-DE57: FF FF FF    STU    $FFFF
-DE5A: FF FF FF    STU    $FFFF
-DE5D: FF FF FF    STU    $FFFF
-DE60: FF FF FF    STU    $FFFF
-DE63: FF FF FF    STU    $FFFF
-DE66: FF FF FF    STU    $FFFF
-DE69: FF FF FF    STU    $FFFF
-DE6C: FF FF FF    STU    $FFFF
-DE6F: FF FF FF    STU    $FFFF
-DE72: FF FF FF    STU    $FFFF
-DE75: FF FF FF    STU    $FFFF
-DE78: FF FF FF    STU    $FFFF
-DE7B: FF FF FF    STU    $FFFF
-DE7E: FF FF FF    STU    $FFFF
-DE81: FF FF FF    STU    $FFFF
-DE84: FF FF FF    STU    $FFFF
-DE87: FF FF FF    STU    $FFFF
-DE8A: FF FF FF    STU    $FFFF
-DE8D: FF FF FF    STU    $FFFF
-DE90: FF FF FF    STU    $FFFF
-DE93: FF FF FF    STU    $FFFF
-DE96: FF FF FF    STU    $FFFF
-DE99: FF FF FF    STU    $FFFF
-DE9C: FF FF FF    STU    $FFFF
-DE9F: FF FF FF    STU    $FFFF
-DEA2: FF FF FF    STU    $FFFF
-DEA5: FF FF FF    STU    $FFFF
-DEA8: FF FF FF    STU    $FFFF
-DEAB: FF FF FF    STU    $FFFF
-DEAE: FF FF FF    STU    $FFFF
-DEB1: FF FF FF    STU    $FFFF
-DEB4: FF FF FF    STU    $FFFF
-DEB7: FF FF FF    STU    $FFFF
-DEBA: FF FF FF    STU    $FFFF
-DEBD: FF FF FF    STU    $FFFF
-DEC0: FF FF FF    STU    $FFFF
-DEC3: FF FF FF    STU    $FFFF
-DEC6: FF FF FF    STU    $FFFF
-DEC9: FF FF FF    STU    $FFFF
-DECC: FF FF FF    STU    $FFFF
-DECF: FF FF FF    STU    $FFFF
-DED2: FF FF FF    STU    $FFFF
-DED5: FF FF FF    STU    $FFFF
-DED8: FF FF FF    STU    $FFFF
-DEDB: FF FF FF    STU    $FFFF
-DEDE: FF FF FF    STU    $FFFF
-DEE1: FF FF FF    STU    $FFFF
-DEE4: FF FF FF    STU    $FFFF
-DEE7: FF FF FF    STU    $FFFF
-DEEA: FF FF FF    STU    $FFFF
-DEED: FF FF FF    STU    $FFFF
-DEF0: FF FF FF    STU    $FFFF
-DEF3: FF FF FF    STU    $FFFF
-DEF6: FF FF FF    STU    $FFFF
-DEF9: FF FF FF    STU    $FFFF
-DEFC: FF FF FF    STU    $FFFF
-DEFF: FF FF FF    STU    $FFFF
-DF02: FF FF FF    STU    $FFFF
-DF05: FF FF FF    STU    $FFFF
-DF08: FF FF FF    STU    $FFFF
-DF0B: FF FF FF    STU    $FFFF
-DF0E: FF FF FF    STU    $FFFF
-DF11: FF FF FF    STU    $FFFF
-DF14: FF FF FF    STU    $FFFF
-DF17: FF FF FF    STU    $FFFF
-DF1A: FF FF FF    STU    $FFFF
-DF1D: FF FF FF    STU    $FFFF
-DF20: FF FF FF    STU    $FFFF
-DF23: FF FF FF    STU    $FFFF
-DF26: FF FF FF    STU    $FFFF
-DF29: FF FF FF    STU    $FFFF
-DF2C: FF FF FF    STU    $FFFF
-DF2F: FF FF FF    STU    $FFFF
-DF32: FF FF FF    STU    $FFFF
-DF35: FF FF FF    STU    $FFFF
-DF38: FF FF FF    STU    $FFFF
-DF3B: FF FF FF    STU    $FFFF
-DF3E: FF FF FF    STU    $FFFF
-DF41: FF FF FF    STU    $FFFF
-DF44: FF FF FF    STU    $FFFF
-DF47: FF FF FF    STU    $FFFF
-DF4A: FF FF FF    STU    $FFFF
-DF4D: FF FF FF    STU    $FFFF
-DF50: FF FF FF    STU    $FFFF
-DF53: FF FF FF    STU    $FFFF
-DF56: FF FF FF    STU    $FFFF
-DF59: FF FF FF    STU    $FFFF
-DF5C: FF FF FF    STU    $FFFF
-DF5F: FF FF FF    STU    $FFFF
-DF62: FF FF FF    STU    $FFFF
-DF65: FF FF FF    STU    $FFFF
-DF68: FF FF FF    STU    $FFFF
-DF6B: FF FF FF    STU    $FFFF
-DF6E: FF FF FF    STU    $FFFF
-DF71: FF FF FF    STU    $FFFF
-DF74: FF FF FF    STU    $FFFF
-DF77: FF FF FF    STU    $FFFF
-DF7A: FF FF FF    STU    $FFFF
-DF7D: FF FF FF    STU    $FFFF
-DF80: FF FF FF    STU    $FFFF
-DF83: FF FF FF    STU    $FFFF
-DF86: FF FF FF    STU    $FFFF
-DF89: FF FF FF    STU    $FFFF
-DF8C: FF FF FF    STU    $FFFF
-DF8F: FF FF FF    STU    $FFFF
-DF92: FF FF FF    STU    $FFFF
-DF95: FF FF FF    STU    $FFFF
-DF98: FF FF FF    STU    $FFFF
-DF9B: FF FF FF    STU    $FFFF
-DF9E: FF FF FF    STU    $FFFF
-DFA1: FF FF FF    STU    $FFFF
-DFA4: FF FF FF    STU    $FFFF
-DFA7: FF FF FF    STU    $FFFF
-DFAA: FF FF FF    STU    $FFFF
-DFAD: FF FF FF    STU    $FFFF
-DFB0: FF FF FF    STU    $FFFF
-DFB3: FF FF FF    STU    $FFFF
-DFB6: FF FF FF    STU    $FFFF
-DFB9: FF FF FF    STU    $FFFF
-DFBC: FF FF FF    STU    $FFFF
-DFBF: FF FF FF    STU    $FFFF
-DFC2: FF FF FF    STU    $FFFF
-DFC5: FF FF FF    STU    $FFFF
-DFC8: FF FF FF    STU    $FFFF
-DFCB: FF FF FF    STU    $FFFF
-DFCE: FF FF FF    STU    $FFFF
-DFD1: FF FF FF    STU    $FFFF
-DFD4: FF FF FF    STU    $FFFF
-DFD7: FF FF FF    STU    $FFFF
-DFDA: FF FF FF    STU    $FFFF
-DFDD: FF FF FF    STU    $FFFF
-DFE0: FF FF FF    STU    $FFFF
-DFE3: FF FF FF    STU    $FFFF
-DFE6: FF FF FF    STU    $FFFF
-DFE9: FF FF FF    STU    $FFFF
-DFEC: FF FF FF    STU    $FFFF
-DFEF: FF FF FF    STU    $FFFF
-DFF2: FF FF FF    STU    $FFFF
-DFF5: FF FF FF    STU    $FFFF
-DFF8: FF FF FF    STU    $FFFF
-DFFB: FF FF FF    STU    $FFFF
-DFFE: FF FF 1A    STU    $FF1A
+
 E001: 10 B7 50 00 STA    $5000
 E005: B7 50 02    STA    $5002
 E008: B7 50 08    STA    $5008
@@ -3503,73 +1769,7 @@ E173: 20 03       BRA    $E178
 E175: B7 01 62    STA    $0162
 E178: B7 80 00    STA    $8000
 E17B: 20 FB       BRA    $E178
-E17D: 02 E2       XNC    <$E2
-E17F: 52          XNCB
-E180: 41          NEGA
-E181: 4D          TSTA
-E182: 00 01       NEG    <$01
-E184: E2 52       SBCB   -$E,U
-E186: 4F          CLRA
-E187: 4D          TSTA
-E188: 00 02       NEG    <$02
-E18A: E4 49       ANDB   $9,U
-E18C: 3B          RTI
-E18D: 4F          CLRA
-E18E: 00 03       NEG    <$03
-E190: 68 31       ASL    -$F,Y
-E192: 53          COMB
-E193: 54          LSRB
-E194: 20 20       BRA    $E1B6
-E196: 20 43       BRA    $E1DB
-E198: 4F          CLRA
-E199: 49          ROLA
-E19A: 4E          XCLRA
-E19B: 20 20       BRA    $E1BD
-E19D: 20 20       BRA    $E1BF
-E19F: 43          COMA
-E1A0: 52          XNCB
-E1A1: 45          LSRA
-E1A2: 44          LSRA
-E1A3: 49          ROLA
-E1A4: 54          LSRB
-E1A5: 00 03       NEG    <$03
-E1A7: 6A 32       DEC    -$E,Y
-E1A9: 4E          XCLRA
-E1AA: 44          LSRA
-E1AB: 20 20       BRA    $E1CD
-E1AD: 20 43       BRA    $E1F2
-E1AF: 4F          CLRA
-E1B0: 49          ROLA
-E1B1: 4E          XCLRA
-E1B2: 20 20       BRA    $E1D4
-E1B4: 20 20       BRA    $E1D6
-E1B6: 43          COMA
-E1B7: 52          XNCB
-E1B8: 45          LSRA
-E1B9: 44          LSRA
-E1BA: 49          ROLA
-E1BB: 54          LSRB
-E1BC: 00 02       NEG    <$02
-E1BE: EC 50       LDD    -$10,U
-E1C0: 41          NEGA
-E1C1: 43          COMA
-E1C2: 4D          TSTA
-E1C3: 41          NEGA
-E1C4: 4E          XCLRA
-E1C5: 00 02       NEG    <$02
-E1C7: EE 52       LDU    -$E,U
-E1C9: 41          NEGA
-E1CA: 4E          XCLRA
-E1CB: 4B          XDECA
-E1CC: 00 02       NEG    <$02
-E1CE: F0 53 4F    SUBB   $534F
-E1D1: 55          LSRB
-E1D2: 4E          XCLRA
-E1D3: 44          LSRA
-E1D4: 20 30       BRA    $E206
-E1D6: 30 00       LEAX   $0,X
-E1D8: 00 00       NEG    <$00
-E1DA: 72 66 28    XNC    $6628
+
 E1DD: CC 00 00    LDD    #$0000
 E1E0: FD 40 40    STD    $4040
 E1E3: CE 48 00    LDU    #$4800
@@ -3672,6 +1872,7 @@ E2BD: EE 62       LDU    $2,S
 E2BF: ED 42       STD    $2,U
 E2C1: AF C4       STX    ,U
 E2C3: 39          RTS
+
 E2C4: 35 10       PULS   X
 E2C6: EE 62       LDU    $2,S
 E2C8: EC 42       LDD    $2,U
@@ -3716,23 +1917,25 @@ E326: 3B          RTI
 E327: A6 48       LDA    $8,U
 E329: 84 0F       ANDA   #$0F
 E32B: 48          ASLA
-E32C: 8E E3 31    LDX    #$E331
-E32F: 6E 96       JMP    [A,X]
-E331: E2 BA       SBCB   [F,Y]
-E333: E3 51       ADDD   -$F,U
-E335: E2 BA       SBCB   [F,Y]
-E337: E2 BA       SBCB   [F,Y]
-E339: E3 69       ADDD   $9,S
-E33B: E2 BA       SBCB   [F,Y]
-E33D: E2 BA       SBCB   [F,Y]
-E33F: E2 BA       SBCB   [F,Y]
-E341: E3 A4       ADDD   ,Y
-E343: E3 D8 E2    ADDD   [-$1E,U]
-E346: BA E2 BA    ORA    $E2BA
-E349: E2 BA       SBCB   [F,Y]
-E34B: E2 BA       SBCB   [F,Y]
-E34D: E2 BA       SBCB   [F,Y]
-E34F: E2 BA       SBCB   [F,Y]
+E32C: 8E E3 31    LDX    #jump_table_e331
+E32F: 6E 96       JMP    [A,X]	; [jump_table] [nb_entries=16]
+jump_table_e331:
+	dc.w	$E2BA
+	dc.w	$E351
+	dc.w	$E2BA
+	dc.w	$E2BA
+	dc.w	$E369
+	dc.w	$E2BA
+	dc.w	$E2BA
+	dc.w	$E2BA
+	dc.w	$E3A4
+	dc.w	$E3D8
+	dc.w	$E2BA 
+	dc.w	$E2BA
+	dc.w	$E2BA
+	dc.w	$E2BA
+	dc.w	$E2BA
+	dc.w	$E2BA
 E351: 8E 10 DE    LDX    #$10DE
 E354: A6 80       LDA    ,X+
 E356: A7 84       STA    ,X
@@ -3963,79 +2166,11 @@ E524: 97 CE       STA    <$CE
 E526: 86 01       LDA    #$01
 E528: 97 EA       STA    <$EA
 E52A: 39          RTS
-E52B: 01 01       NEG    <$01
-E52D: 01 02       NEG    <$02
-E52F: 01 03       NEG    <$03
-E531: 01 06       NEG    <$06
-E533: 01 07       NEG    <$07
-E535: 02 01       XNC    <$01
-E537: 02 03       XNC    <$03
-E539: 03 01       COM    <$01
-E53B: 01 01       NEG    <$01
-E53D: 01 02       NEG    <$02
-E53F: 02 01       XNC    <$01
-E541: 02 03       XNC    <$03
-E543: 00 30       NEG    <$30
-E545: 01 00       NEG    <$00
-E547: 00 30       NEG    <$30
-E549: 01 00       NEG    <$00
-E54B: 00 30       NEG    <$30
-E54D: 00 80       NEG    <$80
-E54F: 00 30       NEG    <$30
-E551: 01 20       NEG    <$20
-E553: 00 30       NEG    <$30
-E555: 01 20       NEG    <$20
-E557: 00 40       NEG    <$40
-E559: 01 20       NEG    <$20
-E55B: 00 30       NEG    <$30
-E55D: 00 80       NEG    <$80
-E55F: 00 30       NEG    <$30
-E561: 01 00       NEG    <$00
-E563: 00 30       NEG    <$30
-E565: 01 00       NEG    <$00
-E567: 00 40       NEG    <$40
-E569: 01 20       NEG    <$20
-E56B: 00 30       NEG    <$30
-E56D: 01 20       NEG    <$20
-E56F: 00 30       NEG    <$30
-E571: 00 00       NEG    <$00
-E573: 00 30       NEG    <$30
-E575: 00 00       NEG    <$00
-E577: 00 40       NEG    <$40
-E579: 00 00       NEG    <$00
-E57B: 00 00       NEG    <$00
-E57D: 00 00       NEG    <$00
-E57F: 00 00       NEG    <$00
-E581: 00 00       NEG    <$00
-E583: 02 02       XNC    <$02
-E585: 02 02       XNC    <$02
-E587: 02 02       XNC    <$02
-E589: FF FF FF    STU    $FFFF
-E58C: FF FF 01    STU    $FF01
-E58F: 01 01       NEG    <$01
-E591: 00 00       NEG    <$00
-E593: 03 01       COM    <$01
-E595: 02 05       XNC    <$05
-E597: CE 02 E6    LDU    #$02E6
-E59A: 96 83       LDA    <$83
-E59C: 27 0C       BEQ    $E5AA
+
 E59E: BD EE C7    JSR    never_returns_eec7
-E5A1: 54          LSRB
-E5A2: 41          NEGA
-E5A3: 42          XNCA
-E5A4: 4C          INCA
-E5A5: 45          LSRA
-E5A6: 20 20       BRA    $E5C8
-E5A8: 00 39       NEG    <$39
+
 E5AA: BD EE C7    JSR    never_returns_eec7
-E5AD: 55          LSRB
-E5AE: 50          NEGB
-E5AF: 52          XNCB
-E5B0: 49          ROLA
-E5B1: 47          ASRA
-E5B2: 48          ASLA
-E5B3: 54          LSRB
-E5B4: 00 39       NEG    <$39
+
 E5B6: 8B 30       ADDA   #$30
 E5B8: A7 C4       STA    ,U
 E5BA: 81 32       CMPA   #$32
@@ -4058,8 +2193,7 @@ E5E0: BD EE C7    JSR    never_returns_eec7
 E5E3: 20 4E       BRA    $E633
 E5E5: 4F          CLRA
 E5E6: 20 42       BRA    $E62A
-E5E8: 4F          CLRA
-E5E9: 4E          XCLRA
+
 E5EA: 55          LSRB
 E5EB: 53          COMB
 E5EC: 20 20       BRA    $E60E
@@ -4104,15 +2238,7 @@ E633: 96 CF       LDA    <$CF
 E635: 4C          INCA
 E636: 26 C9       BNE    $E601
 E638: BD EE C7    JSR    never_returns_eec7
-E63B: 41          NEGA
-E63C: 4E          XCLRA
-E63D: 44          LSRA
-E63E: 20 45       BRA    $E685
-E640: 56          RORB
-E641: 45          LSRA
-E642: 52          XNCB
-E643: 59          ROLB
-E644: 00 8E       NEG    <$8E
+
 E646: 10 D6 10    LDB    <$10
 E649: 8E 03 02    LDX    #$0302
 E64C: BD FE 1C    JSR    $FE1C
@@ -4239,23 +2365,7 @@ E743: 97 14       STA    <$14
 E745: BD EE 06    JSR    $EE06
 E748: CE 02 E8    LDU    #$02E8
 E74B: BD EE C7    JSR    never_returns_eec7
-E74E: 50          NEGB
-E74F: 55          LSRB
-E750: 53          COMB
-E751: 48          ASLA
-E752: 20 53       BRA    $E7A7
-E754: 54          LSRB
-E755: 41          NEGA
-E756: 52          XNCB
-E757: 54          LSRB
-E758: 20 42       BRA    $E79C
-E75A: 55          LSRB
-E75B: 54          LSRB
-E75C: 54          LSRB
-E75D: 4F          CLRA
-E75E: 4E          XCLRA
-E75F: 00 BD       NEG    <$BD
-E761: E9 31       ADCB   -$F,Y
+
 E763: BD C1 03    JSR    $C103
 E766: BD E2 B4    JSR    $E2B4
 E769: BD FB 90    JSR    $FB90
@@ -4267,15 +2377,7 @@ E775: 96 C0       LDA    <$C0
 E777: 4A          DECA
 E778: 26 13       BNE    $E78D
 E77A: BD EE C7    JSR    never_returns_eec7
-E77D: 31 20       LEAY   $0,Y
-E77F: 50          NEGB
-E780: 4C          INCA
-E781: 41          NEGA
-E782: 59          ROLB
-E783: 45          LSRA
-E784: 52          XNCB
-E785: 20 4F       BRA    $E7D6
-E787: 4E          XCLRA
+
 E788: 4C          INCA
 E789: 59          ROLB
 E78A: 20 00       BRA    $E78C
@@ -4283,16 +2385,7 @@ E78C: 39          RTS
 E78D: BD EE C7    JSR    never_returns_eec7
 E790: 31 20       LEAY   $0,Y
 E792: 4F          CLRA
-E793: 52          XNCB
-E794: 20 32       BRA    $E7C8
-E796: 20 50       BRA    $E7E8
-E798: 4C          INCA
-E799: 41          NEGA
-E79A: 59          ROLB
-E79B: 45          LSRA
-E79C: 52          XNCB
-E79D: 53          COMB
-E79E: 00 39       NEG    <$39
+
 E7A0: 86 99       LDA    #$99
 E7A2: 90 C0       SUBA   <$C0
 E7A4: 9B C1       ADDA   <$C1
@@ -4333,14 +2426,7 @@ E7F7: BD CD C5    JSR    $CDC5
 E7FA: BD EB 1D    JSR    $EB1D
 E7FD: CE 02 4F    LDU    #$024F
 E800: BD EE C7    JSR    never_returns_eec7
-E803: 52          XNCB
-E804: 45          LSRA
-E805: 41          NEGA
-E806: 44          LSRA
-E807: 59          ROLB
-E808: 20 5B       BRA    $E865
-E80A: 00 CC       NEG    <$CC
-E80C: 00 3C       NEG    <$3C
+
 E80E: BD E2 BB    JSR    $E2BB
 E811: BD E2 C4    JSR    $E2C4
 E814: BD EB 32    JSR    $EB32
@@ -4397,14 +2483,7 @@ E899: BD EA 33    JSR    $EA33
 E89C: BD EB 1D    JSR    $EB1D
 E89F: CE 02 4F    LDU    #$024F
 E8A2: BD EE C7    JSR    never_returns_eec7
-E8A5: 52          XNCB
-E8A6: 45          LSRA
-E8A7: 41          NEGA
-E8A8: 44          LSRA
-E8A9: 59          ROLB
-E8AA: 20 5B       BRA    $E907
-E8AC: 00 CC       NEG    <$CC
-E8AE: 00 3C       NEG    <$3C
+
 E8B0: BD E2 BB    JSR    $E2BB
 E8B3: BD E2 C4    JSR    $E2C4
 E8B6: BD EB 32    JSR    $EB32
@@ -4418,15 +2497,7 @@ E8C9: 26 2F       BNE    $E8FA
 E8CB: BD E2 9E    JSR    $E29E
 E8CE: CE 02 4B    LDU    #$024B
 E8D1: BD EE C7    JSR    never_returns_eec7
-E8D4: 42          XNCA
-E8D5: 4F          CLRA
-E8D6: 4E          XCLRA
-E8D7: 55          LSRB
-E8D8: 53          COMB
-E8D9: 5B          XDECB
-E8DA: 00 CC       NEG    <$CC
-E8DC: 01 06       NEG    <$06
-E8DE: DD 8C       STD    <$8C
+
 E8E0: CC 00 1E    LDD    #$001E
 E8E3: BD E2 BB    JSR    $E2BB
 E8E6: BD E2 C4    JSR    $E2C4
@@ -4469,19 +2540,7 @@ E933: 26 01       BNE    $E936
 E935: 39          RTS
 E936: CE 03 AF    LDU    #$03AF
 E939: BD EE C7    JSR    never_returns_eec7
-E93C: 31 53       LEAY   -$D,U
-E93E: 54          LSRB
-E93F: 20 42       BRA    $E983
-E941: 4F          CLRA
-E942: 4E          XCLRA
-E943: 55          LSRB
-E944: 53          COMB
-E945: 20 20       BRA    $E967
-E947: 20 20       BRA    $E969
-E949: 46          RORA
-E94A: 4F          CLRA
-E94B: 52          XNCB
-E94C: 00 8E       NEG    <$8E
+
 E94E: 10 D4 8D    ANDB   <$8D
 E951: 4F          CLRA
 E952: CE 16 30    LDU    #$1630
@@ -4493,22 +2552,7 @@ E95D: 26 01       BNE    $E960
 E95F: 39          RTS
 E960: CE 03 B2    LDU    #$03B2
 E963: BD EE C7    JSR    never_returns_eec7
-E966: 32 4E       LEAS   $E,U
-E968: 44          LSRA
-E969: 20 42       BRA    $E9AD
-E96B: 4F          CLRA
-E96C: 4E          XCLRA
-E96D: 55          LSRB
-E96E: 53          COMB
-E96F: 20 20       BRA    $E991
-E971: 20 20       BRA    $E993
-E973: 46          RORA
-E974: 4F          CLRA
-E975: 52          XNCB
-E976: 00 8D       NEG    <$8D
-E978: 25 CE       BCS    $E948
-E97A: 16 10 CC    LBRA   $FA49
-E97D: 98 94       EORA   <$94
+
 E97F: 8D 34       BSR    $E9B5
 E981: CE 03 76    LDU    #$0376
 E984: 96 CF       LDA    <$CF
@@ -4517,29 +2561,13 @@ E987: 27 01       BEQ    $E98A
 E989: 39          RTS
 E98A: CE 03 55    LDU    #$0355
 E98D: BD EE C7    JSR    never_returns_eec7
-E990: 41          NEGA
-E991: 4E          XCLRA
-E992: 44          LSRA
-E993: 20 46       BRA    $E9DB
-E995: 4F          CLRA
-E996: 52          XNCB
-E997: 20 45       BRA    $E9DE
-E999: 56          RORB
-E99A: 45          LSRA
-E99B: 52          XNCB
-E99C: 59          ROLB
-E99D: 00 8E       NEG    <$8E
+
 E99F: 10 D6 10    LDB    <$10
 E9A2: 8E 03 02    LDX    #$0302
 E9A5: BD FE 1C    JSR    $FE1C
 E9A8: BD EE C7    JSR    never_returns_eec7
-E9AB: 30 30       LEAX   -$10,Y
-E9AD: 30 20       LEAX   $0,Y
-E9AF: 50          NEGB
-E9B0: 54          LSRB
-E9B1: 53          COMB
-E9B2: 5B          XDECB
-E9B3: 00 39       NEG    <$39
+
+
 E9B5: ED 4C       STD    $C,U
 E9B7: 86 02       LDA    #$02
 E9B9: A7 49       STA    $9,U
@@ -4566,21 +2594,10 @@ E9E6: CE 02 32    LDU    #$0232
 E9E9: 10 8E 01 01 LDY    #$0101
 E9ED: BD FE 1C    JSR    $FE1C
 E9F0: BD EE C7    JSR    never_returns_eec7
-E9F3: 30 20       LEAX   $0,Y
-E9F5: 50          NEGB
-E9F6: 54          LSRB
-E9F7: 53          COMB
-E9F8: 00 96       NEG    <$96
-E9FA: 96 26       LDA    <$26
-E9FC: 1B          NOP
+
 E9FD: CE 02 6E    LDU    #$026E
 EA00: BD EE C7    JSR    never_returns_eec7
-EA03: 53          COMB
-EA04: 54          LSRB
-EA05: 41          NEGA
-EA06: 47          ASRA
-EA07: 45          LSRA
-EA08: 20 00       BRA    $EA0A
+
 EA0A: 8E 10 03    LDX    #$1003
 EA0D: 10 8E 01 01 LDY    #$0101
 EA11: BD FE 1C    JSR    $FE1C
@@ -4590,16 +2607,7 @@ EA18: 86 01       LDA    #$01
 EA1A: B7 40 52    STA    $4052
 EA1D: CE 02 8E    LDU    #$028E
 EA20: BD EE C7    JSR    never_returns_eec7
-EA23: 42          XNCA
-EA24: 4F          CLRA
-EA25: 4E          XCLRA
-EA26: 55          LSRB
-EA27: 53          COMB
-EA28: 20 53       BRA    $EA7D
-EA2A: 54          LSRB
-EA2B: 41          NEGA
-EA2C: 47          ASRA
-EA2D: 45          LSRA
+
 EA2E: 00 CC       NEG    <$CC
 EA30: 00 78       NEG    <$78
 EA32: 39          RTS
@@ -4690,24 +2698,11 @@ EB07: 86 01       LDA    #$01
 EB09: B7 40 43    STA    $4043
 EB0C: CE 02 8F    LDU    #$028F
 EB0F: BD EE C7    JSR    never_returns_eec7
-EB12: 47          ASRA
-EB13: 41          NEGA
-EB14: 4D          TSTA
-EB15: 45          LSRA
-EB16: 20 4F       BRA    $EB67
-EB18: 56          RORB
-EB19: 45          LSRA
-EB1A: 52          XNCB
+
 EB1B: 00 39       NEG    <$39
 EB1D: CE 02 6E    LDU    #$026E
 EB20: BD EE C7    JSR    never_returns_eec7
-EB23: 50          NEGB
-EB24: 4C          INCA
-EB25: 41          NEGA
-EB26: 59          ROLB
-EB27: 45          LSRA
-EB28: 52          XNCB
-EB29: 20 00       BRA    $EB2B
+
 EB2B: 96 84       LDA    <$84
 EB2D: 8B 31       ADDA   #$31
 EB2F: A7 C4       STA    ,U
@@ -4781,17 +2776,7 @@ EBAD: ED 06       STD    $6,X
 EBAF: BD EE 06    JSR    $EE06
 EBB2: CE 03 2A    LDU    #$032A
 EBB5: BD EE C7    JSR    never_returns_eec7
-EBB8: 45          LSRA
-EBB9: 4E          XCLRA
-EBBA: 54          LSRB
-EBBB: 45          LSRA
-EBBC: 52          XNCB
-EBBD: 20 59       BRA    $EC18
-EBBF: 4F          CLRA
-EBC0: 55          LSRB
-EBC1: 52          XNCB
-EBC2: 20 49       BRA    $EC0D
-EBC4: 4E          XCLRA
+
 EBC5: 49          ROLA
 EBC6: 54          LSRB
 EBC7: 49          ROLA
@@ -4802,22 +2787,7 @@ EBCB: 20 5B       BRA    $EC28
 EBCD: 00 CE       NEG    <$CE
 EBCF: 03 0D       COM    <$0D
 EBD1: BD EE C7    JSR    never_returns_eec7
-EBD4: 53          COMB
-EBD5: 43          COMA
-EBD6: 4F          CLRA
-EBD7: 52          XNCB
-EBD8: 45          LSRA
-EBD9: 20 20       BRA    $EBFB
-EBDB: 53          COMB
-EBDC: 54          LSRB
-EBDD: 41          NEGA
-EBDE: 47          ASRA
-EBDF: 45          LSRA
-EBE0: 20 20       BRA    $EC02
-EBE2: 4E          XCLRA
-EBE3: 41          NEGA
-EBE4: 4D          TSTA
-EBE5: 45          LSRA
+
 EBE6: 00 CE       NEG    <$CE
 EBE8: 03 4F       COM    <$4F
 EBEA: 8E 10 00    LDX    #$1000
@@ -4861,20 +2831,7 @@ EC4B: 39          RTS
 EC4C: 6E 9F 10 E4 JMP    [$10E4]
 EC50: CE 02 93    LDU    #$0293
 EC53: BD EE C7    JSR    never_returns_eec7
-EC56: 53          COMB
-EC57: 43          COMA
-EC58: 4F          CLRA
-EC59: 52          XNCB
-EC5A: 45          LSRA
-EC5B: 20 53       BRA    $ECB0
-EC5D: 54          LSRB
-EC5E: 41          NEGA
-EC5F: 47          ASRA
-EC60: 45          LSRA
-EC61: 20 4E       BRA    $ECB1
-EC63: 41          NEGA
-EC64: 4D          TSTA
-EC65: 45          LSRA
+
 EC66: 00 8E       NEG    <$8E
 EC68: EC B1       LDD    [,Y++]
 EC6A: CE 03 15    LDU    #$0315
@@ -4904,21 +2861,11 @@ ECA7: 33 C9 01 82 LEAU   $0182,U
 ECAB: 8C 11 60    CMPX   #$1160
 ECAE: 26 D4       BNE    $EC84
 ECB0: 39          RTS
-ECB1: 54          LSRB
-ECB2: 44          LSRA
-ECB3: 44          LSRA
-ECB4: 48          ASLA
-ECB5: 48          ASLA
-ECB6: 53          COMB
-ECB7: 4E          XCLRA
-ECB8: 52          XNCB
-ECB9: 54          LSRB
-ECBA: 54          LSRB
+
 ECBB: 31 32       LEAY   -$E,Y
 ECBD: 33 34       LEAU   -$C,Y
 ECBF: 35 96       PULS   D,X,PC
-ECC1: C2 85       SBCB   #$85
-ECC3: 02 26       XNC    <$26
+
 ECC5: 10 85 08    BITA   #$08
 ECC8: 26 2C       BNE    $ECF6
 ECCA: 85 10       BITA   #$10
@@ -5037,19 +2984,9 @@ EDAF: 86 42       LDA    #$42
 EDB1: 8E 00 10    LDX    #$0010
 EDB4: BD EE B1    JSR    $EEB1
 EDB7: CE 03 D4    LDU    #$03D4
-EDBA: BD EE C3    JSR    $EEC3
-EDBD: 48          ASLA
-EDBE: 49          ROLA
-EDBF: 47          ASRA
-EDC0: 48          ASLA
-EDC1: 20 53       BRA    $EE16
-EDC3: 43          COMA
-EDC4: 4F          CLRA
-EDC5: 52          XNCB
-EDC6: 45          LSRA
-EDC7: 00 CC       NEG    <$CC
-EDC9: FD CC FD    STD    $CCFD
-EDCC: 11 18       X18
+EDBA: BD EE C3    JSR    never_returns_eec3
+
+
 EDCE: CE 00 02    LDU    #$0002
 EDD1: 8E 10 08    LDX    #$1008
 EDD4: C6 FF       LDB    #$FF
@@ -5109,19 +3046,15 @@ EE43: CE 00 3C    LDU    #$003C
 EE46: 96 C0       LDA    <$C0
 EE48: 4C          INCA
 EE49: 26 0E       BNE    $EE59
-EE4B: BD EE C3    JSR    $EEC3
-EE4E: 46          RORA
-EE4F: 52          XNCB
-EE50: 45          LSRA
-EE51: 45          LSRA
-EE52: 20 50       BRA    $EEA4
+EE4B: BD EE C3    JSR    never_returns_eec3
+
 EE54: 4C          INCA
 EE55: 41          NEGA
 EE56: 59          ROLB
 EE57: 00 39       NEG    <$39
-EE59: BD EE C3    JSR    $EEC3
+EE59: BD EE C3    JSR    never_returns_eec3
 EE5C: 20 43       BRA    $EEA1
-EE5E: 52          XNCB
+
 EE5F: 45          LSRA
 EE60: 44          LSRA
 EE61: 49          ROLA
@@ -5177,6 +3110,7 @@ EEBC: ED C1       STD    ,U++
 EEBE: 31 3F       LEAY   -$1,Y
 EEC0: 26 F8       BNE    $EEBA
 EEC2: 39          RTS
+never_returns_eec3:
 EEC3: C6 FF       LDB    #$FF
 EEC5: 20 02       BRA    $EEC9
 never_returns_eec7:
@@ -5279,10 +3213,10 @@ F0B2: CE 11 60    LDU    #$1160
 F0B5: 10 8E 00 10 LDY    #$0010
 F0B9: BD EE BA    JSR    $EEBA
 F0BC: BD E2 B4    JSR    $E2B4
-F0BF: CE 08 10    LDU    #$0810
+F0BF: CE 08 10    LDU    #$0810		; first object record
 F0C2: AD D8 04    JSR    [$04,U]		; [indirect_jump]
-F0C5: 33 C8 20    LEAU   $20,U
-F0C8: 11 83 0F 10 CMPU   #$0F10
+F0C5: 33 C8 20    LEAU   $20,U	; advance to next record
+F0C8: 11 83 0F 10 CMPU   #$0F10  ; end of object table?
 F0CC: 26 F4       BNE    $F0C2
 F0CE: CE 16 10    LDU    #$1610
 F0D1: AD D8 04    JSR    [$04,U]		; [indirect_jump]
@@ -5439,118 +3373,7 @@ F229: 0A F9       DEC    <$F9
 F22B: 26 EF       BNE    $F21C
 F22D: CC 00 05    LDD    #$0005
 F230: 7E FD 6B    JMP    $FD6B
-F233: E4 14       ANDB   -$C,X
-F235: 1C 14       ANDCC  #$14
-F237: BC 3C 44    CMPX   $3C44
-F23A: 3C E4       CWAI   #$E4
-F23C: 64 1C       LSR    -$4,X
-F23E: 64 E4       LSR    ,S
-F240: 8C A8 8C    CMPX   #$A88C
-F243: 58          ASLB
-F244: 8C 1C 8C    CMPX   #$1C8C
-F247: 80 B4       SUBA   #$B4
-F249: BC DC 44    CMPX   $DC44
-F24C: DC E4       LDD    <$E4
-F24E: F0 1C F0    SUBB   $1CF0
-F251: 00 05       NEG    <$05
-F253: 80 00       SUBA   #$00
-F255: 05 01       LSR    <$01
-F257: 09 0D       ROL    <$0D
-F259: 0E 16       JMP    <$16
-F25B: 17 22 02    LBSR   $1460
-F25E: 06 80       ROR    <$80
-F260: 02 06       XNC    <$06
-F262: 80 0A       SUBA   #$0A
-F264: 0F 10       CLR    <$10
-F266: 14          XHCF
-F267: 15          XHCF
-F268: 20 01       BRA    $F26B
-F26A: 03 80       COM    <$80
-F26C: 03 17       COM    <$17
-F26E: 80 00       SUBA   #$00
-F270: 05 80       LSR    <$80
-F272: 1C 18       ANDCC  #$18
-F274: 1A 04       ORCC   #$04
-F276: 80 80       SUBA   #$80
-F278: 04 14       LSR    <$14
-F27A: 80 02       SUBA   #$02
-F27C: 06 80       ROR    <$80
-F27E: 13          SYNC
-F27F: 19          DAA
-F280: 1E 09       EXG    D,B
-F282: 0D 0C       TST    <$0C
-F284: 09 0E       ROL    <$0E
-F286: 80 01       SUBA   #$01
-F288: 80 80       SUBA   #$80
-F28A: 0B 1B       XDEC   <$1B
-F28C: 80 0A       SUBA   #$0A
-F28E: 10          FCB    $10
-F28F: 11 0A 0F    DEC    <$0F
-F292: 80 03       SUBA   #$03
-F294: 04 80       LSR    <$80
-F296: 12          NOP
-F297: 1F 80       TFR    A,D
-F299: 13          SYNC
-F29A: 19          DAA
-F29B: 80 0D       SUBA   #$0D
-F29D: 0C 80       INC    <$80
-F29F: 1C 23       ANDCC  #$23
-F2A1: 80 0A       SUBA   #$0A
-F2A3: 10          FCB    $10
-F2A4: 11 0E 14    JMP    <$14
-F2A7: 15          XHCF
-F2A8: 15          XHCF
-F2A9: 1C 80       ANDCC  #$80
-F2AB: 1B          NOP
-F2AC: 20 1D       BRA    $F2CB
-F2AE: 0F 21       CLR    <$21
-F2B0: 80 0F       SUBA   #$0F
-F2B2: 16 17 16    LBRA   $09CB
-F2B5: 1E 80       EXG    A,D
-F2B7: 21 1F       BRN    $F2D8
-F2B9: 22 0E       BHI    $F2C9
-F2BB: 1D          SEX
-F2BC: 80 18       SUBA   #$18
-F2BE: 1A 80       ORCC   #$80
-F2C0: 10          FCB    $10
-F2C1: 11 80 1E    SUBA   #$1E
-F2C4: 24 80       BCC    $F246
-F2C6: 09 0D       ROL    <$0D
-F2C8: 0C 0B       INC    <$0B
-F2CA: 12          NOP
-F2CB: 1D          SEX
-F2CC: 0B 12       XDEC   <$12
-F2CE: 21 0B       BRN    $F2DB
-F2D0: 12          NOP
-F2D1: 80 01       SUBA   #$01
-F2D3: 80 80       SUBA   #$80
-F2D5: 1C 21       ANDCC  #$21
-F2D7: 23 13       BLS    $F2EC
-F2D9: 19          DAA
-F2DA: 1D          SEX
-F2DB: 14          XHCF
-F2DC: 15          XHCF
-F2DD: 80 05       SUBA   #$05
-F2DF: 04 80       LSR    <$80
-F2E1: 1E 24       EXG    Y,S
-F2E3: 80 18       SUBA   #$18
-F2E5: 1A 80       ORCC   #$80
-F2E7: 16 17 80    LBRA   $0A6A
-F2EA: 03 06       COM    <$06
-F2EC: 80 1B       SUBA   #$1B
-F2EE: 20 80       BRA    $F270
-F2F0: 1B          NOP
-F2F1: 20 23       BRA    $F316
-F2F3: 0C 13       INC    <$13
-F2F5: 19          DAA
-F2F6: 02 24       XNC    <$24
-F2F8: 80 1F       SUBA   #$1F
-F2FA: 22 80       BHI    $F27C
-F2FC: 24 1F       BCC    $F31D
-F2FE: 22 11       BHI    $F311
-F300: 18          X18
-F301: 1A 00       ORCC   #$00
-F303: 23 80       BLS    $F285
+
 F305: 86 1E       LDA    #$1E
 F307: 97 F8       STA    <$F8
 F309: 0F 90       CLR    <$90
@@ -5938,10 +3761,7 @@ F621: 48          ASLA
 F622: 8B 10       ADDA   #$10
 F624: A7 4A       STA    $A,U
 F626: 39          RTS
-F627: 01 01       NEG    <$01
-F629: 02 02       XNC    <$02
-F62B: 02 01       XNC    <$01
-F62D: 00 00       NEG    <$00
+
 F62F: 96 AC       LDA    <$AC
 F631: C6 00       LDB    #$00
 F633: 44          LSRA
@@ -6000,6 +3820,7 @@ F6A2: CC EA 60    LDD    #$EA60
 F6A5: FD 11 08    STD    $1108
 F6A8: BD E2 B4    JSR    $E2B4
 F6AB: 39          RTS
+
 F6AC: FC 16 3C    LDD    $163C
 F6AF: A0 4C       SUBA   $C,U
 F6B1: 24 01       BCC    $F6B4
@@ -6123,12 +3944,14 @@ F79A: 96 95       LDA    <$95
 F79C: 48          ASLA
 F79D: E6 56       LDB    -$A,U
 F79F: 58          ASLB
-F7A0: 8E F7 A5    LDX    #$F7A5
-F7A3: 6E 95       JMP    [B,X]
-F7A5: F7 D1 F7    STB    $D1F7
-F7A8: C5 F7       BITB   #$F7
-F7AA: AD F7       JSR    [E,S]
-F7AC: BC 8E F9    CMPX   $8EF9
+F7A0: 8E F7 A5    LDX    #table_f7a5
+F7A3: 6E 95       JMP    [B,X]  ; [jump_table] [nb_entries=4]
+table_f7a5:
+	dc.w	$F7D1
+	dc.w	$F7C5 
+	dc.w	$F7AD 
+	dc.w	$F7BC
+
 F7AF: 7E AE 86    JMP    $AE86
 F7B2: 9C 92       CMPX   <$92
 F7B4: 27 0F       BEQ    $F7C5
@@ -6385,15 +4208,18 @@ F9DE: A6 56       LDA    -$A,U
 F9E0: 48          ASLA
 F9E1: E6 55       LDB    -$B,U
 F9E3: 26 05       BNE    $F9EA
-F9E5: 8E F9 F0    LDX    #$F9F0
-F9E8: 6E 96       JMP    [A,X]
+F9E5: 8E F9 F0    LDX    #jump_table_f9f0
+F9E8: 6E 96       JMP    [A,X]	; [jump_table] [nb_entries=5]
 F9EA: 8E F4 88    LDX    #$F488
 F9ED: EC 86       LDD    A,X
 F9EF: 39          RTS
-F9F0: F9 F8 F9    ADCB   $F8F9
-F9F3: FC FA 16    LDD    $FA16
-F9F6: FA 22 FC    ORB    $22FC
-F9F9: 16 3C 39    LBRA   $3635
+jump_table_f9f0:
+	dc.w	$F9F8 
+	dc.w	$F9FC 
+	dc.w	$FA16 
+	dc.w	$FA22 
+	dc.w	$FC16
+	
 F9FC: B6 16 23    LDA    $1623
 F9FF: 84 7F       ANDA   #$7F
 FA01: 48          ASLA
