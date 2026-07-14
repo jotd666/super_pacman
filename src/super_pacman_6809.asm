@@ -143,9 +143,9 @@ C018: BD C1 03    JSR    $C103
 C01B: CE 00 8B    LDU    #$008B
 C01E: BD C1 35    JSR    $C135
 C021: CE 02 D2    LDU    #$02D2
-C024: BD EE C7    JSR    never_returns_eec7
+C024: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
-C030: BD EE C7    JSR    never_returns_eec7
+C030: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 main_game_init_c039:
 C039: BD C1 6C    JSR    $C16C
@@ -165,7 +165,7 @@ C060: BD E2 C4    JSR    $E2C4
 C063: BD EE 06    JSR    $EE06
 C066: BD C0 85    JSR    $C085
 C069: CE 02 50    LDU    #$0250
-C06C: BD EE C7    JSR    never_returns_eec7
+C06C: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 attract_c077:
 C077: EC 50       LDD    -$10,U
@@ -188,12 +188,12 @@ C0A0: 26 E9       BNE    $C08B
 C0A2: 39          RTS
 C0A3: 20 09       BRA    $C0AE
 
-C106: BD EE C7    JSR    never_returns_eec7
+C106: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 C120: CC 02 07    LDD    #$0207
 C123: BD FE 0F    JSR    $FE0F
 C126: CE 02 5E    LDU    #$025E
-C129: BD EE C7    JSR    never_returns_eec7
+C129: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 C135: CC C4 D4    LDD    #$C4D4
 C138: B7 03 6B    STA    $036B
@@ -2167,9 +2167,9 @@ E526: 86 01       LDA    #$01
 E528: 97 EA       STA    <$EA
 E52A: 39          RTS
 
-E59E: BD EE C7    JSR    never_returns_eec7
+E59E: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
-E5AA: BD EE C7    JSR    never_returns_eec7
+E5AA: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 E5B6: 8B 30       ADDA   #$30
 E5B8: A7 C4       STA    ,U
@@ -2189,10 +2189,8 @@ E5D8: 39          RTS
 E5D9: CE 03 72    LDU    #$0372
 E5DC: 96 CF       LDA    <$CF
 E5DE: 26 27       BNE    $E607
-E5E0: BD EE C7    JSR    never_returns_eec7
-E5E3: 20 4E       BRA    $E633
-E5E5: 4F          CLRA
-E5E6: 20 42       BRA    $E62A
+E5E0: BD EE C7    JSR    never_returns_eec7		; [no_return]
+
 
 E5EA: 55          LSRB
 E5EB: 53          COMB
@@ -2208,12 +2206,11 @@ E5FC: 8D 03       BSR    $E601
 E5FE: CE 03 76    LDU    #$0376
 E601: CC 20 15    LDD    #$2015
 E604: 7E FE 0F    JMP    $FE0F
-E607: BD EE C7    JSR    never_returns_eec7
+E607: BD EE C7    JSR    never_returns_eec7		; [no_return]
 E60A: 31 53       LEAY   -$D,U
 E60C: 54          LSRB
 E60D: 20 42       BRA    $E651
-E60F: 4F          CLRA
-E610: 4E          XCLRA
+
 E611: 55          LSRB
 E612: 53          COMB
 E613: 00 8E       NEG    <$8E
@@ -2223,26 +2220,19 @@ E61A: 03 74       COM    <$74
 E61C: 96 CF       LDA    <$CF
 E61E: 4A          DECA
 E61F: 27 DB       BEQ    $E5FC
-E621: BD EE C7    JSR    never_returns_eec7
-E624: 32 4E       LEAS   $E,U
-E626: 44          LSRA
-E627: 20 42       BRA    $E66B
-E629: 4F          CLRA
-E62A: 4E          XCLRA
-E62B: 55          LSRB
-E62C: 53          COMB
-E62D: 00 8D       NEG    <$8D
-E62F: 15          XHCF
+E621: BD EE C7    JSR    never_returns_eec7		; [no_return]
+
+
 E630: CE 03 76    LDU    #$0376
 E633: 96 CF       LDA    <$CF
 E635: 4C          INCA
 E636: 26 C9       BNE    $E601
-E638: BD EE C7    JSR    never_returns_eec7
+E638: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 E646: 10 D6 10    LDB    <$10
 E649: 8E 03 02    LDX    #$0302
 E64C: BD FE 1C    JSR    $FE1C
-E64F: BD EE C7    JSR    never_returns_eec7
+E64F: BD EE C7    JSR    never_returns_eec7		; [no_return]
 E652: 30 30       LEAX   -$10,Y
 E654: 30 20       LEAX   $0,Y
 E656: 50          NEGB
@@ -2253,13 +2243,8 @@ E65A: 00 39       NEG    <$39
 E65C: CE 02 F8    LDU    #$02F8
 E65F: 96 D2       LDA    <$D2
 E661: 27 0D       BEQ    $E670
-E663: BD EE C7    JSR    never_returns_eec7
-E666: 43          COMA
-E667: 4F          CLRA
-E668: 4E          XCLRA
-E669: 54          LSRB
-E66A: 49          ROLA
-E66B: 4E          XCLRA
+E663: BD EE C7    JSR    never_returns_eec7		; [no_return]
+
 E66C: 55          LSRB
 E66D: 45          LSRA
 E66E: 00 39       NEG    <$39
@@ -2268,7 +2253,7 @@ E673: 7E FE 0F    JMP    $FE0F
 E676: CE 02 FA    LDU    #$02FA
 E679: 96 D3       LDA    <$D3
 E67B: 27 12       BEQ    $E68F
-E67D: BD EE C7    JSR    never_returns_eec7
+E67D: BD EE C7    JSR    never_returns_eec7		; [no_return]
 E680: 20 20       BRA    $E6A2
 E682: 20 20       BRA    $E6A4
 E684: 20 20       BRA    $E6A6
@@ -2364,7 +2349,7 @@ E741: 86 04       LDA    #$04
 E743: 97 14       STA    <$14
 E745: BD EE 06    JSR    $EE06
 E748: CE 02 E8    LDU    #$02E8
-E74B: BD EE C7    JSR    never_returns_eec7
+E74B: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 E763: BD C1 03    JSR    $C103
 E766: BD E2 B4    JSR    $E2B4
@@ -2376,15 +2361,14 @@ E772: CE 02 AB    LDU    #$02AB
 E775: 96 C0       LDA    <$C0
 E777: 4A          DECA
 E778: 26 13       BNE    $E78D
-E77A: BD EE C7    JSR    never_returns_eec7
+E77A: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 E788: 4C          INCA
 E789: 59          ROLB
 E78A: 20 00       BRA    $E78C
 E78C: 39          RTS
-E78D: BD EE C7    JSR    never_returns_eec7
-E790: 31 20       LEAY   $0,Y
-E792: 4F          CLRA
+E78D: BD EE C7    JSR    never_returns_eec7		; [no_return]
+
 
 E7A0: 86 99       LDA    #$99
 E7A2: 90 C0       SUBA   <$C0
@@ -2425,7 +2409,7 @@ E7F5: 97 86       STA    <$86
 E7F7: BD CD C5    JSR    $CDC5
 E7FA: BD EB 1D    JSR    $EB1D
 E7FD: CE 02 4F    LDU    #$024F
-E800: BD EE C7    JSR    never_returns_eec7
+E800: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 E80E: BD E2 BB    JSR    $E2BB
 E811: BD E2 C4    JSR    $E2C4
@@ -2482,7 +2466,7 @@ E896: BD E2 C4    JSR    $E2C4
 E899: BD EA 33    JSR    $EA33
 E89C: BD EB 1D    JSR    $EB1D
 E89F: CE 02 4F    LDU    #$024F
-E8A2: BD EE C7    JSR    never_returns_eec7
+E8A2: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 E8B0: BD E2 BB    JSR    $E2BB
 E8B3: BD E2 C4    JSR    $E2C4
@@ -2496,7 +2480,7 @@ E8C7: 9B 91       ADDA   <$91
 E8C9: 26 2F       BNE    $E8FA
 E8CB: BD E2 9E    JSR    $E29E
 E8CE: CE 02 4B    LDU    #$024B
-E8D1: BD EE C7    JSR    never_returns_eec7
+E8D1: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 E8E0: CC 00 1E    LDD    #$001E
 E8E3: BD E2 BB    JSR    $E2BB
@@ -2539,7 +2523,7 @@ E931: 96 CF       LDA    <$CF
 E933: 26 01       BNE    $E936
 E935: 39          RTS
 E936: CE 03 AF    LDU    #$03AF
-E939: BD EE C7    JSR    never_returns_eec7
+E939: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 E94E: 10 D4 8D    ANDB   <$8D
 E951: 4F          CLRA
@@ -2551,7 +2535,7 @@ E95C: 4A          DECA
 E95D: 26 01       BNE    $E960
 E95F: 39          RTS
 E960: CE 03 B2    LDU    #$03B2
-E963: BD EE C7    JSR    never_returns_eec7
+E963: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 E97F: 8D 34       BSR    $E9B5
 E981: CE 03 76    LDU    #$0376
@@ -2560,12 +2544,12 @@ E986: 4C          INCA
 E987: 27 01       BEQ    $E98A
 E989: 39          RTS
 E98A: CE 03 55    LDU    #$0355
-E98D: BD EE C7    JSR    never_returns_eec7
+E98D: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 E99F: 10 D6 10    LDB    <$10
 E9A2: 8E 03 02    LDX    #$0302
 E9A5: BD FE 1C    JSR    $FE1C
-E9A8: BD EE C7    JSR    never_returns_eec7
+E9A8: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 
 E9B5: ED 4C       STD    $C,U
@@ -2593,10 +2577,10 @@ E9E3: 8E 10 13    LDX    #$1013
 E9E6: CE 02 32    LDU    #$0232
 E9E9: 10 8E 01 01 LDY    #$0101
 E9ED: BD FE 1C    JSR    $FE1C
-E9F0: BD EE C7    JSR    never_returns_eec7
+E9F0: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 E9FD: CE 02 6E    LDU    #$026E
-EA00: BD EE C7    JSR    never_returns_eec7
+EA00: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 EA0A: 8E 10 03    LDX    #$1003
 EA0D: 10 8E 01 01 LDY    #$0101
@@ -2606,7 +2590,7 @@ EA17: 39          RTS
 EA18: 86 01       LDA    #$01
 EA1A: B7 40 52    STA    $4052
 EA1D: CE 02 8E    LDU    #$028E
-EA20: BD EE C7    JSR    never_returns_eec7
+EA20: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 EA2E: 00 CC       NEG    <$CC
 EA30: 00 78       NEG    <$78
@@ -2697,11 +2681,11 @@ EB05: 8D 16       BSR    $EB1D
 EB07: 86 01       LDA    #$01
 EB09: B7 40 43    STA    $4043
 EB0C: CE 02 8F    LDU    #$028F
-EB0F: BD EE C7    JSR    never_returns_eec7
+EB0F: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 EB1B: 00 39       NEG    <$39
 EB1D: CE 02 6E    LDU    #$026E
-EB20: BD EE C7    JSR    never_returns_eec7
+EB20: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 EB2B: 96 84       LDA    <$84
 EB2D: 8B 31       ADDA   #$31
@@ -2723,24 +2707,7 @@ EB50: ED 81       STD    ,X++
 EB52: 8C 11 60    CMPX   #$1160
 EB55: 26 EA       BNE    $EB41
 EB57: 39          RTS
-EB58: 4E          XCLRA
-EB59: 40          NEGA
-EB5A: 4E          XCLRA
-EB5B: 20 41       BRA    $EB9E
-EB5D: 40          NEGA
-EB5E: 41          NEGA
-EB5F: 20 4D       BRA    $EBAE
-EB61: 40          NEGA
-EB62: 4D          TSTA
-EB63: 20 43       BRA    $EBA8
-EB65: 40          NEGA
-EB66: 43          COMA
-EB67: 20 4F       BRA    $EBB8
-EB69: 40          NEGA
-EB6A: 4F          CLRA
-EB6B: 20 CE       BRA    $EB3B
-EB6D: 10 00 8E    NEG    <$8E
-EB70: 11 38 EC    XANDCC #$EC
+
 EB73: C4 10       ANDB   #$10
 EB75: A3 84       SUBD   ,X
 EB77: 26 04       BNE    $EB7D
@@ -2775,7 +2742,7 @@ EBAB: ED 04       STD    $4,X
 EBAD: ED 06       STD    $6,X
 EBAF: BD EE 06    JSR    $EE06
 EBB2: CE 03 2A    LDU    #$032A
-EBB5: BD EE C7    JSR    never_returns_eec7
+EBB5: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 EBC5: 49          ROLA
 EBC6: 54          LSRB
@@ -2786,7 +2753,7 @@ EBCA: 53          COMB
 EBCB: 20 5B       BRA    $EC28
 EBCD: 00 CE       NEG    <$CE
 EBCF: 03 0D       COM    <$0D
-EBD1: BD EE C7    JSR    never_returns_eec7
+EBD1: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
 EBE6: 00 CE       NEG    <$CE
 EBE8: 03 4F       COM    <$4F
@@ -2830,10 +2797,9 @@ EC49: 26 01       BNE    $EC4C
 EC4B: 39          RTS
 EC4C: 6E 9F 10 E4 JMP    [$10E4]
 EC50: CE 02 93    LDU    #$0293
-EC53: BD EE C7    JSR    never_returns_eec7
+EC53: BD EE C7    JSR    never_returns_eec7		; [no_return]
 
-EC66: 00 8E       NEG    <$8E
-EC68: EC B1       LDD    [,Y++]
+
 EC6A: CE 03 15    LDU    #$0315
 EC6D: C6 05       LDB    #$05
 EC6F: A6 80       LDA    ,X+
@@ -2984,7 +2950,7 @@ EDAF: 86 42       LDA    #$42
 EDB1: 8E 00 10    LDX    #$0010
 EDB4: BD EE B1    JSR    $EEB1
 EDB7: CE 03 D4    LDU    #$03D4
-EDBA: BD EE C3    JSR    never_returns_eec3
+EDBA: BD EE C3    JSR    never_returns_eec3	; [no_return]
 
 
 EDCE: CE 00 02    LDU    #$0002
@@ -3046,13 +3012,13 @@ EE43: CE 00 3C    LDU    #$003C
 EE46: 96 C0       LDA    <$C0
 EE48: 4C          INCA
 EE49: 26 0E       BNE    $EE59
-EE4B: BD EE C3    JSR    never_returns_eec3
+EE4B: BD EE C3    JSR    never_returns_eec3	; [no_return]
 
 EE54: 4C          INCA
 EE55: 41          NEGA
 EE56: 59          ROLB
 EE57: 00 39       NEG    <$39
-EE59: BD EE C3    JSR    never_returns_eec3
+EE59: BD EE C3    JSR    never_returns_eec3	; [no_return]
 EE5C: 20 43       BRA    $EEA1
 
 EE5F: 45          LSRA
@@ -3917,15 +3883,7 @@ F75D: 33 C8 20    LEAU   $20,U
 F760: 5A          DECB
 F761: 2A E1       BPL    $F744
 F763: 39          RTS
-F764: 01 7F       NEG    <$7F
-F766: 64 03       LSR    $3,X
-F768: 6E 50       JMP    -$10,U
-F76A: 01 8D       NEG    <$8D
-F76C: 50          NEGB
-F76D: 01 84       NEG    <$84
-F76F: 3C 96       CWAI   #$96
-F771: 96 27       LDA    <$27
-F773: 01 39       NEG    <$39
+
 F775: CC F7 9A    LDD    #$F79A
 F778: 20 03       BRA    $F77D
 F77A: FD 16 30    STD    $1630
@@ -4158,41 +4116,7 @@ F975: BD F6 AF    JSR    $F6AF
 F978: 25 01       BCS    $F97B
 F97A: 39          RTS
 F97B: 7E F7 D1    JMP    $F7D1
-F97E: 01 A4       NEG    <$A4
-F980: 00 00       NEG    <$00
-F982: 00 00       NEG    <$00
-F984: 00 00       NEG    <$00
-F986: 05 DC       LSR    <$DC
-F988: 05 DC       LSR    <$DC
-F98A: 01 A4       NEG    <$A4
-F98C: 00 00       NEG    <$00
-F98E: F9 96 F9    ADCB   $96F9
-F991: A8 F9 B4 F9 EORA   [-$4B07,S]
-F995: C0 01       SUBB   #$01
-F997: 01 A4       NEG    <$A4
-F999: 00 05       NEG    <$05
-F99B: DC 01       LDD    <$01
-F99D: 07 08       ASR    <$08
-F99F: 00 0B       NEG    <$0B
-F9A1: B8 01 0C    EORA   $010C
-F9A4: E4 00       ANDB   $0,X
-F9A6: 00 00       NEG    <$00
-F9A8: 01 01       NEG    <$01
-F9AA: A4 00       ANDA   $0,X
-F9AC: 05 DC       LSR    <$DC
-F9AE: 00 0B       NEG    <$0B
-F9B0: B8 00 00    EORA   >$0000
-F9B3: 00 01       NEG    <$01
-F9B5: 01 2C       NEG    <$2C
-F9B7: 00 05       NEG    <$05
-F9B9: DC 00       LDD    <$00
-F9BB: 0B B8       XDEC   <$B8
-F9BD: 00 00       NEG    <$00
-F9BF: 00 01       NEG    <$01
-F9C1: 01 2C       NEG    <$2C
-F9C3: 00 05       NEG    <$05
-F9C5: DC 00       LDD    <$00
-F9C7: 00 00       NEG    <$00
+
 F9C9: EC 4C       LDD    $C,U
 F9CB: C1 50       CMPB   #$50
 F9CD: 26 0F       BNE    $F9DE
