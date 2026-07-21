@@ -1,9 +1,11 @@
-from shared import *
-import re
+import re,pathlib
 
-# post-conversion automatic patches, allowing not to change the asm file by hand
+gamename = "super_pacman"
 
+# game_specific: replace or remove I/O addresses
+# if not done it will write in ROM here!!
 sound_mem_regex = re.compile("\w+_(40[45]\w)")
+store_to_video = re.compile("GET_ADDRESS\s+0x0")
 
 input_dict = {"system_3300":"read_system_inputs",
 "watchdog_8000":"",
@@ -18,7 +20,34 @@ input_dict = {"system_3300":"read_system_inputs",
 
 }
 
+# empty template
+##single_line_to_cc_protect = set()
+##remove_error_in_next_line = set()
+##remove_error_in_prev_line = set()
+##line_to_push_cc_protect = set() | single_line_to_cc_protect
+##line_to_pull_cc_protect = set() | single_line_to_cc_protect
+##line_to_pull_cc_prev_protect = set()
 
+single_line_to_cc_protect = set()
+remove_error_in_next_line = set()
+remove_error_in_prev_line = set()
+line_to_push_cc_protect = set() | single_line_to_cc_protect
+line_to_pull_cc_protect = set() | single_line_to_cc_protect
+line_to_pull_cc_prev_protect = set()
+
+
+store_to_video = re.compile("GET_ADDRESS\s+(0x8\w\w\w|video_ram_d)",flags=re.I)   # game_specific
+
+
+
+
+
+def remove_continuing_lines(lines,i):
+    for j in range(i+1,i+4):
+        if "[...]" in lines[j]:
+            lines[j] = ""
+        else:
+            break
 
 
 def get_line_address(line):
@@ -29,40 +58,152 @@ def get_line_address(line):
     except (ValueError,IndexError):
         return None
 
-write_to_48xx = {0xFFA4,
-0xAA87,0xFC87,
-0xFC8A,
-0xFC8D,
-0xFF0A,
+def remove_continuing_lines(lines,i):
+    for j in range(i+1,i+4):
+        if "[...]" in lines[j]:
+            lines[j] = ""
+        else:
+            break
 
 
-}
-context_save = {0xc322,
-0xc575,
-0xcad0,
-0xcbb4,
-0xcdea,
-0xd08a,
-0xd096,
-0xf042
-}
-# various dirty but at least automatic patches applying on the specific track and field code
-equates_re = re.compile("(\w+)\s*=\s*(\S+)")
+def change_instruction(code,lines,i,continuing_lines=True):
+    line = lines[i]
+    toks = line.split("|")
+    if len(toks)==2:
+        toks[0] = f"\t{code}"
+        if continuing_lines:
+            remove_continuing_lines(lines,i)
+        return " | ".join(toks)
+    return line
+
+def remove_error(line,ignore=False):
+    if "ERROR" in line:
+        return ""
+    elif not ignore:
+        raise Exception(f"No ERROR to remove in {line}")
+    else:
+        return line
+def remove_instruction(lines,i,continuing_lines=True):
+    return change_instruction("",lines,i,continuing_lines=continuing_lines)
+
+def remove_continuing_lines(lines,i):
+    for j in range(i+1,i+4):
+        if "[...]" in lines[j]:
+            lines[j] = ""
+        else:
+            break
+
+
+
+def process_jump_table(line):
+
+    m = re.search("\[nb_entries=(\d+)",line)
+    if m:
+        nb_entries = m.group(1)
+        line = f"""\t.ifndef\tRELEASE
+\tmove.w\t#{nb_entries},d7
+\t.endif
+"""+line
+
+    return line
+
+def get_original_instruction(line):
+    toks = line.split("| [")
+    if len(toks)==1:
+        return ""
+    inst = toks[1][7:].split("]")[0]
+    return inst
+
+
+def remove_code(pattern,lines,i):
+    if pattern in lines[i]:
+        lines[i] = remove_instruction(lines,i)
+        remove_continuing_lines(lines,i)
+    return lines[i]
+
+def rebuild_lines(lines):
+    return "".join(lines).splitlines(True)
+
+def swap_lines(lines,i,j):
+    lines[i],lines[j] = lines[j].rstrip()+ "| swapped\n",lines[i].rstrip()+ "| swapped\n"
+    return lines[i]
+
+def kill_code(lines,start_line,end_address):
+    while True:
+        address = get_line_address(lines[start_line])
+        lines[start_line] = remove_instruction(lines,start_line)
+        if "|" not in lines[start_line]:
+            lines[start_line] = ""
+        if address == end_address:
+            break
+        start_line+=1
+
+def subt(m):
+    tn = m.group(1)
+    rn = m.group(2)
+    offset = tn.split("_")[-1]
+    rval = f"""
+\t.ifndef\tRELEASE
+\tmove.w\t#0x{offset},d{rn}
+\t.endif
+\tlea\t{tn},a{rn}"""
+    return rval
+
+equates = []
+global_symbols = []
+equates_re = re.compile("(\w+)\s*=\s*(\$?\w+)")
+this_dir = pathlib.Path(__file__).absolute().parent
+
+source_dir = this_dir / "../src"
+
+
+# various dirty but at least automatic patches applying on the converted code
 with open(source_dir / "conv.s") as f:
     lines = list(f)
-    i = 0
 
-    while i < len(lines):
-        line = lines[i]
+    for i,line in enumerate(lines):
         m = equates_re.match(line)
         if m:
             equates.append(line)
             line = ""
 
-##        # remove code for rom checks, watchdog, ...
-##        for p in ("[rom_check_code]","coin_","watchdog_3300"):
-##            line = remove_code(p,lines,i)
 
+##        elif "review stray daa" in line:
+##            line = """\tCLR_XC_FLAGS
+##\tmove.b\t(a0),d6
+##\tabcd\td6,d0
+##"""
+        address = get_line_address(line)
+
+
+        if "[return]" in line:
+            if "MAKE_" in line:
+                line = ""
+            else:
+                line = change_instruction("rts",lines,i)
+
+        elif "[nop]" in line:
+            line = remove_instruction(lines,i)
+
+        elif "[push_function]" in line:
+            toks = line.split()
+            line = remove_instruction(lines,i)
+            pa = toks[1].strip("#")
+            lines[i+1] = change_instruction(f"pea\t{pa}",lines,i+1)
+        elif "[breakpoint]" in line and address:
+            line = f'\tBREAKPOINT "{address:04x}"\n{line}'
+
+        elif "[cc_ok]" in line:
+            if "rts" in line and "ret]" not in line: # conditional return
+                lines[i-1] = remove_error(lines[i-1],True)
+            else:
+                lines[i+1] = remove_error(lines[i+1],True)
+
+
+        line = process_jump_table(line)
+
+
+        # pre-add video_address tag if we find a store instruction to an explicit 3000-3FFF address
         # pre-add video_address tag if we find a store instruction to an explicit 3000-3FFF address
         if store_to_video.search(line):
             line = line.rstrip() + " [video_address]\n"
@@ -86,241 +227,79 @@ with open(source_dir / "conv.s") as f:
                     break
 
 
-        line = re.sub(tablere,subt,line)
 
-        address = get_line_address(line)
+        if "[pop_stack]" in line:
+            line = change_instruction("addq\t#4,sp",lines,i)
 
-        if address in context_save:
-            # code does a PULS D to get caller address
-            line = change_instruction("POP_ENCODED_CALLER_ADDRESS\td1",lines,i)
-##        elif address in write_to_48xx:
-##            line = remove_instruction(lines,i)
-        elif address in [0xf80d,0xf80f,0xF812]:
-            # remove write to read location of dip switches. We're not an emulator
-            # we don't handle read/writes on I/O
-            line = remove_instruction(lines,i)
-        elif address == 0xa04a:
-            # encode address before writing to 1400
-            line = "\tmove.l\t#l_aa7e,d2\n\tENCODE_ADDRESS\td2,d2  | encode the address else it's wrongly decoded!\n"
-        elif address == 0xA96B:
-            # code does a PULS D to get caller address
-            line = change_instruction("POP_ENCODED_CALLER_ADDRESS\td4",lines,i)
-        elif address == 0xd08f:
-            # remove the MAKE_D that destroys D1 value
-            if "MAKE_D" in lines[i-1]:
-                lines[i-1] = ""
-        if address == 0xD01F:
-            # add mid-code label
-            line = "mid_code_base:\n"+line
-        elif address in [0xF7E5,0xF7F8]:
-            # remove I/O tests that lead to fatal errors
-            line = remove_instruction(lines,1)
-        elif address == 0xf285:
-            lines[i-1]=""  # remove subq
-            # make up for subq, without changing carry/x flag
-            line = change_instruction("GET_REG_ADDRESS\t-1,d2",lines,i,continuing_lines=False)
-            lines[i+2] = remove_error(lines[i+2])
-        elif address == 0xf28a:
-            lines[i-1]=""  # remove subq
-            # make up for subq, without changing carry/x flag
-            line = change_instruction("GET_REG_ADDRESS\t-2,d2",lines,i,continuing_lines=False)
-            lines[i+3] = remove_error(lines[i+3])
-        elif address == 0xf28f:
-            line = change_instruction("subq\t#2,d2",lines,i)
-        ################# fix the stray C test ###########
-        if address in [0xe32c,0xe342,0xe356,0x0f33b]:
-            # save C
-            line = "\tscs\td6\n"+line
-        elif address in [0xC276,0xC4E6,0xC1DE]:
-            # grunts & boss & timeout boss have separate tests
-            line = "\ttst.b\tinvincible_flag\n\tjeq\t0f\n\trts\n0:\n"+line
-        elif address == 0xbc5b:
-            line = "\tGET_DP_ADDRESS\tlevel_number_31\n\tmove.b\tstart_level,(a0)\n"+line
-        elif address == 0xe32e:
-            # test C
-            line = "\ttst.b\td6\n"+change_instruction("jeq\tl_e331",lines,i)
-            lines[i+1] = remove_error(lines[i+1])
-        elif address == 0xe344:
-            # test C
-            line = "\ttst.b\td6\n"+change_instruction("jne\tl_e35c",lines,i)
-            lines[i+1] = remove_error(lines[i+1])
-        if address == 0xe358:
-            # test C
-            line = "\ttst.b\td6\n"+change_instruction("jeq\tl_e348",lines,i)
-            lines[i+1] = remove_error(lines[i+1])
-        if address == 0xf33d:
-            # test C
-            line = "\ttst.b\td6\n"+change_instruction("jeq\tl_f346",lines,i)
-            lines[i+1] = remove_error(lines[i+1])
-        ###################################################
-        if address == 0xBB59:
-            line += "\tjbsr\tosd_write_high_scores\n"
-        elif address == 0xA116:
-            line += "\tjbsr\tosd_read_high_scores\n"
-        if address == 0xA05F:
-            # replace stack push by target stack push, game needs that and changes that
-            line = change_instruction("GET_REG_ADDRESS\t0,d5",lines,i) + "\tmove.w\td2,-(a0)  | pushing on target stack\n"
-        if address == 0xa063:
-            # replace stack pull by target stack pull, game needs that and changes that
-            line = change_instruction("GET_REG_ADDRESS\t0,d5",lines,i) + "\tmove.w\t(-2,a0),d2  | pulling from target stack\n"
-        if address in [0xfa4e,0xe94b]:
-            line = line.replace("move.w\t#","lea\t")
-            line = line.replace(",d",",a")
-        if "indirect jsr" in line:
-            # decode original argument again (dirty!!)
-            offset,register = line.split(":")[1].split()[1].strip("[]$").split(",")
-            if not offset:
-                offset = "0"
-            m68k_reg = "d4" if register == "u" else "d2"  # only u and x
-            line = change_instruction(f"JSR_INDIRECT\t0x{offset},{m68k_reg}",lines,i)
+        ###############################################
 
-        # address E4D8 is written several times to resume context here, we have to encode the real address there!
+        ###############################################
+        if address in remove_error_in_prev_line:
+            lines[i-1] = remove_error(lines[i-1].strip()+f" ({address:04x})")
+        if address in remove_error_in_next_line:
+            lines[i+1] = remove_error(lines[i+1].strip()+f" ({address:04x})")
+        if address in line_to_pull_cc_protect:
+            # protect the sub instructions if any
+            for j in range(i+1,len(lines)):
+                if not "[...]" in lines[j]:
+                    break
 
-        if "[function_address]" in line:
-            # we have to patch this code as it takes an immediate value which
-            # is actually an address
-            inst,arg = line.split("|")[1].strip().strip("[]").split(":")[1].split("]")[0].split()
-            if inst!="ldd" or ",d1" in line:
-                dest_reg = {"d":"d1","u":"d4","x":"d2","y":"d3"}[inst[2]]  # d,u,x
-                dest_addr = arg[2:]
-                line = change_instruction(f"move.l\t#l_{dest_addr},{dest_reg}",lines,i)
-                line += f"\tENCODE_ADDRESS\t{dest_reg},{dest_reg}\n"
-                if inst=="ldd" and "MAKE_D" in lines[i+1]:
-                    lines[i+1] = ""
+            lines[j-1] += "\tPOP_SR\n"
+            if j-1==i:
+                line = lines[i]
 
-##        if address in [0xA5A2,0xBD63] and ",d1" in line:
-##            line = change_instruction("move.l\t#l_e4d8,d1",lines,i)+"\tENCODE_ADDRESS    D1,D1\n"
-##            if :
-##                lines[i+1] = ""
-##        elif address in [0xBD23,0xCAC9] and ",d1" in line:
-##            line = change_instruction("move.l\t#l_ca3c,d1",lines,i)+"\tENCODE_ADDRESS    D1,D1\n"
-##            if "MAKE_D" in lines[i+1]:
-##                lines[i+1] = ""
-##
-##        elif address in [0xBCF7,0xBDF9]:
-##            line = change_instruction("move.l\t#l_e4d8,d4",lines,i)+"\tENCODE_ADDRESS    D4,D4\n"
-##        elif address in [0xAB41]:
-##            line = change_instruction("move.l\t#l_e4d8,d2",lines,i)+"\tENCODE_ADDRESS    D2,D2\n"
+        if address in line_to_push_cc_protect:
+            # protect the sub instructions
+            line = "\tPUSH_SR\n"+line
+        if address in line_to_pull_cc_prev_protect:
+            # protect the sub instructions
+            line = "\tPOP_SR\n"+line
 
         if "GET_ADDRESS" in line:
-            val = line.split()[1]
+            val = line.split()[1].split(",")[0]
             osd_call = input_dict.get(val)
             if osd_call is not None:
+
                 if osd_call:
-                    line = change_instruction(f"jbsr\tosd_{osd_call}",lines,i)
+                    if isinstance(osd_call,list):
+                        # choose depending on read/write
+                        if "a,(" in line:
+                            osd_call = osd_call[1]
+                        else:
+                            osd_call = osd_call[0]
+                    if osd_call:
+                        line = change_instruction(f"jbsr\tosd_{osd_call}",lines,i)
+                    else:
+                        line = remove_instruction(lines,i)
                 else:
                     line = remove_instruction(lines,i)
                 lines[i+1] = remove_instruction(lines,i+1)
 
-            # remove all writes into namco register area
-##            if val[-5:-2] == "_48" and "|" in line:
-##                orig = line.split("|")[1].split()
-##                if orig[1] in ["sta","clr"]:  # write operation
-##                    line = remove_instruction(lines,i)
+        if "[global]" in line:
+            label = line.split(":")[0]
+            global_symbols.append(label)
 
-
-
-
-        elif "unsupported instruction rti" in line:
-            line = change_instruction("rts",lines,i)
-
-        elif    ".long" in line:
-            # check if it's not a parameter of function_and_args_table_d020
-            toks = line.split()
-            if toks[1].startswith("l_1"):
-                # it's a parameter
-                v = toks[1][2:]
-                line = f"\t.word\t0x{v}\n"
-        elif "[indirect_jump]" in line:
-            m = jmpre.search(line)
-            if m:
-                ireg = m.group(2).upper()  # A or B
-                inst = m.group(1).upper()
-                reg = {"x":"A2","y":"A3","u":"A4"}[m.group(3)]
-                rest = re.sub(".*\"","",line)
-                nb_cases = int(line.split("nb_entries=")[1].strip(']\n'))
-                line = f"\t{inst}_{ireg}_INDEXED\t{reg},{nb_cases}{rest}"
-
-        m = sound_mem_regex.search(line)
-        if m:
-            toks = line.split()
-            if "inc" in toks:
-                # INC sound_44xx: enabling sfx
-                lines[i+1] += "\tjbsr\tplay_sound\n"
-            elif "sta" in toks or "stb" in toks:
-                # STA sound_44xx: enabling or disabling sfx
-                lines[i+1] += "\tjbsr\tsound_control\n"
-            elif "clr" in toks:
-                # STA sound_44xx: enabling or disabling sfx
-                lines[i+1] += "\tjbsr\tosd_music_stop\n"
-
-        if address == 0xc90d:
-            # remove stop music when it's actually stop microwave
-            # which maybe should be looped, anyway it usually stops itself
-            # because any other sound stops it
-            lines[i-1] = ""
-        if "ERROR" in line:
-            print(line,end="")
         lines[i] = line
-        i+=1
 
-
-
+    # remove duplicate VIDEO_BYTE_DIRTY
+    lines = rebuild_lines(lines)
+    new_lines = []
+    prev_line = ""
+    for line in lines:
+        if "VIDEO_BYTE_DIRTY" in line and "VIDEO_BYTE_DIRTY" in prev_line:
+            pass
+        else:
+            new_lines.append(line)
+        prev_line = line
 
 with open(source_dir / "data.inc","w") as fw:
     fw.writelines(equates)
 
-with open(source_dir / "mappy.68k","w") as fw:
-    fw.write("""\t.include "data.inc"
-\t.global\tirq_ff01
-\t.global\tself_tests_over_f768
+with open(source_dir / f"{gamename}.68k","w") as fw:
 
-.global    l_a098
-.global    l_c000
-.global    l_c013
-.global    l_c029
-.global    l_c04b
-.global    l_c0ea
-.global    l_c108
-.global    l_c123
-.global    l_c1e1
-.global    l_c328
-.global    l_c395
-.global    l_c57b
-.global    l_c5db
-.global    l_c638
-.global    l_c6db
-.global    l_ce19
-.global    l_c81a
-.global    l_ca00
-.global    l_cad6
-.global    l_cbba
-.global    l_ce80
-.global    l_ccd3
-.global    l_cd22
-.global    l_c7e5
-.global    l_cf81
-.global    animate_hurry_up_cfd0
-.global mid_code_base
-
-play_sound:
-    move.l  d0,-(a7)
-    move.l  a0,d0
-    sub.l   a6,d0
-    sub.w   #0x4040,d0
-    jbsr    osd_sound_start
-    move.l  (a7)+,d0
-    rts
-
-
-sound_control:
-    tst.b   d0
-    jeq     0f
-    jbra    play_sound
-0:
-    * we should stop the sound, but it actually isn't
-    * needed, and doing so would stop the music
-    rts
-
+    fw.write(f"""\t.include "data.inc"
 """)
-    fw.writelines(lines)
+    for g in global_symbols:
+        fw.write(f"\t.global\t{g}\n")
+
+    fw.writelines(new_lines)

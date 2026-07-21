@@ -1091,13 +1091,7 @@ C9CF: 33 C8 20    LEAU   $20,U
 C9D2: 5A          DECB
 C9D3: 2A D0       BPL    $C9A5
 C9D5: 39          RTS
-C9D6: 60 D8 70    NEG    [$70,U]
-C9D9: 64 D8 90    LSR    [-$70,U]
-C9DC: 58          ASLB
-C9DD: F8 70 5C    EORB   $705C
-C9E0: F8 90 BD    EORB   $90BD
-C9E3: C3 0A 8D    ADDD   #$0A8D
-C9E6: 0D A6       TST    <$A6
+
 C9E8: 4C          INCA
 C9E9: 81 08       CMPA   #$08
 C9EB: 25 01       BCS    $C9EE
@@ -1846,11 +1840,7 @@ E27F: 0C 8B       INC    <$8B
 E281: CC E7 16    LDD    #$E716
 E284: FD 11 08    STD    $1108
 E287: 39          RTS
-E288: E8 44       EORB   $4,U
-E28A: E3 E6       ADDD   A,S
-E28C: F0 85 E2    SUBB   $85E2
-E28F: BA E2 BA    ORA    $E2BA
-E292: E2 BA       SBCB   [F,Y]
+
 E294: CC E2 BA    LDD    #$E2BA
 E297: FD 11 10    STD    $1110
 E29A: FD 11 28    STD    $1128
@@ -3525,11 +3515,7 @@ F47B: ED 44       STD    $4,U
 F47D: 39          RTS
 F47E: 8E 10 2B    LDX    #$102B
 F481: 7E F1 E0    JMP    $F1E0
-F484: 58          ASLB
-F485: A0 A8 A0    SUBA   -$60,Y
-F488: 30 28       LEAX   $8,Y
-F48A: D0 28       SUBB   <$28
-F48C: 30 DC D0    LEAX   [$F45F,PCR]
+
 F48F: DC A6       LDD    <$A6
 F491: 55          LSRB
 F492: 27 47       BEQ    $F4DB
@@ -3537,6 +3523,7 @@ F494: 8D 2A       BSR    $F4C0
 F496: BD F6 AC    JSR    $F6AC
 F499: 25 01       BCS    $F49C
 F49B: 39          RTS
+
 F49C: 96 8B       LDA    <$8B
 F49E: B7 40 51    STA    $4051
 F4A1: BD F4 3D    JSR    $F43D
@@ -3565,9 +3552,7 @@ F4CD: 8E F4 D5    LDX    #$F4D5
 F4D0: A6 86       LDA    A,X
 F4D2: A7 4B       STA    $B,U
 F4D4: 39          RTS
-F4D5: 0C 0D       INC    <$0D
-F4D7: 0E 0F       JMP    <$0F
-F4D9: 0E 0D       JMP    <$0D
+
 F4DB: 8D 1F       BSR    $F4FC
 F4DD: BD F6 AC    JSR    $F6AC
 F4E0: 25 01       BCS    $F4E3
