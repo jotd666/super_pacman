@@ -1,1 +1,1 @@
-F710: 30 84       LEAX   ,X  => doesn't build & useless??
+check Mappy task system, compare as I had to introduce a lot of "func_xxx": encode functions

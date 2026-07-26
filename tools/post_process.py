@@ -63,7 +63,11 @@ def game_specific(address,lines,i):
             rest = re.sub(".*\"","",line)
             nb_cases = int(line.split("nb_entries=")[1].strip(']\n'))
             line = f"\t{inst}_{ireg}_INDEXED\t{reg},{nb_cases}{rest}"
+        elif "[$04,u]" in line:
+            line = change_instruction("jbsr\tjump_u_plus_4",lines,i)
 
+    elif "had to be swapped" in line:
+        line = ""
 
     line = re.sub(tablere,subt,line)
     return line
@@ -343,4 +347,11 @@ indirect_jump_10e4:
 \tmove.w\t(a0),d6
 \tBREAKPOINT\t"indirect jmp check d6"
 \tillegal
+
+jump_u_plus_4:
+\tGET_REG_ADDRESS\t4,d4
+\tmove.w\t(a0),d6
+\tBREAKPOINT\t"indirect jmp check d4"
+\tillegal
+
 """)

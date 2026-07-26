@@ -135,7 +135,7 @@ C006: 97 AB       STA    <$AB
 C008: 4C          INCA
 C009: 97 C7       STA    <$C7
 C00B: BD E2 9E    JSR    $E29E
-C00E: BD E2 B4    JSR    $E2B4
+C00E: BD E2 B4    JSR    stack_set_e2b4
 C011: 86 04       LDA    #$04
 C013: 97 14       STA    <$14
 C015: BD EE 06    JSR    $EE06
@@ -143,9 +143,9 @@ C018: BD C1 03    JSR    $C103
 C01B: CE 00 8B    LDU    #$008B
 C01E: BD C1 35    JSR    $C135
 C021: CE 02 D2    LDU    #$02D2
-C024: BD EE C7    JSR    never_returns_eec7		; [no_return]
+C024: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
-C030: BD EE C7    JSR    never_returns_eec7		; [no_return]
+C030: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 main_game_init_c039:
 C039: BD C1 6C    JSR    $C16C
@@ -154,24 +154,24 @@ C03F: BD C2 4C    JSR    $C24C
 C042: BD C2 56    JSR    $C256
 C045: BD C2 A4    JSR    $C2A4
 C048: CC 07 08    LDD    #$0708
-C04B: BD E2 BB    JSR    $E2BB
-C04E: BD E2 C4    JSR    $E2C4
+C04B: BD E2 BB    JSR    stack_set_with_param_e2bb
+C04E: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C051: BD EE 06    JSR    $EE06
 C054: BD C0 85    JSR    $C085
 C057: BD C1 03    JSR    $C103
 C05A: CC 00 B4    LDD    #$00B4
-C05D: BD E2 BB    JSR    $E2BB
-C060: BD E2 C4    JSR    $E2C4
+C05D: BD E2 BB    JSR    stack_set_with_param_e2bb
+C060: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C063: BD EE 06    JSR    $EE06
 C066: BD C0 85    JSR    $C085
 C069: CE 02 50    LDU    #$0250
-C06C: BD EE C7    JSR    never_returns_eec7		; [no_return]
+C06C: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 attract_c077:
 C077: EC 50       LDD    -$10,U
 C079: CC 00 B4    LDD    #$00B4
-C07C: BD E2 BB    JSR    $E2BB
-C07F: BD E2 C4    JSR    $E2C4
+C07C: BD E2 BB    JSR    stack_set_with_param_e2bb
+C07F: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C082: 7E C4 45    JMP    $C445
 C085: 8E C0 A3    LDX    #$C0A3
 C088: CE 01 46    LDU    #$0146
@@ -188,12 +188,12 @@ C0A0: 26 E9       BNE    $C08B
 C0A2: 39          RTS
 C0A3: 20 09       BRA    $C0AE
 
-C106: BD EE C7    JSR    never_returns_eec7		; [no_return]
+C106: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 C120: CC 02 07    LDD    #$0207
 C123: BD FE 0F    JSR    $FE0F
 C126: CE 02 5E    LDU    #$025E
-C129: BD EE C7    JSR    never_returns_eec7		; [no_return]
+C129: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 C135: CC C4 D4    LDD    #$C4D4
 C138: B7 03 6B    STA    $036B
@@ -229,7 +229,7 @@ C17E: CC 00 40    LDD    #$0040
 C181: ED 49       STD    $9,U
 C183: 86 24       LDA    #$24
 C185: A7 4B       STA    $B,U
-C187: CC F0 FB    LDD    #$F0FB
+C187: CC F0 FB    LDD    #func_f0fb
 C18A: ED 44       STD    $4,U
 C18C: CC C1 9A    LDD    #$C19A
 C18F: ED C4       STD    ,U
@@ -238,9 +238,9 @@ C193: 33 C8 20    LEAU   $20,U
 C196: 5A          DECB
 C197: 2A D8       BPL    $C171
 C199: 39          RTS
-C19A: CC F0 DE    LDD    #$F0DE
+C19A: CC F0 DE    LDD    #func_f0de
 C19D: ED 44       STD    $4,U
-C19F: BD E2 B4    JSR    $E2B4
+C19F: BD E2 B4    JSR    stack_set_e2b4
 C1A2: BD F6 AC    JSR    carry_returning_f6ac
 C1A5: 25 01       BCS    $C1A8
 C1A7: 39          RTS
@@ -248,7 +248,7 @@ C1A8: 96 D3       LDA    <$D3
 C1AA: B7 40 49    STA    $4049
 C1AD: CC 7C 02    LDD    #$7C02
 C1B0: ED 4A       STD    $A,U
-C1B2: CC F0 FB    LDD    #$F0FB
+C1B2: CC F0 FB    LDD    #func_f0fb
 C1B5: ED 44       STD    $4,U
 C1B7: 8E F0 71    LDX    #$F071
 C1BA: A6 56       LDA    -$A,U
@@ -258,9 +258,9 @@ C1C1: 86 20       LDA    #$20
 C1C3: A7 C4       STA    ,U
 C1C5: A7 C5       STA    B,U
 C1C7: CC 00 20    LDD    #$0020
-C1CA: BD E2 BB    JSR    $E2BB
-C1CD: BD E2 C4    JSR    $E2C4
-C1D0: CC F0 E5    LDD    #$F0E5
+C1CA: BD E2 BB    JSR    stack_set_with_param_e2bb
+C1CD: BD E2 C4    JSR    stack_set_with_param_test_e2c4
+C1D0: CC F0 E5    LDD    #func_f0e5
 C1D3: ED 44       STD    $4,U
 C1D5: 39          RTS
 C1D6: CE 09 F0    LDU    #$09F0
@@ -283,7 +283,7 @@ C1F6: 8B 44       ADDA   #$44
 C1F8: 20 03       BRA    $C1FD
 C1FA: CC 7E 02    LDD    #$7E02
 C1FD: ED 4A       STD    $A,U
-C1FF: CC F0 FB    LDD    #$F0FB
+C1FF: CC F0 FB    LDD    #func_f0fb
 C202: ED 44       STD    $4,U
 C204: CC C2 12    LDD    #$C212
 C207: ED C4       STD    ,U
@@ -292,9 +292,9 @@ C20B: 33 C8 20    LEAU   $20,U
 C20E: 5A          DECB
 C20F: 2A CA       BPL    $C1DB
 C211: 39          RTS
-C212: CC F0 DE    LDD    #$F0DE
+C212: CC F0 DE    LDD    #func_f0de
 C215: ED 44       STD    $4,U
-C217: BD E2 B4    JSR    $E2B4
+C217: BD E2 B4    JSR    stack_set_e2b4
 C21A: BD F6 AC    JSR    carry_returning_f6ac
 C21D: 25 01       BCS    $C220
 C21F: 39          RTS
@@ -310,12 +310,12 @@ C231: 86 7E       LDA    #$7E
 C233: 4A          DECA
 C234: C6 02       LDB    #$02
 C236: ED 4A       STD    $A,U
-C238: CC F0 FB    LDD    #$F0FB
+C238: CC F0 FB    LDD    #func_f0fb
 C23B: ED 44       STD    $4,U
 C23D: CC 00 20    LDD    #$0020
-C240: BD E2 BB    JSR    $E2BB
-C243: BD E2 C4    JSR    $E2C4
-C246: CC F0 E5    LDD    #$F0E5
+C240: BD E2 BB    JSR    stack_set_with_param_e2bb
+C243: BD E2 C4    JSR    stack_set_with_param_test_e2c4
+C246: CC F0 E5    LDD    #func_f0e5
 C249: ED 44       STD    $4,U
 C24B: 39          RTS
 C24C: CE 0D F0    LDU    #$0DF0
@@ -339,7 +339,7 @@ C273: 96 D3       LDA    <$D3
 C275: B7 40 51    STA    $4051
 C278: CC C3 56    LDD    #$C356
 C27B: FD 16 30    STD    $1630
-C27E: CC F0 E5    LDD    #$F0E5
+C27E: CC F0 E5    LDD    #func_f0e5
 C281: ED 44       STD    $4,U
 C283: 39          RTS
 C284: BD F4 FC    JSR    $F4FC
@@ -352,7 +352,7 @@ C292: CC C3 1F    LDD    #$C31F
 C295: FD 16 30    STD    $1630
 C298: CC C3 F0    LDD    #$C3F0
 C29B: BD F7 7D    JSR    $F77D
-C29E: CC F0 E5    LDD    #$F0E5
+C29E: CC F0 E5    LDD    #func_f0e5
 C2A1: ED 44       STD    $4,U
 C2A3: 39          RTS
 C2A4: 7F 16 26    CLR    $1626
@@ -374,8 +374,8 @@ C2C8: 8E F8 68    LDX    #$F868
 C2CB: CC 01 01    LDD    #$0101
 C2CE: BD F5 1E    JSR    $F51E
 C2D1: CC 00 40    LDD    #$0040
-C2D4: BD E2 BB    JSR    $E2BB
-C2D7: BD E2 C4    JSR    $E2C4
+C2D4: BD E2 BB    JSR    stack_set_with_param_e2bb
+C2D7: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C2DA: BD C3 0A    JSR    $C30A
 C2DD: BD F5 FA    JSR    $F5FA
 C2E0: A6 4C       LDA    $C,U
@@ -386,11 +386,11 @@ C2E7: 8E 00 94    LDX    #$0094
 C2EA: CC 01 03    LDD    #$0103
 C2ED: BD F5 1E    JSR    $F51E
 C2F0: CC 00 40    LDD    #$0040
-C2F3: BD E2 BB    JSR    $E2BB
-C2F6: BD E2 C4    JSR    $E2C4
+C2F3: BD E2 BB    JSR    stack_set_with_param_e2bb
+C2F6: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C2F9: 10 8E 00 94 LDY    #$0094
 C2FD: BD C3 A4    JSR    $C3A4
-C300: BD E2 B4    JSR    $E2B4
+C300: BD E2 B4    JSR    stack_set_e2b4
 C303: BD C3 0A    JSR    $C30A
 C306: BD F5 FA    JSR    $F5FA
 C309: 39          RTS
@@ -409,8 +409,8 @@ C31F: AE 4C       LDX    $C,U
 C321: CC 01 01    LDD    #$0101
 C324: BD F5 1E    JSR    $F51E
 C327: CC 00 3C    LDD    #$003C
-C32A: BD E2 BB    JSR    $E2BB
-C32D: BD E2 C4    JSR    $E2C4
+C32A: BD E2 BB    JSR    stack_set_with_param_e2bb
+C32D: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C330: BD C3 0A    JSR    $C30A
 C333: BD F5 FA    JSR    $F5FA
 C336: A6 4C       LDA    $C,U
@@ -422,7 +422,7 @@ C340: CC 01 03    LDD    #$0103
 C343: BD F5 1E    JSR    $F51E
 C346: 10 8E 00 BC LDY    #$00BC
 C34A: BD C3 A4    JSR    $C3A4
-C34D: BD E2 B4    JSR    $E2B4
+C34D: BD E2 B4    JSR    stack_set_e2b4
 C350: BD C3 0A    JSR    $C30A
 C353: 7E F5 FA    JMP    $F5FA
 C356: 86 01       LDA    #$01
@@ -433,28 +433,28 @@ C35F: BD F5 1E    JSR    $F51E
 C362: CC 01 80    LDD    #$0180
 C365: ED 50       STD    -$10,U
 C367: BD F5 FA    JSR    $F5FA
-C36A: BD E2 B4    JSR    $E2B4
-C36D: CC E2 BA    LDD    #$E2BA
+C36A: BD E2 B4    JSR    stack_set_e2b4
+C36D: CC E2 BA    LDD    #func_e2ba
 C370: BD F7 8D    JSR    $F78D
 C373: CC 00 3C    LDD    #$003C
-C376: BD E2 BB    JSR    $E2BB
-C379: BD E2 C4    JSR    $E2C4
-C37C: CC F0 FB    LDD    #$F0FB
+C376: BD E2 BB    JSR    stack_set_with_param_e2bb
+C379: BD E2 C4    JSR    stack_set_with_param_test_e2c4
+C37C: CC F0 FB    LDD    #func_f0fb
 C37F: BD F7 8D    JSR    $F78D
-C382: BD E2 B4    JSR    $E2B4
+C382: BD E2 B4    JSR    stack_set_e2b4
 C385: BD C3 0A    JSR    $C30A
 C388: BD F5 FA    JSR    $F5FA
 C38B: A6 4C       LDA    $C,U
 C38D: 81 08       CMPA   #$08
 C38F: 25 01       BCS    $C392
 C391: 39          RTS
-C392: CC F0 E5    LDD    #$F0E5
+C392: CC F0 E5    LDD    #func_f0e5
 C395: ED 44       STD    $4,U
 C397: A6 4C       LDA    $C,U
 C399: 81 F9       CMPA   #$F9
 C39B: 24 01       BCC    $C39E
 C39D: 39          RTS
-C39E: CC F0 E5    LDD    #$F0E5
+C39E: CC F0 E5    LDD    #func_f0e5
 C3A1: ED 44       STD    $4,U
 C3A3: 39          RTS
 C3A4: CE 0E 90    LDU    #$0E90
@@ -469,7 +469,7 @@ C3B6: CC 00 E0    LDD    #$00E0
 C3B9: ED 50       STD    -$10,U
 C3BB: 86 03       LDA    #$03
 C3BD: A7 53       STA    -$D,U
-C3BF: CC F0 FB    LDD    #$F0FB
+C3BF: CC F0 FB    LDD    #func_f0fb
 C3C2: ED 44       STD    $4,U
 C3C4: CC C3 DA    LDD    #$C3DA
 C3C7: ED C4       STD    ,U
@@ -482,14 +482,14 @@ C3D2: 00 2C       NEG    <$2C
 C3D4: 00 40       NEG    <$40
 C3D6: 00 54       NEG    <$54
 C3D8: 00 68       NEG    <$68
-C3DA: BD E2 C4    JSR    $E2C4
+C3DA: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C3DD: BD C3 0A    JSR    $C30A
 C3E0: BD F8 47    JSR    $F847
 C3E3: A6 4C       LDA    $C,U
 C3E5: 81 F9       CMPA   #$F9
 C3E7: 24 01       BCC    $C3EA
 C3E9: 39          RTS
-C3EA: CC F0 E5    LDD    #$F0E5
+C3EA: CC F0 E5    LDD    #func_f0e5
 C3ED: ED 44       STD    $4,U
 C3EF: 39          RTS
 C3F0: 86 01       LDA    #$01
@@ -498,8 +498,8 @@ C3F4: CC 00 40    LDD    #$0040
 C3F7: ED 50       STD    -$10,U
 C3F9: BD F8 CA    JSR    $F8CA
 C3FC: CC 00 3C    LDD    #$003C
-C3FF: BD E2 BB    JSR    $E2BB
-C402: BD E2 C4    JSR    $E2C4
+C3FF: BD E2 BB    JSR    stack_set_with_param_e2bb
+C402: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C405: BD C3 0A    JSR    $C30A
 C408: BD F8 CA    JSR    $F8CA
 C40B: BD F6 AC    JSR    carry_returning_f6ac
@@ -507,7 +507,7 @@ C40E: 25 01       BCS    $C411
 C410: 39          RTS
 C411: 96 D3       LDA    <$D3
 C413: B7 40 4D    STA    $404D
-C416: CC F1 01    LDD    #$F101
+C416: CC F1 01    LDD    #func_f101
 C419: BD F7 8A    JSR    $F78A
 C41C: CC F0 EF    LDD    #$F0EF
 C41F: ED 44       STD    $4,U
@@ -517,13 +517,13 @@ C426: CE 16 30    LDU    #$1630
 C429: 6F 49       CLR    $9,U
 C42B: ED 4A       STD    $A,U
 C42D: CC 00 1E    LDD    #$001E
-C430: BD E2 BB    JSR    $E2BB
-C433: BD E2 C4    JSR    $E2C4
+C430: BD E2 BB    JSR    stack_set_with_param_e2bb
+C433: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C436: 86 01       LDA    #$01
 C438: B7 16 3B    STA    $163B
-C43B: CC F0 FB    LDD    #$F0FB
+C43B: CC F0 FB    LDD    #func_f0fb
 C43E: BD F7 8A    JSR    $F78A
-C441: BD E2 B4    JSR    $E2B4
+C441: BD E2 B4    JSR    stack_set_e2b4
 C444: 39          RTS
 C445: 4F          CLRA
 C446: CE 12 00    LDU    #$1200
@@ -544,7 +544,7 @@ C46C: BD C5 14    JSR    $C514
 C46F: 86 03       LDA    #$03
 C471: 97 14       STA    <$14
 C473: BD E2 9E    JSR    $E29E
-C476: BD E2 B4    JSR    $E2B4
+C476: BD E2 B4    JSR    stack_set_e2b4
 C479: BD EA 33    JSR    $EA33
 C47C: BD EB 0C    JSR    $EB0C
 C47F: CC 00 00    LDD    #$0000
@@ -560,7 +560,7 @@ C494: 86 02       LDA    #$02
 C496: 97 AB       STA    <$AB
 C498: BD F5 08    JSR    $F508
 C49B: BD F7 70    JSR    $F770
-C49E: BD E2 B4    JSR    $E2B4
+C49E: BD E2 B4    JSR    stack_set_e2b4
 C4A1: DC 92       LDD    <$92
 C4A3: C3 00 01    ADDD   #$0001
 C4A6: 25 02       BCS    $C4AA
@@ -571,15 +571,15 @@ C4AE: 27 01       BEQ    $C4B1
 C4B0: 39          RTS
 C4B1: 0F AB       CLR    <$AB
 C4B3: CC 00 3C    LDD    #$003C
-C4B6: BD E2 BB    JSR    $E2BB
-C4B9: BD E2 C4    JSR    $E2C4
+C4B6: BD E2 BB    JSR    stack_set_with_param_e2bb
+C4B9: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C4BC: 7E C0 03    JMP    $C003
 C4BF: 96 B6       LDA    <$B6
 C4C1: 26 03       BNE    $C4C6
 C4C3: 4C          INCA
 C4C4: 97 B6       STA    <$B6
 C4C6: BD E2 9E    JSR    $E29E
-C4C9: BD E2 B4    JSR    $E2B4
+C4C9: BD E2 B4    JSR    stack_set_e2b4
 C4CC: 86 20       LDA    #$20
 C4CE: CE 00 00    LDU    #$0000
 C4D1: 8E 02 00    LDX    #$0200
@@ -601,7 +601,7 @@ C4F9: 26 EE       BNE    $C4E9
 C4FB: 33 C9 FF 20 LEAU   -$00E0,U
 C4FF: 4A          DECA
 C500: 26 E5       BNE    $C4E7
-C502: BD E2 B4    JSR    $E2B4
+C502: BD E2 B4    JSR    stack_set_e2b4
 C505: 96 AC       LDA    <$AC
 C507: 85 80       BITA   #$80
 C509: 10 26 FF 38 LBNE   $C445
@@ -823,10 +823,10 @@ C76B: BD EE 06    JSR    $EE06
 C76E: 8D 1E       BSR    $C78E
 C770: 8D 2E       BSR    $C7A0
 C772: CC 02 58    LDD    #$0258
-C775: BD E2 BB    JSR    $E2BB
-C778: BD E2 C4    JSR    $E2C4
+C775: BD E2 BB    JSR    stack_set_with_param_e2bb
+C778: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C77B: BD E2 9E    JSR    $E29E
-C77E: BD E2 B4    JSR    $E2B4
+C77E: BD E2 B4    JSR    stack_set_e2b4
 C781: FC E2 8A    LDD    $E28A
 C784: 83 E3 E6    SUBD   #$E3E6
 C787: 27 01       BEQ    $C78A
@@ -899,11 +899,11 @@ C800: A6 4C       LDA    $C,U
 C802: 81 08       CMPA   #$08
 C804: 25 01       BCS    $C807
 C806: 39          RTS
-C807: CC F1 01    LDD    #$F101
+C807: CC F1 01    LDD    #func_f101
 C80A: BD F7 8D    JSR    $F78D
 C80D: CC 00 3C    LDD    #$003C
-C810: BD E2 BB    JSR    $E2BB
-C813: BD E2 C4    JSR    $E2C4
+C810: BD E2 BB    JSR    stack_set_with_param_e2bb
+C813: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C816: 86 01       LDA    #$01
 C818: A7 56       STA    -$A,U
 C81A: 8E 00 40    LDX    #$0040
@@ -913,17 +913,17 @@ C823: CC 0C 14    LDD    #$0C14
 C826: ED 49       STD    $9,U
 C828: CC 01 80    LDD    #$0180
 C82B: ED 50       STD    -$10,U
-C82D: CC F0 FB    LDD    #$F0FB
+C82D: CC F0 FB    LDD    #func_f0fb
 C830: BD F7 8D    JSR    $F78D
 C833: CC C8 90    LDD    #$C890
 C836: BD F7 7D    JSR    $F77D
-C839: BD E2 B4    JSR    $E2B4
+C839: BD E2 B4    JSR    stack_set_e2b4
 C83C: BD C3 0A    JSR    $C30A
 C83F: A6 4C       LDA    $C,U
 C841: 81 F8       CMPA   #$F8
 C843: 24 01       BCC    $C846
 C845: 39          RTS
-C846: CC F0 E5    LDD    #$F0E5
+C846: CC F0 E5    LDD    #func_f0e5
 C849: ED 44       STD    $4,U
 C84B: 39          RTS
 C84C: 10 8E F8 80 LDY    #$F880
@@ -939,7 +939,7 @@ C862: CC 00 C0    LDD    #$00C0
 C865: ED 50       STD    -$10,U
 C867: 86 01       LDA    #$01
 C869: A7 53       STA    -$D,U
-C86B: CC F0 FB    LDD    #$F0FB
+C86B: CC F0 FB    LDD    #func_f0fb
 C86E: ED 44       STD    $4,U
 C870: CC C8 86    LDD    #$C886
 C873: ED C4       STD    ,U
@@ -952,14 +952,14 @@ C87E: 00 54       NEG    <$54
 C880: 00 68       NEG    <$68
 C882: 00 7C       NEG    <$7C
 C884: 00 90       NEG    <$90
-C886: BD E2 C4    JSR    $E2C4
+C886: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C889: BD C3 0A    JSR    $C30A
 C88C: BD F8 47    JSR    $F847
 C88F: 39          RTS
 C890: CC 00 9F    LDD    #$009F
-C893: BD E2 BB    JSR    $E2BB
+C893: BD E2 BB    JSR    stack_set_with_param_e2bb
 C896: BD C8 9D    JSR    $C89D
-C899: BD E2 C4    JSR    $E2C4
+C899: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C89C: 39          RTS
 C89D: E6 43       LDB    $3,U
 C89F: C4 E0       ANDB   #$E0
@@ -983,8 +983,8 @@ C8CA: 8E C8 D0    LDX    #$C8D0
 C8CD: AF C4       STX    ,U
 C8CF: 39          RTS
 C8D0: CC 00 30    LDD    #$0030
-C8D3: BD E2 BB    JSR    $E2BB
-C8D6: BD E2 C4    JSR    $E2C4
+C8D3: BD E2 BB    JSR    stack_set_with_param_e2bb
+C8D6: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C8D9: BD C3 0A    JSR    $C30A
 C8DC: BD F5 FA    JSR    $F5FA
 C8DF: A6 4C       LDA    $C,U
@@ -995,14 +995,14 @@ C8E6: 6F 56       CLR    -$A,U
 C8E8: 8E 00 80    LDX    #$0080
 C8EB: CC 01 03    LDD    #$0103
 C8EE: BD F5 1E    JSR    $F51E
-C8F1: BD E2 B4    JSR    $E2B4
+C8F1: BD E2 B4    JSR    stack_set_e2b4
 C8F4: BD C3 0A    JSR    $C30A
 C8F7: BD F5 FA    JSR    $F5FA
 C8FA: A6 4C       LDA    $C,U
 C8FC: 81 F8       CMPA   #$F8
 C8FE: 24 01       BCC    $C901
 C900: 39          RTS
-C901: CC F0 E5    LDD    #$F0E5
+C901: CC F0 E5    LDD    #func_f0e5
 C904: ED 44       STD    $4,U
 C906: 39          RTS
 C907: CE 0E 90    LDU    #$0E90
@@ -1012,7 +1012,7 @@ C90F: CC 01 00    LDD    #$0100
 C912: ED 50       STD    -$10,U
 C914: 86 01       LDA    #$01
 C916: A7 53       STA    -$D,U
-C918: CC F0 FB    LDD    #$F0FB
+C918: CC F0 FB    LDD    #func_f0fb
 C91B: ED 44       STD    $4,U
 C91D: CC C9 23    LDD    #$C923
 C920: ED C4       STD    ,U
@@ -1024,14 +1024,14 @@ C92B: 81 08       CMPA   #$08
 C92D: 25 01       BCS    $C930
 C92F: 39          RTS
 C930: CC 00 60    LDD    #$0060
-C933: BD E2 BB    JSR    $E2BB
-C936: BD E2 C4    JSR    $E2C4
+C933: BD E2 BB    JSR    stack_set_with_param_e2bb
+C936: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 C939: 86 03       LDA    #$03
 C93B: A7 53       STA    -$D,U
 C93D: CC 0C 04    LDD    #$0C04
 C940: A7 49       STA    $9,U
 C942: E7 4B       STB    $B,U
-C944: BD E2 B4    JSR    $E2B4
+C944: BD E2 B4    JSR    stack_set_e2b4
 C947: BD C3 0A    JSR    $C30A
 C94A: 96 81       LDA    <$81
 C94C: 44          LSRA
@@ -1043,7 +1043,7 @@ C954: A6 4C       LDA    $C,U
 C956: 81 F8       CMPA   #$F8
 C958: 24 01       BCC    $C95B
 C95A: 39          RTS
-C95B: CC F0 E5    LDD    #$F0E5
+C95B: CC F0 E5    LDD    #func_f0e5
 C95E: ED 44       STD    $4,U
 C960: 39          RTS
 C961: 7F 16 26    CLR    $1626
@@ -1062,9 +1062,9 @@ C980: 81 F8       CMPA   #$F8
 C982: 24 01       BCC    $C985
 C984: 39          RTS
 C985: CC 00 80    LDD    #$0080
-C988: BD E2 BB    JSR    $E2BB
-C98B: BD E2 C4    JSR    $E2C4
-C98E: CC F0 E5    LDD    #$F0E5
+C988: BD E2 BB    JSR    stack_set_with_param_e2bb
+C98B: BD E2 C4    JSR    stack_set_with_param_test_e2c4
+C98E: CC F0 E5    LDD    #func_f0e5
 C991: ED 44       STD    $4,U
 C993: 10 8E C9 E2 LDY    #$C9E2
 C997: 8E 01 00    LDX    #$0100
@@ -1089,7 +1089,7 @@ C9BD: 96 FA       LDA    <$FA
 C9BF: A7 53       STA    -$D,U
 C9C1: DC F8       LDD    <$F8
 C9C3: ED 50       STD    -$10,U
-C9C5: CC F0 FB    LDD    #$F0FB
+C9C5: CC F0 FB    LDD    #func_f0fb
 C9C8: ED 44       STD    $4,U
 C9CA: 10 AF C4    STY    ,U
 C9CD: E6 56       LDB    -$A,U
@@ -1102,7 +1102,7 @@ C9E8: 4C          INCA
 C9E9: 81 08       CMPA   #$08
 C9EB: 25 01       BCS    $C9EE
 C9ED: 39          RTS
-C9EE: CC F0 E5    LDD    #$F0E5
+C9EE: CC F0 E5    LDD    #func_f0e5
 C9F1: ED 44       STD    $4,U
 C9F3: 39          RTS
 C9F4: D6 81       LDB    <$81
@@ -1122,14 +1122,14 @@ CA0E: A7 53       STA    -$D,U
 CA10: CC 0C 04    LDD    #$0C04
 CA13: A7 49       STA    $9,U
 CA15: E7 4B       STB    $B,U
-CA17: CC F0 FB    LDD    #$F0FB
+CA17: CC F0 FB    LDD    #func_f0fb
 CA1A: ED 44       STD    $4,U
 CA1C: CC CA 22    LDD    #$CA22
 CA1F: ED C4       STD    ,U
 CA21: 39          RTS
 CA22: CC 00 30    LDD    #$0030
-CA25: BD E2 BB    JSR    $E2BB
-CA28: BD E2 C4    JSR    $E2C4
+CA25: BD E2 BB    JSR    stack_set_with_param_e2bb
+CA28: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CA2B: BD C3 0A    JSR    $C30A
 CA2E: 96 81       LDA    <$81
 CA30: 44          LSRA
@@ -1145,7 +1145,7 @@ CA3F: 86 01       LDA    #$01
 CA41: A7 53       STA    -$D,U
 CA43: 86 08       LDA    #$08
 CA45: A7 4B       STA    $B,U
-CA47: BD E2 B4    JSR    $E2B4
+CA47: BD E2 B4    JSR    stack_set_e2b4
 CA4A: BD C3 0A    JSR    $C30A
 CA4D: 96 81       LDA    <$81
 CA4F: 44          LSRA
@@ -1157,7 +1157,7 @@ CA57: A6 4C       LDA    $C,U
 CA59: 81 08       CMPA   #$08
 CA5B: 25 01       BCS    $CA5E
 CA5D: 39          RTS
-CA5E: CC F0 E5    LDD    #$F0E5
+CA5E: CC F0 E5    LDD    #func_f0e5
 CA61: ED 44       STD    $4,U
 CA63: 39          RTS
 CA64: 10 8E CA 70 LDY    #$CA70
@@ -1175,8 +1175,8 @@ CA7F: CC 03 08    LDD    #$0308
 CA82: A7 53       STA    -$D,U
 CA84: E7 4B       STB    $B,U
 CA86: CC 00 A0    LDD    #$00A0
-CA89: BD E2 BB    JSR    $E2BB
-CA8C: BD E2 C4    JSR    $E2C4
+CA89: BD E2 BB    JSR    stack_set_with_param_e2bb
+CA8C: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CA8F: BD C3 0A    JSR    $C30A
 CA92: 96 81       LDA    <$81
 CA94: 44          LSRA
@@ -1188,7 +1188,7 @@ CA9C: A6 4C       LDA    $C,U
 CA9E: 81 F8       CMPA   #$F8
 CAA0: 24 01       BCC    $CAA3
 CAA2: 39          RTS
-CAA3: CC F0 E5    LDD    #$F0E5
+CAA3: CC F0 E5    LDD    #func_f0e5
 CAA6: ED 44       STD    $4,U
 CAA8: 39          RTS
 CAA9: CE 08 90    LDU    #$0890
@@ -1221,7 +1221,7 @@ CAD8: CC 01 80    LDD    #$0180
 CADB: ED 50       STD    -$10,U
 CADD: 86 01       LDA    #$01
 CADF: A7 53       STA    -$D,U
-CAE1: CC F0 FB    LDD    #$F0FB
+CAE1: CC F0 FB    LDD    #func_f0fb
 CAE4: ED 44       STD    $4,U
 CAE6: CC CB 04    LDD    #$CB04
 CAE9: ED C4       STD    ,U
@@ -1238,7 +1238,7 @@ CAFC: 00 60       NEG    <$60
 CAFE: 00 6C       NEG    <$6C
 CB00: 00 78       NEG    <$78
 CB02: 00 84       NEG    <$84
-CB04: BD E2 C4    JSR    $E2C4
+CB04: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CB07: BD C3 0A    JSR    $C30A
 CB0A: BD F8 4D    JSR    $F84D
 CB0D: A6 4C       LDA    $C,U
@@ -1249,8 +1249,8 @@ CB14: CC 03 01    LDD    #$0301
 CB17: A7 53       STA    -$D,U
 CB19: E7 4B       STB    $B,U
 CB1B: CC 00 A0    LDD    #$00A0
-CB1E: BD E2 BB    JSR    $E2BB
-CB21: BD E2 C4    JSR    $E2C4
+CB1E: BD E2 BB    JSR    stack_set_with_param_e2bb
+CB21: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CB24: 6F 56       CLR    -$A,U
 CB26: BD C3 0A    JSR    $C30A
 CB29: BD F5 FA    JSR    $F5FA
@@ -1258,7 +1258,7 @@ CB2C: A6 4C       LDA    $C,U
 CB2E: 81 F8       CMPA   #$F8
 CB30: 24 01       BCC    $CB33
 CB32: 39          RTS
-CB33: CC F0 E5    LDD    #$F0E5
+CB33: CC F0 E5    LDD    #func_f0e5
 CB36: ED 44       STD    $4,U
 CB38: 39          RTS
 CB39: 7F 16 26    CLR    $1626
@@ -1279,13 +1279,13 @@ CB5C: 39          RTS
 CB5D: 86 0F       LDA    #$0F
 CB5F: A7 4A       STA    $A,U
 CB61: CC 00 0C    LDD    #$000C
-CB64: BD E2 BB    JSR    $E2BB
-CB67: BD E2 C4    JSR    $E2C4
+CB64: BD E2 BB    JSR    stack_set_with_param_e2bb
+CB67: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CB6A: CC CB EB    LDD    #$CBEB
 CB6D: BD F7 7D    JSR    $F77D
 CB70: CC F0 EF    LDD    #$F0EF
 CB73: ED 44       STD    $4,U
-CB75: BD E2 B4    JSR    $E2B4
+CB75: BD E2 B4    JSR    stack_set_e2b4
 CB78: 39          RTS
 CB79: 10 8E 08 C0 LDY    #$08C0
 CB7D: CE 0E 90    LDU    #$0E90
@@ -1300,7 +1300,7 @@ CB8F: CC 00 E0    LDD    #$00E0
 CB92: ED 50       STD    -$10,U
 CB94: 86 03       LDA    #$03
 CB96: A7 53       STA    -$D,U
-CB98: CC F0 FB    LDD    #$F0FB
+CB98: CC F0 FB    LDD    #func_f0fb
 CB9B: ED 44       STD    $4,U
 CB9D: CC CB E1    LDD    #$CBE1
 CBA0: ED C4       STD    ,U
@@ -1320,7 +1320,7 @@ CBBD: CC 00 E0    LDD    #$00E0
 CBC0: ED 50       STD    -$10,U
 CBC2: 86 01       LDA    #$01
 CBC4: A7 53       STA    -$D,U
-CBC6: CC F0 FB    LDD    #$F0FB
+CBC6: CC F0 FB    LDD    #func_f0fb
 CBC9: ED 44       STD    $4,U
 CBCB: CC CB E1    LDD    #$CBE1
 CBCE: ED C4       STD    ,U
@@ -1333,7 +1333,7 @@ CBD9: 00 2C       NEG    <$2C
 CBDB: 00 3E       NEG    <$3E
 CBDD: 00 2C       NEG    <$2C
 CBDF: 00 3E       NEG    <$3E
-CBE1: BD E2 C4    JSR    $E2C4
+CBE1: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CBE4: BD C3 0A    JSR    $C30A
 CBE7: BD F8 47    JSR    $F847
 CBEA: 39          RTS
@@ -1341,44 +1341,44 @@ CBEB: CC 00 24    LDD    #$0024
 CBEE: 8E 02 24    LDX    #$0224
 CBF1: BD CC 8C    JSR    $CC8C
 CBF4: CC 00 20    LDD    #$0020
-CBF7: BD E2 BB    JSR    $E2BB
-CBFA: BD E2 C4    JSR    $E2C4
+CBF7: BD E2 BB    JSR    stack_set_with_param_e2bb
+CBFA: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CBFD: CC 02 24    LDD    #$0224
 CC00: 8E 00 24    LDX    #$0024
 CC03: BD CC 8C    JSR    $CC8C
 CC06: CC 00 20    LDD    #$0020
-CC09: BD E2 BB    JSR    $E2BB
-CC0C: BD E2 C4    JSR    $E2C4
+CC09: BD E2 BB    JSR    stack_set_with_param_e2bb
+CC0C: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CC0F: CC 00 24    LDD    #$0024
 CC12: 8E 02 24    LDX    #$0224
 CC15: 8D 75       BSR    $CC8C
 CC17: CC 00 20    LDD    #$0020
-CC1A: BD E2 BB    JSR    $E2BB
-CC1D: BD E2 C4    JSR    $E2C4
+CC1A: BD E2 BB    JSR    stack_set_with_param_e2bb
+CC1D: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CC20: CC 02 24    LDD    #$0224
 CC23: 8E 00 24    LDX    #$0024
 CC26: 8D 64       BSR    $CC8C
 CC28: CC 00 20    LDD    #$0020
-CC2B: BD E2 BB    JSR    $E2BB
-CC2E: BD E2 C4    JSR    $E2C4
+CC2B: BD E2 BB    JSR    stack_set_with_param_e2bb
+CC2E: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CC31: CC 00 28    LDD    #$0028
 CC34: 8E 00 26    LDX    #$0026
 CC37: 8D 53       BSR    $CC8C
 CC39: A6 56       LDA    -$A,U
 CC3B: 81 03       CMPA   #$03
 CC3D: 27 04       BEQ    $CC43
-CC3F: BD E2 B4    JSR    $E2B4
+CC3F: BD E2 B4    JSR    stack_set_e2b4
 CC42: 39          RTS
 CC43: CC 5B 14    LDD    #$5B14
 CC46: B7 01 76    STA    $0176
 CC49: F7 05 76    STB    $0576
 CC4C: CC 00 20    LDD    #$0020
-CC4F: BD E2 BB    JSR    $E2BB
-CC52: BD E2 C4    JSR    $E2C4
+CC4F: BD E2 BB    JSR    stack_set_with_param_e2bb
+CC52: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CC55: 8D 42       BSR    $CC99
 CC57: CC 00 20    LDD    #$0020
-CC5A: BD E2 BB    JSR    $E2BB
-CC5D: BD E2 C4    JSR    $E2C4
+CC5A: BD E2 BB    JSR    stack_set_with_param_e2bb
+CC5D: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CC60: 86 20       LDA    #$20
 CC62: B7 01 76    STA    $0176
 CC65: 86 08       LDA    #$08
@@ -1387,14 +1387,14 @@ CC69: CC 00 26    LDD    #$0026
 CC6C: 8E 00 30    LDX    #$0030
 CC6F: 8D 1B       BSR    $CC8C
 CC71: CC 00 38    LDD    #$0038
-CC74: BD E2 BB    JSR    $E2BB
-CC77: BD E2 C4    JSR    $E2C4
+CC74: BD E2 BB    JSR    stack_set_with_param_e2bb
+CC77: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CC7A: CC 55 08    LDD    #$5508
 CC7D: ED 4A       STD    $A,U
 CC7F: FD 0E FA    STD    $0EFA
 CC82: FD 0E BA    STD    $0EBA
 CC85: FD 0E DA    STD    $0EDA
-CC88: BD E2 B4    JSR    $E2B4
+CC88: BD E2 B4    JSR    stack_set_e2b4
 CC8B: 39          RTS
 CC8C: BF 0E 99    STX    $0E99
 CC8F: FD 0E F9    STD    $0EF9
@@ -1424,7 +1424,7 @@ CCC3: 96 FA       LDA    <$FA
 CCC5: A7 53       STA    -$D,U
 CCC7: DC F8       LDD    <$F8
 CCC9: ED 50       STD    -$10,U
-CCCB: CC F0 FB    LDD    #$F0FB
+CCCB: CC F0 FB    LDD    #func_f0fb
 CCCE: ED 44       STD    $4,U
 CCD0: 10 AF C4    STY    ,U
 CCD3: E6 56       LDB    -$A,U
@@ -1433,39 +1433,39 @@ CCD8: 5A          DECB
 CCD9: 2A D0       BPL    $CCAB
 CCDB: 39          RTS
 
-CCEB: BD E2 BB    JSR    $E2BB
+CCEB: BD E2 BB    JSR    stack_set_with_param_e2bb
 CCEE: BD C3 0A    JSR    $C30A
-CCF1: BD E2 C4    JSR    $E2C4
+CCF1: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CCF4: 86 00       LDA    #$00
 CCF6: A7 53       STA    -$D,U
 CCF8: CC 00 10    LDD    #$0010
-CCFB: BD E2 BB    JSR    $E2BB
+CCFB: BD E2 BB    JSR    stack_set_with_param_e2bb
 CCFE: BD C3 0A    JSR    $C30A
-CD01: BD E2 C4    JSR    $E2C4
+CD01: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CD04: 86 02       LDA    #$02
 CD06: A7 53       STA    -$D,U
 CD08: CC 00 10    LDD    #$0010
-CD0B: BD E2 BB    JSR    $E2BB
+CD0B: BD E2 BB    JSR    stack_set_with_param_e2bb
 CD0E: BD C3 0A    JSR    $C30A
-CD11: BD E2 C4    JSR    $E2C4
+CD11: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CD14: 86 00       LDA    #$00
 CD16: A7 53       STA    -$D,U
 CD18: CC 00 08    LDD    #$0008
-CD1B: BD E2 BB    JSR    $E2BB
+CD1B: BD E2 BB    JSR    stack_set_with_param_e2bb
 CD1E: BD C3 0A    JSR    $C30A
-CD21: BD E2 C4    JSR    $E2C4
+CD21: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CD24: 86 02       LDA    #$02
 CD26: A7 53       STA    -$D,U
 CD28: CC 00 08    LDD    #$0008
-CD2B: BD E2 BB    JSR    $E2BB
+CD2B: BD E2 BB    JSR    stack_set_with_param_e2bb
 CD2E: BD C3 0A    JSR    $C30A
-CD31: BD E2 C4    JSR    $E2C4
+CD31: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CD34: CC 00 20    LDD    #$0020
-CD37: BD E2 BB    JSR    $E2BB
-CD3A: BD E2 C4    JSR    $E2C4
+CD37: BD E2 BB    JSR    stack_set_with_param_e2bb
+CD3A: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 CD3D: 86 31       LDA    #$31
 CD3F: A7 4B       STA    $B,U
-CD41: BD E2 B4    JSR    $E2B4
+CD41: BD E2 B4    JSR    stack_set_e2b4
 CD44: 39          RTS
 CD45: CC 00 00    LDD    #$0000
 CD48: 97 12       STA    <$12
@@ -1779,7 +1779,7 @@ E1FB: 10 8E E2 88 LDY    #$E288
 E1FF: C6 06       LDB    #$06
 E201: AE A1       LDX    ,Y++
 E203: AF C4       STX    ,U
-E205: 8E F0 DE    LDX    #$F0DE
+E205: 8E F0 DE    LDX    #func_f0de
 E208: AF 44       STX    $4,U
 E20A: 33 48       LEAU   $8,U
 E20C: 5A          DECB
@@ -1797,7 +1797,7 @@ E222: 20 ED       BRA    $E211
 E224: CE 11 08    LDU    #$1108
 E227: 96 C6       LDA    <$C6
 E229: 2B 0C       BMI    $E237
-E22B: AD D8 04    JSR    [$04,U]
+E22B: AD D8 04    JSR    [$04,U]	; [indirect_jump]
 E22E: 33 48       LEAU   $8,U
 E230: 11 83 11 30 CMPU   #$1130
 E234: 26 F5       BNE    $E22B
@@ -1816,7 +1816,7 @@ E24D: AE C4       LDX    ,U
 E24F: 8C E8 44    CMPX   #$E844
 E252: 26 01       BNE    $E255
 E254: 39          RTS
-E255: AD D8 04    JSR    [$04,U]
+E255: AD D8 04    JSR    [$04,U]	; [indirect_jump]
 E258: CE 11 10    LDU    #$1110
 E25B: 20 CE       BRA    $E22B
 E25D: 96 C0       LDA    <$C0
@@ -1837,41 +1837,49 @@ E27A: 96 C0       LDA    <$C0
 E27C: 26 01       BNE    $E27F
 E27E: 39          RTS
 E27F: 0C 8B       INC    <$8B
-E281: CC E7 16    LDD    #$E716
+E281: CC E7 16    LDD    #func_e716
 E284: FD 11 08    STD    $1108
 E287: 39          RTS
 
-E294: CC E2 BA    LDD    #$E2BA
+E294: CC E2 BA    LDD    #func_e2ba
 E297: FD 11 10    STD    $1110
 E29A: FD 11 28    STD    $1128
 E29D: 39          RTS
-E29E: CC F0 85    LDD    #$F085
+
+E29E: CC F0 85    LDD    #func_f085
 E2A1: FD 11 10    STD    $1110
-E2A4: CC FD 3A    LDD    #$FD3A
+E2A4: CC FD 3A    LDD    #func_fd3a
 E2A7: FD 11 28    STD    $1128
-E2AA: CC F0 DE    LDD    #$F0DE
+E2AA: CC F0 DE    LDD    #func_f0de
 E2AD: FD 11 2C    STD    $112C
 E2B0: 7F 40 4E    CLR    $404E
 E2B3: 39          RTS
-E2B4: 35 10       PULS   X
-E2B6: EE 62       LDU    $2,S
-E2B8: AF C4       STX    ,U
-E2BA: 39          RTS
-E2BB: 35 10       PULS   X
-E2BD: EE 62       LDU    $2,S
-E2BF: ED 42       STD    $2,U
-E2C1: AF C4       STX    ,U
-E2C3: 39          RTS
 
-E2C4: 35 10       PULS   X
-E2C6: EE 62       LDU    $2,S
-E2C8: EC 42       LDD    $2,U
-E2CA: 83 00 01    SUBD   #$0001
-E2CD: ED 42       STD    $2,U
-E2CF: 27 01       BEQ    $E2D2
+stack_set_e2b4:
+E2B4: 35 10       PULS   X		; put return address in X
+E2B6: EE 62       LDU    $2,S	; put stack value from U+2
+E2B8: AF C4       STX    ,U		; store return address in U
+func_e2ba:
+E2BA: 39          RTS			; and returns to caller
+
+stack_set_with_param_e2bb:
+E2BB: 35 10       PULS   X      ; put return address in X
+E2BD: EE 62       LDU    $2,S   ; put stack value from U+2
+E2BF: ED 42       STD    $2,U   ; store D in U+2
+E2C1: AF C4       STX    ,U     ; store return address in U
+E2C3: 39          RTS           ; and returns to caller
+
+stack_set_with_param_test_e2c4:
+E2C4: 35 10       PULS   X      ; put return address in X
+E2C6: EE 62       LDU    $2,S   ; put stack value from U+2
+E2C8: EC 42       LDD    $2,U	; get D from U+2
+E2CA: 83 00 01    SUBD   #$0001	; D--
+E2CD: ED 42       STD    $2,U	; store new value of D
+E2CF: 27 01       BEQ    $E2D2	; if 0, do something else
 E2D1: 39          RTS
-E2D2: AF C4       STX    ,U
-E2D4: 6E 84       JMP    ,X
+E2D2: AF C4       STX    ,U     ; store return address in U
+E2D4: 6E 84       JMP    ,X     ; and returns to caller without popping the stack
+
 E2D6: B7 80 00    STA    $8000
 E2D9: B7 50 02    STA    $5002
 E2DC: B7 50 03    STA    $5003
@@ -1910,22 +1918,22 @@ E32B: 48          ASLA
 E32C: 8E E3 31    LDX    #jump_table_e331
 E32F: 6E 96       JMP    [A,X]	; [indirect_jump] [nb_entries=16]
 jump_table_e331:
-	dc.w	$E2BA
+	dc.w	func_e2ba
 	dc.w	$E351
-	dc.w	$E2BA
-	dc.w	$E2BA
+	dc.w	func_e2ba
+	dc.w	func_e2ba
 	dc.w	$E369
-	dc.w	$E2BA
-	dc.w	$E2BA
-	dc.w	$E2BA
+	dc.w	func_e2ba
+	dc.w	func_e2ba
+	dc.w	func_e2ba
 	dc.w	$E3A4
 	dc.w	$E3D8
-	dc.w	$E2BA 
-	dc.w	$E2BA
-	dc.w	$E2BA
-	dc.w	$E2BA
-	dc.w	$E2BA
-	dc.w	$E2BA
+	dc.w	func_e2ba 
+	dc.w	func_e2ba
+	dc.w	func_e2ba
+	dc.w	func_e2ba
+	dc.w	func_e2ba
+	dc.w	func_e2ba
 E351: 8E 10 DE    LDX    #$10DE
 E354: A6 80       LDA    ,X+
 E356: A7 84       STA    ,X
@@ -2010,7 +2018,7 @@ E3E6: CE 48 08    LDU    #$4808
 E3E9: BD E4 A3    JSR    $E4A3
 E3EC: CE 48 18    LDU    #$4818
 E3EF: BD E4 A3    JSR    $E4A3
-E3F2: BD E2 B4    JSR    $E2B4
+E3F2: BD E2 B4    JSR    stack_set_e2b4
 E3F5: CC 4F 4B    LDD    #$4F4B
 E3F8: B7 02 64    STA    $0264
 E3FB: F7 02 44    STB    $0244
@@ -2020,7 +2028,7 @@ E404: 10 8E 00 03 LDY    #$0003
 E408: BD EE BA    JSR    $EEBA
 E40B: 86 09       LDA    #$09
 E40D: B7 48 18    STA    $4818
-E410: BD E2 B4    JSR    $E2B4
+E410: BD E2 B4    JSR    stack_set_e2b4
 E413: BD E4 B6    JSR    $E4B6
 E416: BD E5 97    JSR    $E597
 E419: CE 02 E8    LDU    #$02E8
@@ -2064,8 +2072,8 @@ E473: 5A          DECB
 E474: 26 F9       BNE    $E46F
 E476: BD E6 F2    JSR    $E6F2
 E479: CC 00 78    LDD    #$0078
-E47C: BD E2 BB    JSR    $E2BB
-E47F: BD E2 C4    JSR    $E2C4
+E47C: BD E2 BB    JSR    stack_set_with_param_e2bb
+E47F: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 E482: 96 C4       LDA    <$C4
 E484: 84 08       ANDA   #$08
 E486: 27 01       BEQ    $E489
@@ -2080,7 +2088,7 @@ E495: 86 01       LDA    #$01
 E497: A7 41       STA    $1,U
 E499: 96 EA       LDA    <$EA
 E49B: A7 42       STA    $2,U
-E49D: BD E2 B4    JSR    $E2B4
+E49D: BD E2 B4    JSR    stack_set_e2b4
 E4A0: 7E C0 00    JMP    $C000
 E4A3: 86 08       LDA    #$08
 E4A5: A7 C0       STA    ,U+
@@ -2157,9 +2165,9 @@ E526: 86 01       LDA    #$01
 E528: 97 EA       STA    <$EA
 E52A: 39          RTS
 
-E59E: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E59E: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
-E5AA: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E5AA: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 E5B6: 8B 30       ADDA   #$30
 E5B8: A7 C4       STA    ,U
@@ -2179,7 +2187,7 @@ E5D8: 39          RTS
 E5D9: CE 03 72    LDU    #$0372
 E5DC: 96 CF       LDA    <$CF
 E5DE: 26 27       BNE    $E607
-E5E0: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E5E0: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 
 E5EA: 55          LSRB
@@ -2196,7 +2204,7 @@ E5FC: 8D 03       BSR    $E601
 E5FE: CE 03 76    LDU    #$0376
 E601: CC 20 15    LDD    #$2015
 E604: 7E FE 0F    JMP    $FE0F
-E607: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E607: BD EE C7    JSR    task_switch_eec7		; [no_return]
 E60A: 31 53       LEAY   -$D,U
 E60C: 54          LSRB
 E60D: 20 42       BRA    $E651
@@ -2210,19 +2218,19 @@ E61A: 03 74       COM    <$74
 E61C: 96 CF       LDA    <$CF
 E61E: 4A          DECA
 E61F: 27 DB       BEQ    $E5FC
-E621: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E621: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 
 E630: CE 03 76    LDU    #$0376
 E633: 96 CF       LDA    <$CF
 E635: 4C          INCA
 E636: 26 C9       BNE    $E601
-E638: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E638: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 E646: 10 D6 10    LDB    <$10
 E649: 8E 03 02    LDX    #$0302
 E64C: BD FE 1C    JSR    $FE1C
-E64F: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E64F: BD EE C7    JSR    task_switch_eec7		; [no_return]
 E652: 30 30       LEAX   -$10,Y
 E654: 30 20       LEAX   $0,Y
 E656: 50          NEGB
@@ -2233,7 +2241,7 @@ E65A: 00 39       NEG    <$39
 E65C: CE 02 F8    LDU    #$02F8
 E65F: 96 D2       LDA    <$D2
 E661: 27 0D       BEQ    $E670
-E663: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E663: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 E66C: 55          LSRB
 E66D: 45          LSRA
@@ -2243,7 +2251,7 @@ E673: 7E FE 0F    JMP    $FE0F
 E676: CE 02 FA    LDU    #$02FA
 E679: 96 D3       LDA    <$D3
 E67B: 27 12       BEQ    $E68F
-E67D: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E67D: BD EE C7    JSR    task_switch_eec7		; [no_return]
 E680: 20 20       BRA    $E6A2
 E682: 20 20       BRA    $E6A4
 E684: 20 20       BRA    $E6A6
@@ -2317,19 +2325,24 @@ E710: AF C1       STX    ,U++
 E712: 4A          DECA
 E713: 26 FB       BNE    $E710
 E715: 39          RTS
+func_e716:
 E716: 0F AB       CLR    <$AB
 E718: BD E2 9E    JSR    $E29E
-E71B: BD E2 B4    JSR    $E2B4
+E71B: BD E2 B4    JSR    stack_set_e2b4
+; copyright tampering protection check
 E71E: B6 EB 58    LDA    $EB58
 E721: F6 EB 5C    LDB    $EB5C
 E724: 83 4E 41    SUBD   #$4E41
 E727: 27 01       BEQ    $E72A
+; namco copyright has been tampered with: make game fail
 E729: 39          RTS
+; another copyright tampering protection check
 E72A: B6 EB 60    LDA    $EB60
 E72D: F6 EB 64    LDB    $EB64
 E730: 83 4D 43    SUBD   #$4D43
 E733: 27 01       BEQ    $E736
 E735: 39          RTS
+; another tampering protection check
 E736: B6 EB 68    LDA    $EB68
 E739: 80 4F       SUBA   #$4F
 E73B: 27 01       BEQ    $E73E
@@ -2339,10 +2352,10 @@ E741: 86 04       LDA    #$04
 E743: 97 14       STA    <$14
 E745: BD EE 06    JSR    $EE06
 E748: CE 02 E8    LDU    #$02E8
-E74B: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E74B: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 E763: BD C1 03    JSR    $C103
-E766: BD E2 B4    JSR    $E2B4
+E766: BD E2 B4    JSR    stack_set_e2b4
 E769: BD FB 90    JSR    $FB90
 E76C: 96 C0       LDA    <$C0
 E76E: 90 C1       SUBA   <$C1
@@ -2351,13 +2364,13 @@ E772: CE 02 AB    LDU    #$02AB
 E775: 96 C0       LDA    <$C0
 E777: 4A          DECA
 E778: 26 13       BNE    $E78D
-E77A: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E77A: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 E788: 4C          INCA
 E789: 59          ROLB
 E78A: 20 00       BRA    $E78C
 E78C: 39          RTS
-E78D: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E78D: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 
 E7A0: 86 99       LDA    #$99
@@ -2380,13 +2393,13 @@ E7C2: DD 04       STD    <$04
 E7C4: 96 D0       LDA    <$D0
 E7C6: 97 07       STA    <$07
 E7C8: BD E2 9E    JSR    $E29E
-E7CB: BD E2 B4    JSR    $E2B4
+E7CB: BD E2 B4    JSR    stack_set_e2b4
 E7CE: 86 01       LDA    #$01
 E7D0: B7 40 41    STA    $4041
 E7D3: BD E9 C6    JSR    $E9C6
 E7D6: CC 00 B4    LDD    #$00B4
-E7D9: BD E2 BB    JSR    $E2BB
-E7DC: BD E2 C4    JSR    $E2C4
+E7D9: BD E2 BB    JSR    stack_set_with_param_e2bb
+E7DC: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 E7DF: BD EA 33    JSR    $EA33
 E7E2: 96 82       LDA    <$82
 E7E4: 27 0D       BEQ    $E7F3
@@ -2399,10 +2412,10 @@ E7F5: 97 86       STA    <$86
 E7F7: BD CD C5    JSR    $CDC5
 E7FA: BD EB 1D    JSR    $EB1D
 E7FD: CE 02 4F    LDU    #$024F
-E800: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E800: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
-E80E: BD E2 BB    JSR    $E2BB
-E811: BD E2 C4    JSR    $E2C4
+E80E: BD E2 BB    JSR    stack_set_with_param_e2bb
+E811: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 E814: BD EB 32    JSR    $EB32
 E817: CE 02 4F    LDU    #$024F
 E81A: CC 20 07    LDD    #$2007
@@ -2420,7 +2433,7 @@ E836: CC 00 00    LDD    #$0000
 E839: DD 92       STD    <$92
 E83B: BD F5 08    JSR    $F508
 E83E: BD F7 70    JSR    $F770
-E841: BD E2 B4    JSR    $E2B4
+E841: BD E2 B4    JSR    stack_set_e2b4
 E844: 96 96       LDA    <$96
 E846: 26 7D       BNE    $E8C5
 E848: DC 92       LDD    <$92
@@ -2431,35 +2444,35 @@ E851: 96 90       LDA    <$90
 E853: 9B 91       ADDA   <$91
 E855: 27 01       BEQ    $E858
 E857: 39          RTS
-E858: CC F1 01    LDD    #$F101
+E858: CC F1 01    LDD    #func_f101
 E85B: FD 16 34    STD    $1634
-E85E: CC F0 E5    LDD    #$F0E5
+E85E: CC F0 E5    LDD    #func_f0e5
 E861: BD F7 8D    JSR    $F78D
 E864: CC 00 1E    LDD    #$001E
-E867: BD E2 BB    JSR    $E2BB
-E86A: BD E2 C4    JSR    $E2C4
+E867: BD E2 BB    JSR    stack_set_with_param_e2bb
+E86A: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 E86D: BD E2 9E    JSR    $E29E
 E870: 86 01       LDA    #$01
 E872: B7 40 42    STA    $4042
 E875: CC 00 80    LDD    #$0080
-E878: BD E2 BB    JSR    $E2BB
+E878: BD E2 BB    JSR    stack_set_with_param_e2bb
 E87B: BD EA 48    JSR    $EA48
-E87E: BD E2 C4    JSR    $E2C4
+E87E: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 E881: CC 00 40    LDD    #$0040
-E884: BD E2 BB    JSR    $E2BB
-E887: BD E2 C4    JSR    $E2C4
+E884: BD E2 BB    JSR    stack_set_with_param_e2bb
+E887: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 E88A: BD C7 5A    JSR    $C75A
 E88D: BD CD C1    JSR    $CDC1
 E890: BD E9 C6    JSR    $E9C6
-E893: BD E2 BB    JSR    $E2BB
-E896: BD E2 C4    JSR    $E2C4
+E893: BD E2 BB    JSR    stack_set_with_param_e2bb
+E896: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 E899: BD EA 33    JSR    $EA33
 E89C: BD EB 1D    JSR    $EB1D
 E89F: CE 02 4F    LDU    #$024F
-E8A2: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E8A2: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
-E8B0: BD E2 BB    JSR    $E2BB
-E8B3: BD E2 C4    JSR    $E2C4
+E8B0: BD E2 BB    JSR    stack_set_with_param_e2bb
+E8B3: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 E8B6: BD EB 32    JSR    $EB32
 E8B9: CE 02 4F    LDU    #$024F
 E8BC: CC 20 07    LDD    #$2007
@@ -2470,11 +2483,11 @@ E8C7: 9B 91       ADDA   <$91
 E8C9: 26 2F       BNE    $E8FA
 E8CB: BD E2 9E    JSR    $E29E
 E8CE: CE 02 4B    LDU    #$024B
-E8D1: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E8D1: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 E8E0: CC 00 1E    LDD    #$001E
-E8E3: BD E2 BB    JSR    $E2BB
-E8E6: BD E2 C4    JSR    $E2C4
+E8E3: BD E2 BB    JSR    stack_set_with_param_e2bb
+E8E6: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 E8E9: 96 8D       LDA    <$8D
 E8EB: 81 06       CMPA   #$06
 E8ED: 26 0B       BNE    $E8FA
@@ -2513,7 +2526,7 @@ E931: 96 CF       LDA    <$CF
 E933: 26 01       BNE    $E936
 E935: 39          RTS
 E936: CE 03 AF    LDU    #$03AF
-E939: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E939: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 E94E: 10 D4 8D    ANDB   <$8D
 E951: 4F          CLRA
@@ -2525,7 +2538,7 @@ E95C: 4A          DECA
 E95D: 26 01       BNE    $E960
 E95F: 39          RTS
 E960: CE 03 B2    LDU    #$03B2
-E963: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E963: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 E97F: 8D 34       BSR    $E9B5
 E981: CE 03 76    LDU    #$0376
@@ -2534,12 +2547,12 @@ E986: 4C          INCA
 E987: 27 01       BEQ    $E98A
 E989: 39          RTS
 E98A: CE 03 55    LDU    #$0355
-E98D: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E98D: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 E99F: 10 D6 10    LDB    <$10
 E9A2: 8E 03 02    LDX    #$0302
 E9A5: BD FE 1C    JSR    $FE1C
-E9A8: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E9A8: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 
 E9B5: ED 4C       STD    $C,U
@@ -2547,7 +2560,7 @@ E9B7: 86 02       LDA    #$02
 E9B9: A7 49       STA    $9,U
 E9BB: CC 01 01    LDD    #$0101
 E9BE: ED 4A       STD    $A,U
-E9C0: CC F1 01    LDD    #$F101
+E9C0: CC F1 01    LDD    #func_f101
 E9C3: ED 44       STD    $4,U
 E9C5: 39          RTS
 E9C6: BD EE 06    JSR    $EE06
@@ -2561,16 +2574,16 @@ E9D6: ED 49       STD    $9,U
 E9D8: 96 10       LDA    <$10
 E9DA: 8B 10       ADDA   #$10
 E9DC: A7 4B       STA    $B,U
-E9DE: CC F1 01    LDD    #$F101
+E9DE: CC F1 01    LDD    #func_f101
 E9E1: ED 44       STD    $4,U
 E9E3: 8E 10 13    LDX    #$1013
 E9E6: CE 02 32    LDU    #$0232
 E9E9: 10 8E 01 01 LDY    #$0101
 E9ED: BD FE 1C    JSR    $FE1C
-E9F0: BD EE C7    JSR    never_returns_eec7		; [no_return]
+E9F0: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 E9FD: CE 02 6E    LDU    #$026E
-EA00: BD EE C7    JSR    never_returns_eec7		; [no_return]
+EA00: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 EA0A: 8E 10 03    LDX    #$1003
 EA0D: 10 8E 01 01 LDY    #$0101
@@ -2580,7 +2593,7 @@ EA17: 39          RTS
 EA18: 86 01       LDA    #$01
 EA1A: B7 40 52    STA    $4052
 EA1D: CE 02 8E    LDU    #$028E
-EA20: BD EE C7    JSR    never_returns_eec7		; [no_return]
+EA20: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 EA2E: 00 CC       NEG    <$CC
 EA30: 00 78       NEG    <$78
@@ -2610,7 +2623,7 @@ EA68: 9B 91       ADDA   <$91
 EA6A: 10 27 FD EA LBEQ   $E858
 EA6E: BD CD B3    JSR    $CDB3
 EA71: BD E2 9E    JSR    $E29E
-EA74: BD E2 B4    JSR    $E2B4
+EA74: BD E2 B4    JSR    stack_set_e2b4
 EA77: 96 82       LDA    <$82
 EA79: 26 18       BNE    $EA93
 EA7B: 96 07       LDA    <$07
@@ -2618,8 +2631,8 @@ EA7D: 26 1E       BNE    $EA9D
 EA7F: 0F 86       CLR    <$86
 EA81: BD EB 07    JSR    $EB07
 EA84: CC 00 F0    LDD    #$00F0
-EA87: BD E2 BB    JSR    $E2BB
-EA8A: BD E2 C4    JSR    $E2C4
+EA87: BD E2 BB    JSR    stack_set_with_param_e2bb
+EA8A: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 EA8D: BD EB 6C    JSR    $EB6C
 EA90: 7E C0 03    JMP    $C003
 EA93: 96 07       LDA    <$07
@@ -2628,8 +2641,8 @@ EA97: 96 47       LDA    <$47
 EA99: 27 02       BEQ    $EA9D
 EA9B: 8D 4B       BSR    $EAE8
 EA9D: BD E9 C6    JSR    $E9C6
-EAA0: BD E2 BB    JSR    $E2BB
-EAA3: BD E2 C4    JSR    $E2C4
+EAA0: BD E2 BB    JSR    stack_set_with_param_e2bb
+EAA3: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 EAA6: BD EE 65    JSR    $EE65
 EAA9: BD EF AA    JSR    $EFAA
 EAAC: BD F1 65    JSR    $F165
@@ -2640,16 +2653,16 @@ EAB8: BD F7 36    JSR    $F736
 EABB: 7E E7 F7    JMP    $E7F7
 EABE: BD EB 05    JSR    $EB05
 EAC1: CC 00 F0    LDD    #$00F0
-EAC4: BD E2 BB    JSR    $E2BB
-EAC7: BD E2 C4    JSR    $E2C4
+EAC4: BD E2 BB    JSR    stack_set_with_param_e2bb
+EAC7: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 EACA: BD EB 6C    JSR    $EB6C
 EACD: 96 47       LDA    <$47
 EACF: 26 CA       BNE    $EA9B
 EAD1: BD EB 32    JSR    $EB32
 EAD4: 0F 86       CLR    <$86
 EAD6: CC 00 B4    LDD    #$00B4
-EAD9: BD E2 BB    JSR    $E2BB
-EADC: BD E2 C4    JSR    $E2C4
+EAD9: BD E2 BB    JSR    stack_set_with_param_e2bb
+EADC: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 EADF: 96 84       LDA    <$84
 EAE1: 27 02       BEQ    $EAE5
 EAE3: 8D 03       BSR    $EAE8
@@ -2671,11 +2684,11 @@ EB05: 8D 16       BSR    $EB1D
 EB07: 86 01       LDA    #$01
 EB09: B7 40 43    STA    $4043
 EB0C: CE 02 8F    LDU    #$028F
-EB0F: BD EE C7    JSR    never_returns_eec7		; [no_return]
+EB0F: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 EB1B: 00 39       NEG    <$39
 EB1D: CE 02 6E    LDU    #$026E
-EB20: BD EE C7    JSR    never_returns_eec7		; [no_return]
+EB20: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 EB2B: 96 84       LDA    <$84
 EB2D: 8B 31       ADDA   #$31
@@ -2732,7 +2745,7 @@ EBAB: ED 04       STD    $4,X
 EBAD: ED 06       STD    $6,X
 EBAF: BD EE 06    JSR    $EE06
 EBB2: CE 03 2A    LDU    #$032A
-EBB5: BD EE C7    JSR    never_returns_eec7		; [no_return]
+EBB5: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 EBC5: 49          ROLA
 EBC6: 54          LSRB
@@ -2743,7 +2756,7 @@ EBCA: 53          COMB
 EBCB: 20 5B       BRA    $EC28
 EBCD: 00 CE       NEG    <$CE
 EBCF: 03 0D       COM    <$0D
-EBD1: BD EE C7    JSR    never_returns_eec7		; [no_return]
+EBD1: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 EBE6: 00 CE       NEG    <$CE
 EBE8: 03 4F       COM    <$4F
@@ -2762,7 +2775,7 @@ EC0A: DD E4       STD    <$E4
 EC0C: 0F E0       CLR    <$E0
 EC0E: BD ED 30    JSR    $ED30
 EC11: CC 0E 10    LDD    #$0E10
-EC14: BD E2 BB    JSR    $E2BB
+EC14: BD E2 BB    JSR    stack_set_with_param_e2bb
 EC17: BD ED 7E    JSR    $ED7E
 EC1A: BD ED 16    JSR    $ED16
 EC1D: BD EC C0    JSR    $ECC0
@@ -2771,12 +2784,12 @@ EC22: 27 09       BEQ    $EC2D
 EC24: 96 E0       LDA    <$E0
 EC26: 81 A0       CMPA   #$A0
 EC28: 27 03       BEQ    $EC2D
-EC2A: BD E2 C4    JSR    $E2C4
+EC2A: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 EC2D: CC 00 3C    LDD    #$003C
-EC30: BD E2 BB    JSR    $E2BB
+EC30: BD E2 BB    JSR    stack_set_with_param_e2bb
 EC33: BD ED 5D    JSR    $ED5D
 EC36: BD ED 7E    JSR    $ED7E
-EC39: BD E2 C4    JSR    $E2C4
+EC39: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 EC3C: BD ED 5D    JSR    $ED5D
 EC3F: FC 40 44    LDD    $4044
 EC42: 27 01       BEQ    $EC45
@@ -2787,7 +2800,7 @@ EC49: 26 01       BNE    $EC4C
 EC4B: 39          RTS
 EC4C: 6E 9F 10 E4 JMP    [$10E4]
 EC50: CE 02 93    LDU    #$0293
-EC53: BD EE C7    JSR    never_returns_eec7		; [no_return]
+EC53: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
 
 EC6A: CE 03 15    LDU    #$0315
@@ -3069,14 +3082,15 @@ EEC2: 39          RTS
 never_returns_eec3:
 EEC3: C6 FF       LDB    #$FF
 EEC5: 20 02       BRA    $EEC9
-never_returns_eec7:
+
+task_switch_eec7:
 EEC7: C6 E0       LDB    #$E0
 EEC9: 35 10       PULS   X		; use return address to load data from
-EECB: A6 80       LDA    ,X+
+EECB: A6 80       LDA    ,X+	; get A from X++
 EECD: 27 06       BEQ    $EED5	; found a zero, use 2 next bytes as jump address
-EECF: A7 C4       STA    ,U
-EED1: 33 C5       LEAU   B,U
-EED3: 20 F6       BRA    $EECB
+EECF: A7 C4       STA    ,U		; else save value in U
+EED1: 33 C5       LEAU   B,U	; U += $E0
+EED3: 20 F6       BRA    $EECB	; while A != 0
 EED5: 6E 84       JMP    ,X		; [direct_jump]
 
 EFB2: 2A FA       BPL    $EFAE
@@ -3168,7 +3182,7 @@ F0AF: 8E F1 45    LDX    #$F145
 F0B2: CE 11 60    LDU    #$1160
 F0B5: 10 8E 00 10 LDY    #$0010
 F0B9: BD EE BA    JSR    $EEBA
-F0BC: BD E2 B4    JSR    $E2B4
+F0BC: BD E2 B4    JSR    stack_set_e2b4
 F0BF: CE 08 10    LDU    #$0810		; first object record
 F0C2: AD D8 04    JSR    [$04,U]		; [indirect_jump]
 F0C5: 33 C8 20    LEAU   $20,U	; advance to next record
@@ -3180,22 +3194,27 @@ F0D4: 33 C8 20    LEAU   $20,U
 F0D7: 11 83 17 10 CMPU   #$1710
 F0DB: 26 F4       BNE    $F0D1
 F0DD: 39          RTS
+func_f0de:
 F0DE: 34 40       PSHS   U
 F0E0: AD D4       JSR    [,U]		; [indirect_jump]
 F0E2: 35 40       PULS   U
 F0E4: 39          RTS
-F0E5: CC E2 BA    LDD    #$E2BA
+
+func_f0e5:
+F0E5: CC E2 BA    LDD    #func_e2ba
 F0E8: ED C4       STD    ,U
 F0EA: CC 00 00    LDD    #$0000
 F0ED: ED 42       STD    $2,U
 F0EF: CC 00 00    LDD    #$0000
 F0F2: ED 4C       STD    $C,U
-F0F4: CC F0 DE    LDD    #$F0DE
+F0F4: CC F0 DE    LDD    #func_f0de
 F0F7: ED 44       STD    $4,U
-F0F9: 20 06       BRA    $F101
+F0F9: 20 06       BRA    func_f101
+func_f0fb:
 F0FB: 34 40       PSHS   U
 F0FD: AD D4       JSR    [,U]		; [indirect_jump]
 F0FF: 35 40       PULS   U
+func_f101:
 F101: AE 46       LDX    $6,U
 F103: EC 4A       LDD    $A,U
 F105: ED 84       STD    ,X
@@ -3265,7 +3284,7 @@ F1AC: 8D 2F       BSR    $F1DD
 F1AE: 53          COMB
 F1AF: E4 84       ANDB   ,X
 F1B1: E7 84       STB    ,X
-F1B3: CC F0 E5    LDD    #$F0E5
+F1B3: CC F0 E5    LDD    #func_f0e5
 F1B6: ED 44       STD    $4,U
 F1B8: 39          RTS
 F1B9: 8D 22       BSR    $F1DD
@@ -3280,9 +3299,9 @@ F1C9: CC 00 40    LDD    #$0040
 F1CC: ED 49       STD    $9,U
 F1CE: 86 24       LDA    #$24
 F1D0: A7 4B       STA    $B,U
-F1D2: CC F0 FB    LDD    #$F0FB
+F1D2: CC F0 FB    LDD    #func_f0fb
 F1D5: ED 44       STD    $4,U
-F1D7: CC F1 F4    LDD    #$F1F4
+F1D7: CC F1 F4    LDD    #func_f1f4
 F1DA: ED C4       STD    ,U
 F1DC: 39          RTS
 F1DD: 8E 10 25    LDX    #$1025
@@ -3300,10 +3319,11 @@ F1EF: 58          ASLB
 F1F0: 4A          DECA
 F1F1: 26 FC       BNE    $F1EF
 F1F3: 39          RTS
-F1F4: BD E2 B4    JSR    $E2B4
-F1F7: CC F0 DE    LDD    #$F0DE
+func_f1f4:
+F1F4: BD E2 B4    JSR    stack_set_e2b4
+F1F7: CC F0 DE    LDD    #func_f0de
 F1FA: ED 44       STD    $4,U
-F1FC: BD E2 B4    JSR    $E2B4
+F1FC: BD E2 B4    JSR    stack_set_e2b4
 F1FF: BD F6 AC    JSR    carry_returning_f6ac
 F202: 25 01       BCS    $F205
 F204: 39          RTS
@@ -3372,7 +3392,7 @@ F354: 53          COMB
 F355: E4 84       ANDB   ,X
 F357: E7 84       STB    ,X
 F359: 0A 90       DEC    <$90
-F35B: CC F0 E5    LDD    #$F0E5
+F35B: CC F0 E5    LDD    #func_f0e5
 F35E: ED 44       STD    $4,U
 F360: 39          RTS
 F361: 8D 28       BSR    $F38B
@@ -3391,17 +3411,17 @@ F378: ED 49       STD    $9,U
 F37A: 96 10       LDA    <$10
 F37C: 8B 10       ADDA   #$10
 F37E: A7 4B       STA    $B,U
-F380: CC F0 FB    LDD    #$F0FB
+F380: CC F0 FB    LDD    #func_f0fb
 F383: ED 44       STD    $4,U
 F385: CC F3 91    LDD    #$F391
 F388: ED C4       STD    ,U
 F38A: 39          RTS
 F38B: 8E 10 27    LDX    #$1027
 F38E: 7E F1 E0    JMP    $F1E0
-F391: BD E2 B4    JSR    $E2B4
-F394: CC F0 DE    LDD    #$F0DE
+F391: BD E2 B4    JSR    stack_set_e2b4
+F394: CC F0 DE    LDD    #func_f0de
 F397: ED 44       STD    $4,U
-F399: BD E2 B4    JSR    $E2B4
+F399: BD E2 B4    JSR    stack_set_e2b4
 F39C: BD F6 AC    JSR    carry_returning_f6ac
 F39F: 25 01       BCS    $F3A2
 F3A1: 39          RTS
@@ -3454,7 +3474,7 @@ F43F: 53          COMB
 F440: E4 84       ANDB   ,X
 F442: E7 84       STB    ,X
 F444: 0A 91       DEC    <$91
-F446: CC F0 E5    LDD    #$F0E5
+F446: CC F0 E5    LDD    #func_f0e5
 F449: ED 44       STD    $4,U
 F44B: 39          RTS
 F44C: 8D 30       BSR    $F47E
@@ -3480,7 +3500,7 @@ F470: A7 4A       STA    $A,U
 F472: AF 4C       STX    $C,U
 F474: 6F 49       CLR    $9,U
 F476: 6F 42       CLR    $2,U
-F478: CC F0 FB    LDD    #$F0FB
+F478: CC F0 FB    LDD    #func_f0fb
 F47B: ED 44       STD    $4,U
 F47D: 39          RTS
 F47E: 8E 10 2B    LDX    #$102B
@@ -3560,13 +3580,13 @@ F525: E7 52       STB    -$E,U
 F527: E7 53       STB    -$D,U
 F529: CC 00 00    LDD    #$0000
 F52C: ED 4E       STD    $E,U
-F52E: CC F0 FB    LDD    #$F0FB
+F52E: CC F0 FB    LDD    #func_f0fb
 F531: ED 44       STD    $4,U
 F533: 39          RTS
 F534: CE 16 30    LDU    #$1630
 F537: 4F          CLRA
 F538: A7 56       STA    -$A,U
-F53A: CC F0 E5    LDD    #$F0E5
+F53A: CC F0 E5    LDD    #func_f0e5
 F53D: ED 44       STD    $4,U
 F53F: 39          RTS
 F540: AE 4E       LDX    $E,U
@@ -3632,7 +3652,7 @@ F5B9: F7 11 78    STB    $1178
 F5BC: 39          RTS
 F5BD: DC 9A       LDD    <$9A
 F5BF: 27 1A       BEQ    $F5DB
-F5C1: BD E2 BB    JSR    $E2BB
+F5C1: BD E2 BB    JSR    stack_set_with_param_e2bb
 F5C4: EC 42       LDD    $2,U
 F5C6: 10 83 00 40 CMPD   #$0040
 F5CA: 24 08       BCC    $F5D4
@@ -3644,7 +3664,7 @@ F5D1: 5C          INCB
 F5D2: 20 02       BRA    $F5D6
 F5D4: C6 01       LDB    #$01
 F5D6: 8D D2       BSR    $F5AA
-F5D8: BD E2 C4    JSR    $E2C4
+F5D8: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 F5DB: CC 00 00    LDD    #$0000
 F5DE: ED 55       STD    -$B,U
 F5E0: C6 01       LDB    #$01
@@ -3712,20 +3732,20 @@ F65E: 39          RTS
 F65F: CC F6 66    LDD    #$F666
 F662: FD 16 30    STD    $1630
 F665: 39          RTS
-F666: CC F0 E5    LDD    #$F0E5
+F666: CC F0 E5    LDD    #func_f0e5
 F669: FD 16 54    STD    $1654
 F66C: FD 16 74    STD    $1674
 F66F: FD 16 14    STD    $1614
 F672: BD F7 8D    JSR    $F78D
 F675: CC 00 10    LDD    #$0010
-F678: BD E2 BB    JSR    $E2BB
-F67B: BD E2 C4    JSR    $E2C4
+F678: BD E2 BB    JSR    stack_set_with_param_e2bb
+F67B: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 F67E: 4F          CLRA
 F67F: A7 49       STA    $9,U
 F681: 96 8B       LDA    <$8B
 F683: B7 40 53    STA    $4053
 F686: CC 00 67    LDD    #$0067
-F689: BD E2 BB    JSR    $E2BB
+F689: BD E2 BB    JSR    stack_set_with_param_e2bb
 F68C: A6 43       LDA    $3,U
 F68E: 44          LSRA
 F68F: 44          LSRA
@@ -3733,13 +3753,13 @@ F690: 44          LSRA
 F691: 40          NEGA
 F692: 8B 0F       ADDA   #$0F
 F694: A7 4A       STA    $A,U
-F696: BD E2 C4    JSR    $E2C4
+F696: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 F699: CC 00 1E    LDD    #$001E
-F69C: BD E2 BB    JSR    $E2BB
-F69F: BD E2 C4    JSR    $E2C4
+F69C: BD E2 BB    JSR    stack_set_with_param_e2bb
+F69F: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 F6A2: CC EA 60    LDD    #$EA60
 F6A5: FD 11 08    STD    $1108
-F6A8: BD E2 B4    JSR    $E2B4
+F6A8: BD E2 B4    JSR    stack_set_e2b4
 F6AB: 39          RTS
 
 carry_returning_f6ac:
@@ -3799,7 +3819,7 @@ F705: B7 40 4C    STA    $404C
 F708: 8D 06       BSR    $F710
 F70A: CC 00 20    LDD    #$0020
 F70D: 7E FD 6B    JMP    $FD6B
-F710: 30 84       LEAX   ,X		; [nop]
+F710: 30 84       LEAX   ,X		; this is a no-op as Z isn't tested [nop]
 F712: 9F F8       STX    <$F8
 F714: 8E F0 27    LDX    #$F027
 F717: EC 81       LDD    ,X++
@@ -3833,7 +3853,7 @@ F74E: 8E F8 47    LDX    #$F847
 F751: AF C4       STX    ,U
 F753: 8E 00 00    LDX    #$0000
 F756: AF 4E       STX    $E,U
-F758: 8E F0 FB    LDX    #$F0FB
+F758: 8E F0 FB    LDX    #func_f0fb
 F75B: AF 44       STX    $4,U
 F75D: 33 C8 20    LEAU   $20,U
 F760: 5A          DECB
@@ -3876,10 +3896,10 @@ F7BF: AE 86       LDX    A,X
 F7C1: 9C 92       CMPX   <$92
 F7C3: 26 F1       BNE    $F7B6
 F7C5: CC 00 1E    LDD    #$001E
-F7C8: BD E2 BB    JSR    $E2BB
+F7C8: BD E2 BB    JSR    stack_set_with_param_e2bb
 F7CB: BD F8 71    JSR    $F871
-F7CE: BD E2 C4    JSR    $E2C4
-F7D1: BD E2 B4    JSR    $E2B4
+F7CE: BD E2 C4    JSR    stack_set_with_param_test_e2c4
+F7D1: BD E2 B4    JSR    stack_set_e2b4
 F7D4: 96 95       LDA    <$95
 F7D6: 48          ASLA
 F7D7: 8E F9 8E    LDX    #$F98E
@@ -4008,7 +4028,7 @@ F8D6: 39          RTS
 F8D7: A6 53       LDA    -$D,U
 F8D9: 88 02       EORA   #$02
 F8DB: A7 53       STA    -$D,U
-F8DD: BD E2 B4    JSR    $E2B4
+F8DD: BD E2 B4    JSR    stack_set_e2b4
 F8E0: 8D BB       BSR    $F89D
 F8E2: BD F6 AC    JSR    carry_returning_f6ac
 F8E5: 81 08       CMPA   #$08
@@ -4023,11 +4043,11 @@ F8F6: 00 80       NEG    <$80
 F8F8: 01 60       NEG    <$60
 F8FA: 6F 4B       CLR    $B,U
 F8FC: 0F 8C       CLR    <$8C
-F8FE: CC F1 01    LDD    #$F101
+F8FE: CC F1 01    LDD    #func_f101
 F901: BD F7 8A    JSR    $F78A
-F904: CC E2 BA    LDD    #$E2BA
+F904: CC E2 BA    LDD    #func_e2ba
 F907: FD 11 2C    STD    $112C
-F90A: CC F0 DE    LDD    #$F0DE
+F90A: CC F0 DE    LDD    #func_f0de
 F90D: ED 44       STD    $4,U
 F90F: CE 16 30    LDU    #$1630
 F912: CC 00 3C    LDD    #$003C
@@ -4045,15 +4065,15 @@ F92A: EC 86       LDD    A,X
 F92C: BD FD 6B    JSR    $FD6B
 F92F: 0C 8A       INC    <$8A
 F931: CC 00 3C    LDD    #$003C
-F934: BD E2 BB    JSR    $E2BB
-F937: BD E2 C4    JSR    $E2C4
+F934: BD E2 BB    JSR    stack_set_with_param_e2bb
+F937: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 F93A: 86 01       LDA    #$01
 F93C: 97 8C       STA    <$8C
-F93E: CC F0 FB    LDD    #$F0FB
+F93E: CC F0 FB    LDD    #func_f0fb
 F941: BD F7 8A    JSR    $F78A
-F944: CC F0 DE    LDD    #$F0DE
+F944: CC F0 DE    LDD    #func_f0de
 F947: FD 11 2C    STD    $112C
-F94A: BD E2 B4    JSR    $E2B4
+F94A: BD E2 B4    JSR    stack_set_e2b4
 F94D: 7F 11 70    CLR    $1170
 F950: 7F 11 78    CLR    $1178
 F953: CC 80 64    LDD    #$8064
@@ -4359,41 +4379,41 @@ FBE1: ED 4C       STD    $C,U
 FBE3: 6F 49       CLR    $9,U
 FBE5: CC 43 28    LDD    #$4328
 FBE8: ED 4A       STD    $A,U
-FBEA: CC F0 FB    LDD    #$F0FB
+FBEA: CC F0 FB    LDD    #func_f0fb
 FBED: ED 44       STD    $4,U
 FBEF: CC 00 78    LDD    #$0078
-FBF2: BD E2 BB    JSR    $E2BB
+FBF2: BD E2 BB    JSR    stack_set_with_param_e2bb
 FBF5: BD FC CD    JSR    $FCCD
 FBF8: BD F6 AC    JSR    carry_returning_f6ac
 FBFB: 25 37       BCS    $FC34
-FBFD: BD E2 C4    JSR    $E2C4
+FBFD: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 FC00: CE 16 50    LDU    #$1650
 FC03: 96 2A       LDA    <$2A
 FC05: 85 01       BITA   #$01
 FC07: 26 05       BNE    $FC0E
 FC09: 96 10       LDA    <$10
 FC0B: BD FD 28    JSR    $FD28
-FC0E: CC F1 01    LDD    #$F101
+FC0E: CC F1 01    LDD    #func_f101
 FC11: ED 44       STD    $4,U
 FC13: CC 01 E0    LDD    #$01E0
-FC16: BD E2 BB    JSR    $E2BB
+FC16: BD E2 BB    JSR    stack_set_with_param_e2bb
 FC19: BD FC CD    JSR    $FCCD
 FC1C: BD F6 AC    JSR    carry_returning_f6ac
 FC1F: 25 13       BCS    $FC34
-FC21: BD E2 C4    JSR    $E2C4
-FC24: CC F0 E5    LDD    #$F0E5
+FC21: BD E2 C4    JSR    stack_set_with_param_test_e2c4
+FC24: CC F0 E5    LDD    #func_f0e5
 FC27: FD 16 14    STD    $1614
 FC2A: FD 16 54    STD    $1654
 FC2D: FD 16 74    STD    $1674
-FC30: BD E2 B4    JSR    $E2B4
+FC30: BD E2 B4    JSR    stack_set_e2b4
 FC33: 39          RTS
 FC34: CC F0 EF    LDD    #$F0EF
 FC37: ED 44       STD    $4,U
-FC39: CC F1 01    LDD    #$F101
+FC39: CC F1 01    LDD    #func_f101
 FC3C: BD F7 8A    JSR    $F78A
 FC3F: FD 16 54    STD    $1654
 FC42: FD 16 74    STD    $1674
-FC45: CC E2 BA    LDD    #$E2BA
+FC45: CC E2 BA    LDD    #func_e2ba
 FC48: FD 11 2C    STD    $112C
 FC4B: 0F 8C       CLR    <$8C
 FC4D: 7F 40 4E    CLR    $404E
@@ -4423,21 +4443,21 @@ FC82: A7 4B       STA    $B,U
 FC84: EC 02       LDD    $2,X
 FC86: BD FD 6B    JSR    $FD6B
 FC89: 35 06       PULS   D
-FC8B: BD E2 BB    JSR    $E2BB
-FC8E: BD E2 C4    JSR    $E2C4
-FC91: CC F0 E5    LDD    #$F0E5
+FC8B: BD E2 BB    JSR    stack_set_with_param_e2bb
+FC8E: BD E2 C4    JSR    stack_set_with_param_test_e2c4
+FC91: CC F0 E5    LDD    #func_f0e5
 FC94: FD 16 54    STD    $1654
 FC97: FD 16 74    STD    $1674
-FC9A: CC F0 FB    LDD    #$F0FB
+FC9A: CC F0 FB    LDD    #func_f0fb
 FC9D: FD 16 34    STD    $1634
 FCA0: 0D 96       TST    <$96
 FCA2: 26 03       BNE    $FCA7
 FCA4: BD F7 8D    JSR    $F78D
-FCA7: CC F0 DE    LDD    #$F0DE
+FCA7: CC F0 DE    LDD    #func_f0de
 FCAA: FD 11 2C    STD    $112C
 FCAD: 86 01       LDA    #$01
 FCAF: 97 8C       STA    <$8C
-FCB1: BD E2 B4    JSR    $E2B4
+FCB1: BD E2 B4    JSR    stack_set_e2b4
 FCB4: 39          RTS
 
 FCCD: 96 81       LDA    <$81
@@ -4469,9 +4489,9 @@ FD01: E6 51       LDB    -$F,U
 FD03: ED 55       STD    -$B,U
 FD05: 6F 49       CLR    $9,U
 FD07: 8D 21       BSR    $FD2A
-FD09: CC F0 FB    LDD    #$F0FB
+FD09: CC F0 FB    LDD    #func_f0fb
 FD0C: ED 44       STD    $4,U
-FD0E: BD E2 B4    JSR    $E2B4
+FD0E: BD E2 B4    JSR    stack_set_e2b4
 FD11: 6A 51       DEC    -$F,U
 FD13: 27 01       BEQ    $FD16
 FD15: 39          RTS
@@ -4494,9 +4514,10 @@ FD32: ED 4A       STD    $A,U
 FD34: 96 8B       LDA    <$8B
 FD36: B7 40 4E    STA    $404E
 FD39: 39          RTS
+func_fd3a:
 FD3A: CC 00 00    LDD    #$0000
 FD3D: ED 42       STD    $2,U
-FD3F: BD E2 B4    JSR    $E2B4
+FD3F: BD E2 B4    JSR    stack_set_e2b4
 FD42: 39          RTS
 FD43: CC F8 D7    LDD    #$F8D7
 FD46: BD F7 7D    JSR    $F77D
@@ -4506,15 +4527,15 @@ FD4C: CC FD 53    LDD    #$FD53
 FD4F: FD 11 28    STD    $1128
 FD52: 39          RTS
 FD53: DC 9C       LDD    <$9C
-FD55: 27 E3       BEQ    $FD3A
+FD55: 27 E3       BEQ    func_fd3a
 FD57: 7D 16 26    TST    $1626
 FD5A: 27 03       BEQ    $FD5F
 FD5C: FD 16 32    STD    $1632
-FD5F: BD E2 BB    JSR    $E2BB
+FD5F: BD E2 BB    JSR    stack_set_with_param_e2bb
 FD62: 96 96       LDA    <$96
 FD64: 27 01       BEQ    $FD67
 FD66: 39          RTS
-FD67: BD E2 C4    JSR    $E2C4
+FD67: BD E2 C4    JSR    stack_set_with_param_test_e2c4
 FD6A: 39          RTS
 FD6B: 0D 8B       TST    <$8B
 FD6D: 26 01       BNE    $FD70
@@ -4571,7 +4592,7 @@ FDCF: 8E 10 87    LDX    #$1087
 FDD2: CE 03 F4    LDU    #$03F4
 FDD5: 8D 22       BSR    $FDF9
 FDD7: 8D 04       BSR    $FDDD
-FDD9: BD E2 B4    JSR    $E2B4
+FDD9: BD E2 B4    JSR    stack_set_e2b4
 FDDC: 39          RTS
 FDDD: 8E 10 00    LDX    #$1000
 FDE0: CE 10 40    LDU    #$1040
@@ -4692,12 +4713,7 @@ FEB7: A7 C2       STA    ,-U
 FEB9: 5A          DECB
 FEBA: 26 F9       BNE    $FEB5
 FEBC: 39          RTS
-FEBD: 31 55       LEAY   -$B,U
-FEBF: 50          NEGB
-FEC0: 32 55       LEAS   -$B,U
-FEC2: 50          NEGB
-FEC3: 20 20       BRA    $FEE5
-FEC5: 20 96       BRA    $FE5D
+
 
 FED2: ED 81       STD    ,X++
 FED4: 8C 12 12    CMPX   #$1212
