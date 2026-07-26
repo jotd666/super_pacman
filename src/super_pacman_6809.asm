@@ -241,7 +241,7 @@ C199: 39          RTS
 C19A: CC F0 DE    LDD    #$F0DE
 C19D: ED 44       STD    $4,U
 C19F: BD E2 B4    JSR    $E2B4
-C1A2: BD F6 AC    JSR    $F6AC
+C1A2: BD F6 AC    JSR    carry_returning_f6ac
 C1A5: 25 01       BCS    $C1A8
 C1A7: 39          RTS
 C1A8: 96 D3       LDA    <$D3
@@ -295,7 +295,7 @@ C211: 39          RTS
 C212: CC F0 DE    LDD    #$F0DE
 C215: ED 44       STD    $4,U
 C217: BD E2 B4    JSR    $E2B4
-C21A: BD F6 AC    JSR    $F6AC
+C21A: BD F6 AC    JSR    carry_returning_f6ac
 C21D: 25 01       BCS    $C220
 C21F: 39          RTS
 C220: 96 D3       LDA    <$D3
@@ -332,7 +332,7 @@ C265: 39          RTS
 C266: A6 55       LDA    -$B,U
 C268: 27 1A       BEQ    $C284
 C26A: BD F4 C0    JSR    $F4C0
-C26D: BD F6 AC    JSR    $F6AC
+C26D: BD F6 AC    JSR    carry_returning_f6ac
 C270: 25 01       BCS    $C273
 C272: 39          RTS
 C273: 96 D3       LDA    <$D3
@@ -343,7 +343,7 @@ C27E: CC F0 E5    LDD    #$F0E5
 C281: ED 44       STD    $4,U
 C283: 39          RTS
 C284: BD F4 FC    JSR    $F4FC
-C287: BD F6 AC    JSR    $F6AC
+C287: BD F6 AC    JSR    carry_returning_f6ac
 C28A: 25 01       BCS    $C28D
 C28C: 39          RTS
 C28D: 96 D3       LDA    <$D3
@@ -502,7 +502,7 @@ C3FF: BD E2 BB    JSR    $E2BB
 C402: BD E2 C4    JSR    $E2C4
 C405: BD C3 0A    JSR    $C30A
 C408: BD F8 CA    JSR    $F8CA
-C40B: BD F6 AC    JSR    $F6AC
+C40B: BD F6 AC    JSR    carry_returning_f6ac
 C40E: 25 01       BCS    $C411
 C410: 39          RTS
 C411: 96 D3       LDA    <$D3
@@ -808,10 +808,13 @@ C753: 84 F0       ANDA   #$F0
 C755: 9A F4       ORA    <$F4
 C757: A7 84       STA    ,X
 C759: 39          RTS
+
 C75A: BD C7 B2    JSR    $C7B2
 C75D: D6 AA       LDB    <$AA
-C75F: 26 01       BNE    $C762
+C75F: 26 01       BNE    set_10e4_return_address_c762
 C761: 39          RTS
+
+set_10e4_return_address_c762:
 C762: 35 10       PULS   X
 C764: 9F E4       STX    <$E4
 C766: 86 01       LDA    #$01
@@ -828,15 +831,17 @@ C781: FC E2 8A    LDD    $E28A
 C784: 83 E3 E6    SUBD   #$E3E6
 C787: 27 01       BEQ    $C78A
 C789: 39          RTS
+; called at the end of intermission, probably a protection
+; jumps at E88D
 C78A: 6E 9F 10 E4 JMP    [$10E4]
 
 ; ghost state machine variant A
 C78E: D6 AA       LDB    <$AA
 C790: 58          ASLB
-C791: 8E C7 94    LDX    #table_c796-2
-C794: 6E 95       JMP    [B,X]		; [jump_table] [nb_entries=6]
+C791: 8E C7 94    LDX    #jump_table_c796-2
+C794: 6E 95       JMP    [B,X]		; [indirect_jump] [nb_entries=6]
 
-table_c796:
+jump_table_c796:
 	dc.w	$C7E3
 	dc.w	$C8B7
 	dc.w	$C961
@@ -846,15 +851,16 @@ table_c796:
 
 ; ghost state machine, variant B
 C7A2: 58          ASLB
-C7A3: 8E C7 A6    LDX    #table_c7a8-2
-C7A6: 6E 95       JMP    [B,X]		; [jump_table] [nb_entries=5]
+C7A3: 8E C7 A6    LDX    #jump_table_c7a8-2
+C7A6: 6E 95       JMP    [B,X]		; [indirect_jump] [nb_entries=5]
 
-table_c7a8:
+jump_table_c7a8:
 	dc.w	$C84C
 	dc.w	$C907
 	dc.w	$C9FF
 	dc.w	$CAA9
 	dc.w	$CB79
+
 C7B2: 0F AA       CLR    <$AA
 C7B4: D6 18       LDB    <$18
 C7B6: 58          ASLB
@@ -1426,13 +1432,7 @@ CCD5: 33 C8 20    LEAU   $20,U
 CCD8: 5A          DECB
 CCD9: 2A D0       BPL    $CCAB
 CCDB: 39          RTS
-CCDC: 58          ASLB
-CCDD: 70 00 5C    NEG    >$005C
-CCE0: 70 20 60    NEG    $2060
-CCE3: 90 00       SUBA   <$00
-CCE5: 64 90       LSR    [,W]
-CCE7: 20 CC       BRA    $CCB5
-CCE9: 00 4A       NEG    <$4A
+
 CCEB: BD E2 BB    JSR    $E2BB
 CCEE: BD C3 0A    JSR    $C30A
 CCF1: BD E2 C4    JSR    $E2C4
@@ -1908,7 +1908,7 @@ E327: A6 48       LDA    $8,U
 E329: 84 0F       ANDA   #$0F
 E32B: 48          ASLA
 E32C: 8E E3 31    LDX    #jump_table_e331
-E32F: 6E 96       JMP    [A,X]	; [jump_table] [nb_entries=16]
+E32F: 6E 96       JMP    [A,X]	; [indirect_jump] [nb_entries=16]
 jump_table_e331:
 	dc.w	$E2BA
 	dc.w	$E351
@@ -3304,7 +3304,7 @@ F1F4: BD E2 B4    JSR    $E2B4
 F1F7: CC F0 DE    LDD    #$F0DE
 F1FA: ED 44       STD    $4,U
 F1FC: BD E2 B4    JSR    $E2B4
-F1FF: BD F6 AC    JSR    $F6AC
+F1FF: BD F6 AC    JSR    carry_returning_f6ac
 F202: 25 01       BCS    $F205
 F204: 39          RTS
 F205: 96 8B       LDA    <$8B
@@ -3402,7 +3402,7 @@ F391: BD E2 B4    JSR    $E2B4
 F394: CC F0 DE    LDD    #$F0DE
 F397: ED 44       STD    $4,U
 F399: BD E2 B4    JSR    $E2B4
-F39C: BD F6 AC    JSR    $F6AC
+F39C: BD F6 AC    JSR    carry_returning_f6ac
 F39F: 25 01       BCS    $F3A2
 F3A1: 39          RTS
 F3A2: 96 8B       LDA    <$8B
@@ -3412,37 +3412,7 @@ F3A9: D6 13       LDB    <$13
 F3AB: 4F          CLRA
 F3AC: BD FD 6B    JSR    $FD6B
 F3AF: 7E FB C2    JMP    $FBC2
-F3B2: A8 28       EORA   $8,Y
-F3B4: 94 28       ANDA   <$28
-F3B6: 80 28       SUBA   #$28
-F3B8: 6C 28       INC    $8,Y
-F3BA: 58          ASLB
-F3BB: 28 D0       BVC    $F38D
-F3BD: 50          NEGB
-F3BE: BC 50 44    CMPX   $5044
-F3C1: 50          NEGB
-F3C2: 30 50       LEAX   -$10,U
-F3C4: BC 64 44    CMPX   $6444
-F3C7: 64 E4       LSR    ,S
-F3C9: 78 BC 78    ASL    $BC78
-F3CC: 44          LSRA
-F3CD: 78 1C 78    ASL    $1C78
-F3D0: D0 A0       SUBB   <$A0
-F3D2: 94 A0       ANDA   <$A0
-F3D4: 6C A0       INC    ,Y+
-F3D6: 30 A0       LEAX   ,Y+
-F3D8: D0 B4       SUBB   <$B4
-F3DA: A8 B4       EORA   [,Y]
-F3DC: 58          ASLB
-F3DD: B4 30 B4    ANDA   $30B4
-F3E0: A8 C8 80    EORA   -$80,U
-F3E3: C8 58       EORB   #$58
-F3E5: C8 A8       EORB   #$A8
-F3E7: F0 94 F0    SUBB   $94F0
-F3EA: 80 F0       SUBA   #$F0
-F3EC: 6C F0       INC    [,--W]
-F3EE: 58          ASLB
-F3EF: F0 86 05    SUBB   $8605
+
 F3F2: 97 F8       STA    <$F8
 F3F4: 0F 91       CLR    <$91
 F3F6: CE 0D D0    LDU    #$0DD0
@@ -3520,7 +3490,7 @@ F48F: DC A6       LDD    <$A6
 F491: 55          LSRB
 F492: 27 47       BEQ    $F4DB
 F494: 8D 2A       BSR    $F4C0
-F496: BD F6 AC    JSR    $F6AC
+F496: BD F6 AC    JSR    carry_returning_f6ac
 F499: 25 01       BCS    $F49C
 F49B: 39          RTS
 
@@ -3554,7 +3524,7 @@ F4D2: A7 4B       STA    $B,U
 F4D4: 39          RTS
 
 F4DB: 8D 1F       BSR    $F4FC
-F4DD: BD F6 AC    JSR    $F6AC
+F4DD: BD F6 AC    JSR    carry_returning_f6ac
 F4E0: 25 01       BCS    $F4E3
 F4E2: 39          RTS
 F4E3: 96 8B       LDA    <$8B
@@ -3736,7 +3706,7 @@ F653: 39          RTS
 F654: B6 16 25    LDA    $1625
 F657: 27 01       BEQ    $F65A
 F659: 39          RTS
-F65A: 8D 50       BSR    $F6AC
+F65A: 8D 50       BSR    carry_returning_f6ac
 F65C: 25 01       BCS    $F65F
 F65E: 39          RTS
 F65F: CC F6 66    LDD    #$F666
@@ -3772,6 +3742,7 @@ F6A5: FD 11 08    STD    $1108
 F6A8: BD E2 B4    JSR    $E2B4
 F6AB: 39          RTS
 
+carry_returning_f6ac:
 F6AC: FC 16 3C    LDD    $163C
 F6AF: A0 4C       SUBA   $C,U
 F6B1: 24 01       BCC    $F6B4
@@ -3828,7 +3799,7 @@ F705: B7 40 4C    STA    $404C
 F708: 8D 06       BSR    $F710
 F70A: CC 00 20    LDD    #$0020
 F70D: 7E FD 6B    JMP    $FD6B
-F710: 30 84       LEAX   ,X
+F710: 30 84       LEAX   ,X		; [nop]
 F712: 9F F8       STX    <$F8
 F714: 8E F0 27    LDX    #$F027
 F717: EC 81       LDD    ,X++
@@ -3887,9 +3858,9 @@ F79A: 96 95       LDA    <$95
 F79C: 48          ASLA
 F79D: E6 56       LDB    -$A,U
 F79F: 58          ASLB
-F7A0: 8E F7 A5    LDX    #table_f7a5
-F7A3: 6E 95       JMP    [B,X]  ; [jump_table] [nb_entries=4]
-table_f7a5:
+F7A0: 8E F7 A5    LDX    #jump_table_f7a5
+F7A3: 6E 95       JMP    [B,X]  ; [indirect_jump] [nb_entries=4]
+jump_table_f7a5:
 	dc.w	$F7D1
 	dc.w	$F7C5 
 	dc.w	$F7AD 
@@ -4039,7 +4010,7 @@ F8D9: 88 02       EORA   #$02
 F8DB: A7 53       STA    -$D,U
 F8DD: BD E2 B4    JSR    $E2B4
 F8E0: 8D BB       BSR    $F89D
-F8E2: BD F6 AC    JSR    $F6AC
+F8E2: BD F6 AC    JSR    carry_returning_f6ac
 F8E5: 81 08       CMPA   #$08
 F8E7: 25 11       BCS    $F8FA
 F8E9: FC 11 2A    LDD    $112A
@@ -4118,7 +4089,7 @@ F9E0: 48          ASLA
 F9E1: E6 55       LDB    -$B,U
 F9E3: 26 05       BNE    $F9EA
 F9E5: 8E F9 F0    LDX    #jump_table_f9f0
-F9E8: 6E 96       JMP    [A,X]	; [jump_table] [nb_entries=5]
+F9E8: 6E 96       JMP    [A,X]	; [indirect_jump] [nb_entries=5]
 F9EA: 8E F4 88    LDX    #$F488
 F9ED: EC 86       LDD    A,X
 F9EF: 39          RTS
@@ -4147,7 +4118,7 @@ FA1A: B0 0E FC    SUBA   $0EFC
 FA1D: 58          ASLB
 FA1E: F0 0E FD    SUBB   $0EFD
 FA21: 39          RTS
-FA22: BD F6 AC    JSR    $F6AC
+FA22: BD F6 AC    JSR    carry_returning_f6ac
 FA25: 81 21       CMPA   #$21
 FA27: FC 16 3C    LDD    $163C
 FA2A: 25 01       BCS    $FA2D
@@ -4393,7 +4364,7 @@ FBED: ED 44       STD    $4,U
 FBEF: CC 00 78    LDD    #$0078
 FBF2: BD E2 BB    JSR    $E2BB
 FBF5: BD FC CD    JSR    $FCCD
-FBF8: BD F6 AC    JSR    $F6AC
+FBF8: BD F6 AC    JSR    carry_returning_f6ac
 FBFB: 25 37       BCS    $FC34
 FBFD: BD E2 C4    JSR    $E2C4
 FC00: CE 16 50    LDU    #$1650
@@ -4407,7 +4378,7 @@ FC11: ED 44       STD    $4,U
 FC13: CC 01 E0    LDD    #$01E0
 FC16: BD E2 BB    JSR    $E2BB
 FC19: BD FC CD    JSR    $FCCD
-FC1C: BD F6 AC    JSR    $F6AC
+FC1C: BD F6 AC    JSR    carry_returning_f6ac
 FC1F: 25 13       BCS    $FC34
 FC21: BD E2 C4    JSR    $E2C4
 FC24: CC F0 E5    LDD    #$F0E5

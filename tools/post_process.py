@@ -20,6 +20,9 @@ input_dict = {"system_3300":"read_system_inputs",
 
 }
 
+tablere = re.compile("move.w\t#(\w*jump_table_....),d(.)")
+jmpre = re.compile("(j..)\s+\[([ab]),(.)\]")
+
 # empty template
 ##single_line_to_cc_protect = set()
 ##remove_error_in_next_line = set()
@@ -28,13 +31,42 @@ input_dict = {"system_3300":"read_system_inputs",
 ##line_to_pull_cc_protect = set() | single_line_to_cc_protect
 ##line_to_pull_cc_prev_protect = set()
 
-single_line_to_cc_protect = set()
-remove_error_in_next_line = set()
+single_line_to_cc_protect = {0xe5bc,0xe5ce,0xfdb5}
+remove_error_in_next_line = {0xf6c1,0xfa25,0xfa2a,0xe5ba,0xe5be,0xe5cc,0xe5d0,0xfae9,0xfdb7}
 remove_error_in_prev_line = set()
-line_to_push_cc_protect = set() | single_line_to_cc_protect
-line_to_pull_cc_protect = set() | single_line_to_cc_protect
+line_to_push_cc_protect = {0xfae2} | single_line_to_cc_protect
+line_to_pull_cc_protect = {0xfae7} | single_line_to_cc_protect
 line_to_pull_cc_prev_protect = set()
 
+def game_specific(address,lines,i):
+    line = lines[i]
+    # game_specific
+    if address in {0xc78a,0xec4c}:
+        # strange protection ?
+        line = change_instruction("jra\tindirect_jump_10e4",lines,i)
+    elif address == 0xf6c3:
+        line += "\tSET_XC_FLAGS\n"
+    elif address == 0xfa25:
+        line = remove_instruction(lines,i)
+    elif address == 0xfa2a:
+        line = "\tcmp.b\t#0x21,d0\n"+line
+    elif address == 0xe326:
+        line = change_instruction("rts",lines,i)
+    elif address == 0xfb43:
+        lines[i+1] = "\tSET_X_FROM_CLEARED_C\n"
+    elif "[indirect_jump]" in line:
+        m = jmpre.search(line)
+        if m:
+            ireg = m.group(2).upper()  # A or B
+            inst = m.group(1).upper()
+            reg = {"x":"A2","y":"A3","u":"A4"}[m.group(3)]
+            rest = re.sub(".*\"","",line)
+            nb_cases = int(line.split("nb_entries=")[1].strip(']\n'))
+            line = f"\t{inst}_{ireg}_INDEXED\t{reg},{nb_cases}{rest}"
+
+
+    line = re.sub(tablere,subt,line)
+    return line
 
 store_to_video = re.compile("GET_ADDRESS\s+(0x8\w\w\w|video_ram_d)",flags=re.I)   # game_specific
 
@@ -232,6 +264,7 @@ with open(source_dir / "conv.s") as f:
             line = change_instruction("addq\t#4,sp",lines,i)
 
         ###############################################
+        line = game_specific(address,lines,i)
 
         ###############################################
         if address in remove_error_in_prev_line:
@@ -303,3 +336,11 @@ with open(source_dir / f"{gamename}.68k","w") as fw:
         fw.write(f"\t.global\t{g}\n")
 
     fw.writelines(new_lines)
+
+    fw.write("""
+indirect_jump_10e4:
+\tGET_ADDRESS\t0x10e4
+\tmove.w\t(a0),d6
+\tBREAKPOINT\t"indirect jmp check d6"
+\tillegal
+""")
