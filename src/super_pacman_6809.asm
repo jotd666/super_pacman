@@ -231,13 +231,15 @@ C183: 86 24       LDA    #$24
 C185: A7 4B       STA    $B,U
 C187: CC F0 FB    LDD    #func_f0fb
 C18A: ED 44       STD    $4,U
-C18C: CC C1 9A    LDD    #$C19A
+C18C: CC C1 9A    LDD    #func_c19a
 C18F: ED C4       STD    ,U
 C191: E6 56       LDB    -$A,U
 C193: 33 C8 20    LEAU   $20,U
 C196: 5A          DECB
 C197: 2A D8       BPL    $C171
 C199: 39          RTS
+
+func_c19a:
 C19A: CC F0 DE    LDD    #func_f0de
 C19D: ED 44       STD    $4,U
 C19F: BD E2 B4    JSR    stack_set_e2b4
