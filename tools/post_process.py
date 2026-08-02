@@ -354,4 +354,24 @@ jump_u_plus_4:
 \tBREAKPOINT\t"indirect jmp check d4"
 \tillegal
 
+
+play_sound:
+    move.l  d0,-(a7)
+    move.l  a0,d0
+    sub.l   a6,d0
+    sub.w   #0x4040,d0
+    jbsr    osd_sound_start
+    move.l  (a7)+,d0
+    rts
+
+
+sound_control:
+    tst.b   d0
+    jeq     0f
+    jbra    play_sound
+0:
+    * we should stop the sound, but it actually isn't
+    * needed, and doing so would stop the music
+    rts
+
 """)

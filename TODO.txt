@@ -1,1 +1,3 @@
-check Mappy task system, compare as I had to introduce a lot of "func_xxx": encode functions
+
+RE to skip system tests
+compare post_process.py with mappy: identify switch parts
