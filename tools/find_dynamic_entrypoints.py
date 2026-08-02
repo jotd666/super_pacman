@@ -3,7 +3,7 @@ import re
 imm = re.compile("#\$(\w\w\w\w)")
 
 found = set()
-with open("../src/mappy_6809.asm") as f, open("../src/mappy_6809_x.asm","w") as fw:
+with open("../src/super_pacman_6809.asm") as f, open("../src/super_pacman_6809_x.asm","w") as fw:
     lines = list(f)
     address_set = set()
     for line in lines:
