@@ -32,7 +32,7 @@ jmpre = re.compile("(j..)\s+\[([ab]),(.)\]")
 ##line_to_pull_cc_prev_protect = set()
 
 single_line_to_cc_protect = {0xe5bc,0xe5ce,0xfdb5}
-remove_error_in_next_line = {0xf6c1,0xfa25,0xfa2a,0xe5ba,0xe5be,0xe5cc,0xe5d0,0xfae9,0xfdb7}
+remove_error_in_next_line = {0xf6c1,0xfa25,0xfa2a,0xe5ba,0xe5be,0xe5cc,0xe5d0,0xfae9,0xfdb7,0xe2b4,0Xe2bb,0xe2c4}
 remove_error_in_prev_line = set()
 line_to_push_cc_protect = {0xfae2} | single_line_to_cc_protect
 line_to_pull_cc_protect = {0xfae7} | single_line_to_cc_protect
@@ -65,6 +65,13 @@ def game_specific(address,lines,i):
             line = f"\t{inst}_{ireg}_INDEXED\t{reg},{nb_cases}{rest}"
         elif "[$04,u]" in line:
             line = change_instruction("jbsr\tjump_u_plus_4",lines,i)
+    # call tree manipulation functions
+    elif address in {0xe2b6,0Xe2c1,0xe2c6}:
+        line = change_instruction("move.l\td2,(4,sp)",lines,i)
+    elif address == 0xe2bd:
+        line = "\tMAKE_D\n"+change_instruction("move.w\td1,(8,sp)",lines,i)
+    elif address in {0xe2b8,0Xe2bf}:
+        line = remove_instruction(lines,i)
 
     elif "had to be swapped" in line:
         line = ""
@@ -284,6 +291,21 @@ with open(source_dir / "conv.s") as f:
             lines[j-1] += "\tPOP_SR\n"
             if j-1==i:
                 line = lines[i]
+
+        if "[function_address]" in line:
+            # we have to patch this code as it takes an immediate value which
+            # is actually an address
+            inst,arg = line.split("|")[1].strip().strip("[]").split(":")[1].split("]")[0].split()
+            if inst!="ldd" or ",d1" in line:
+                if inst=="cmpx":
+                    line = change_instruction(f'BREAKPOINT\t"{address:04x}"',lines,i)
+                else:
+                    dest_reg = {"d":"d1","u":"d4","x":"d2","y":"d3"}[inst[2]]  # d,u,x
+                    dest_addr = arg[2:]
+                    line = change_instruction(f"move.l\t#l_{dest_addr},{dest_reg}",lines,i)
+                    line += f"\tENCODE_ADDRESS\t{dest_reg},{dest_reg}\n"
+                    if inst=="ldd" and "MAKE_D" in lines[i+1]:
+                        lines[i+1] = ""
 
         if address in line_to_push_cc_protect:
             # protect the sub instructions
