@@ -17,7 +17,7 @@
 	.global	m6809_direct_page_pointer
 
 	.macro	ERROR	arg
-	.error	"\arg"     | comment out or replace by ".warning" to disable errors
+	.warning	"\arg"     | comment out or replace by ".warning" to disable errors
 	.endm
 
 	.include	"options.inc"

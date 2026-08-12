@@ -1,3 +1,9 @@
-stack_set_with_param_decrease_e2c4 complete transcode
+understand those:
+
+task_switch_eec7
+stack_set_with_param_e2bb
+stack_set_with_param_decrease_e2c4
+stack_set_e2b4
+
 RE to skip system tests
 compare post_process.py with mappy: identify switch parts

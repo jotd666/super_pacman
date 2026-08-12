@@ -32,7 +32,7 @@ jmpre = re.compile("(j..)\s+\[([ab]),(.)\]")
 ##line_to_pull_cc_prev_protect = set()
 
 single_line_to_cc_protect = {0xe5bc,0xe5ce,0xfdb5}
-remove_error_in_next_line = {0xf6c1,0xfa25,0xfa2a,0xe5ba,0xe5be,0xe5cc,0xe5d0,0xfae9,0xfdb7,0xe2b4,0Xe2bb,0xe2c4}
+remove_error_in_next_line = {0xf6c1,0xfa25,0xfa2a,0xe5ba,0xe5be,0xe5cc,0xe5d0,0xfae9,0xfdb7,0xe2b4,0Xe2bb}
 remove_error_in_prev_line = set()
 line_to_push_cc_protect = {0xfae2} | single_line_to_cc_protect
 line_to_pull_cc_protect = {0xfae7} | single_line_to_cc_protect
@@ -66,13 +66,21 @@ def game_specific(address,lines,i):
         elif "[$04,u]" in line:
             line = change_instruction("jbsr\tjump_u_plus_4",lines,i)
     # call tree manipulation functions
-    elif address in {0xe2b6,0Xe2c1,0xe2c6}:
-        line = change_instruction("move.l\td2,(4,sp)",lines,i)
-    elif address == 0xe2bd:
-        line = "\tMAKE_D\n"+change_instruction("move.w\td1,(8,sp)",lines,i)
-    elif address in {0xe2b8,0Xe2bf}:
-        line = remove_instruction(lines,i)
-
+    elif address == 0xe2c4:
+        line = """
+    movem.l    (sp)+,d2                           | [$e2c4: puls   x] put return address in X
+    sub.w    #1,(4,sp) |  [$e2c6: ldu    $2,s] put stack value from U+2
+     |  [$e2c8: ldd    $2,u] get D from U+2
+            | [$e2ca: subd   #$0001] D-- (decrease our counter parameter)
+    | [$e2cd: std    $2,u] store new value of D
+    jeq    l_e2d2                                 | [$e2cf: beq    $e2d2] if 0, countdown done, branch
+    rts                                        | [$e2d1: rts]
+l_e2d2:
+    move.l\td2,(sp)                       | [$e2d2: stx    ,u] store return address in U
+    move.l\td2,(a0)                            | [...]
+    jmp\t(a0)                         | [$e2d4: jmp    ,x] and returns to caller without popping the stack
+"""
+        kill_code(lines,i,0xe2d4)
     elif "had to be swapped" in line:
         line = ""
 
