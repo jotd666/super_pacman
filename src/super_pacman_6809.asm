@@ -2245,9 +2245,6 @@ E65F: 96 D2       LDA    <$D2
 E661: 27 0D       BEQ    $E670
 E663: BD EE C7    JSR    task_switch_eec7		; [no_return]
 
-E66C: 55          LSRB
-E66D: 45          LSRA
-
 E670: CC 20 08    LDD    #$2008
 E673: 7E FE 0F    JMP    $FE0F
 E676: CE 02 FA    LDU    #$02FA
